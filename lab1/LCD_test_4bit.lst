@@ -1,0 +1,253 @@
+0000              1   ; LCD_test_4bit.asm: Initializes and uses an LCD in 4-bit mode
+0000              2   ; using the most common procedure found on the internet.
+                  4   $LIST
+0000              6   
+0000              7   org 0000H
+0000 02011A       8       ljmp myprogram
+0003              9   
+001B             10   org 001bH
+001B 02181B      11       ljmp 181bH
+001E             12   
+001E             13   ; These 'equ' must match the hardware wiring
+001E             14   LCD_RS equ P1.4
+001E             15   LCD_RW equ P1.5 ; Not used in this code
+001E             16   LCD_E  equ P1.6
+001E             17   LCD_D4 equ P3.2
+001E             18   LCD_D5 equ P3.3
+001E             19   LCD_D6 equ P3.4
+001E             20   LCD_D7 equ P3.5
+001E             21   
+001E             22   ; When using a 22.1184MHz crystal in fast mode
+001E             23   ; one cycle takes 1.0/22.1184MHz = 45.21123 ns
+001E             24   
+001E             25   ;---------------------------------;
+001E             26   ; Wait 40 microseconds            ;
+001E             27   ;---------------------------------;
+001E             28   Wait40uSec:
+001E C000        29       push AR0
+0020 78B1        30       mov R0, #177
+0022             31   L0:
+0022 00          32       nop
+0023 00          33       nop
+0024 D8FC        34       djnz R0, L0 ; 1+1+3 cycles->5*45.21123ns*177=40us
+0026 D000        35       pop AR0
+0028 22          36       ret
+0029             37   
+0029             38   ;---------------------------------;
+0029             39   ; Wait 'R2' milliseconds          ;
+0029             40   ;---------------------------------;
+0029             41   WaitmilliSec:
+0029 C000        42       push AR0
+002B C001        43       push AR1
+002D 792D        44   L3: mov R1, #45
+002F 78A6        45   L2: mov R0, #166
+0031 D8FE        46   L1: djnz R0, L1 ; 3 cycles->3*45.21123ns*166=22.51519us
+0033 D9FA        47       djnz R1, L2 ; 22.51519us*45=1.013ms
+0035 DAF6        48       djnz R2, L3 ; number of millisecons to wait passed in R2
+0037 D001        49       pop AR1
+0039 D000        50       pop AR0
+003B 22          51       ret
+003C             52   
+003C             53   ;---------------------------------;
+003C             54   ; Toggles the LCD's 'E' pin       ;
+003C             55   ;---------------------------------;
+003C             56   LCD_pulse:
+003C D296        57       setb LCD_E
+003E 12001E      58       lcall Wait40uSec
+0041 C296        59       clr LCD_E
+0043 22          60       ret
+0044             61   
+0044             62   ;---------------------------------;
+0044             63   ; Writes data to LCD              ;
+0044             64   ;---------------------------------;
+0044             65   WriteData:
+0044 D294        66       setb LCD_RS
+0046 7A50        67            mov R2, #80
+0048 7964        68   L9: mov R1, #100
+004A 7896        69   L8: mov R0, #150
+004C D8FE        70   L7: djnz R0, L7
+004E D9FA        71            djnz R1, L8
+0050 DAF6        72            djnz R2, L9
+0052 B2B7        73            cpl P3.7
+0054 02005C      74       ljmp LCD_byte
+0057             75   
+0057             76   ;---------------------------------;
+0057             77   ; Writes command to LCD           ;
+0057             78   ;---------------------------------;
+0057             79   WriteCommand:
+0057 C294        80       clr LCD_RS
+0059 02005C      81       ljmp LCD_byte
+005C             82   
+005C             83   ;---------------------------------;
+005C             84   ; Writes acc to LCD in 4-bit mode ;
+005C             85   ;---------------------------------;
+005C             86   LCD_byte:
+005C             87       ; Write high 4 bits first
+005C A2E7        88       mov c, ACC.7
+005E 92B5        89       mov LCD_D7, c
+0060 A2E6        90       mov c, ACC.6
+0062 92B4        91       mov LCD_D6, c
+0064 A2E5        92       mov c, ACC.5
+0066 92B3        93       mov LCD_D5, c
+0068 A2E4        94       mov c, ACC.4
+006A 92B2        95       mov LCD_D4, c
+006C 12003C      96       lcall LCD_pulse
+006F             97   
+006F             98       ; Write low 4 bits next
+006F A2E3        99       mov c, ACC.3
+0071 92B5       100       mov LCD_D7, c
+0073 A2E2       101       mov c, ACC.2
+0075 92B4       102       mov LCD_D6, c
+0077 A2E1       103       mov c, ACC.1
+0079 92B3       104       mov LCD_D5, c
+007B A2E0       105       mov c, ACC.0
+007D 92B2       106       mov LCD_D4, c
+007F 12003C     107       lcall LCD_pulse
+0082 22         108       ret
+0083            109   
+0083            110   ;---------------------------------;
+0083            111   ; Configure LCD in 4-bit mode     ;
+0083            112   ;---------------------------------;
+0083            113   LCD_4BIT:
+0083 C296       114       clr LCD_E   ; Resting state of LCD's enable is zero
+0085 C295       115       clr LCD_RW  ; We are only writing to the LCD in this program
+0087            116   
+0087            117       ; After power on, wait for the LCD start up time before initializing
+0087            118       ; NOTE: the preprogrammed power-on delay of 16 ms on the AT89LP52
+0087            119       ; seems to be enough.  That is why these two lines are commented out.
+0087            120       ; Also, commenting these two lines improves simulation time in Multisim.
+0087            121       ; mov R2, #40
+0087            122       ; lcall WaitmilliSec
+0087            123   
+0087            124       ; First make sure the LCD is in 8-bit mode and then change to 4-bit mode
+0087 7433       125       mov a, #0x33
+0089 120057     126       lcall WriteCommand
+008C 7433       127       mov a, #0x33
+008E 120057     128       lcall WriteCommand
+0091 7432       129       mov a, #0x32 ; change to 4-bit mode
+0093 120057     130       lcall WriteCommand
+0096            131   
+0096            132       ; Configure the LCD
+0096 7428       133       mov a, #0x28
+0098 120057     134       lcall WriteCommand
+009B 740C       135       mov a, #0x0c
+009D 120057     136       lcall WriteCommand
+00A0 7401       137       mov a, #0x01 ;  Clear screen command (takes some time)
+00A2 120057     138       lcall WriteCommand
+00A5            139   
+00A5            140       ;Wait for clear screen command to finish. Usually takes 1.52ms.
+00A5 7A02       141       mov R2, #2
+00A7 120029     142       lcall WaitmilliSec
+00AA 22         143       ret
+00AB            144   
+00AB            145   
+00AB            146   erase:
+00AB 7480       147       mov a, #0x80 ; Move cursor to line 1 column 1
+00AD 120057     148       lcall WriteCommand
+00B0 7420       149       mov a, #' '
+00B2 120044     150       lcall WriteData
+00B5 7420       151       mov a, #' '
+00B7 120044     152       lcall WriteData
+00BA 7420       153       mov a, #' '
+00BC 120044     154       lcall WriteData
+00BF 7420       155       mov a, #' '
+00C1 120044     156       lcall WriteData
+00C4 7420       157       mov a, #' '
+00C6 120044     158       lcall WriteData
+00C9 7420       159       mov a, #' '
+00CB 120044     160       lcall WriteData
+00CE 7420       161           mov a, #' '
+00D0 120044     162       lcall WriteData
+00D3 7420       163           mov a, #' '
+00D5 120044     164       lcall WriteData
+00D8 7420       165           mov a, #' '
+00DA 120044     166       lcall WriteData
+00DD 7420       167           mov a, #' '
+00DF 120044     168       lcall WriteData
+00E2 7420       169           mov a, #' '
+00E4 120044     170       lcall WriteData
+00E7 7420       171           mov a, #' '
+00E9 120044     172       lcall WriteData
+00EC            173       
+00EC 74C0       174       mov a, #0xC0 ; Move cursor to line 2 column 1
+00EE 120057     175       lcall WriteCommand
+00F1 7420       176           mov a, #' '
+00F3 120044     177       lcall WriteData
+00F6 7420       178       mov a, #' '
+00F8 120044     179       lcall WriteData
+00FB 7420       180           mov a, #' '
+00FD 120044     181       lcall WriteData
+0100 7420       182           mov a, #' '
+0102 120044     183       lcall WriteData
+0105 7420       184           mov a, #' '
+0107 120044     185       lcall WriteData
+010A 7420       186           mov a, #' '
+010C 120044     187       lcall WriteData
+010F 7420       188           mov a, #' '
+0111 120044     189       lcall WriteData
+0114 7420       190           mov a, #' '
+0116 120044     191       lcall WriteData
+0119 22         192            ret
+011A            193   
+011A            194   ;---------------------------------;
+011A            195   ; Main loop.  Initialize stack,   ;
+011A            196   ; ports, LCD, and displays a      ;
+011A            197   ; letter on the LCD              ;
+011A            198   ;---------------------------------;
+011A            199   myprogram:       
+011A 75817F     200       mov SP, #7FH
+011D 75C100     201       mov PMOD, #0 ; Configure all ports in bidirectional mode
+0120 120083     202       lcall LCD_4BIT
+0123 7480       203   M1: mov a, #0x80 ; Move cursor to line 1 column 1
+0125 120057     204       lcall WriteCommand
+0128 744A       205       mov a, #'J'
+012A 120044     206       lcall WriteData
+012D 7465       207       mov a, #'e'
+012F 120044     208       lcall WriteData
+0132 7466       209       mov a, #'f'
+0134 120044     210       lcall WriteData
+0137 7466       211       mov a, #'f'
+0139 120044     212       lcall WriteData
+013C 7472       213       mov a, #'r'
+013E 120044     214       lcall WriteData
+0141 7465       215       mov a, #'e'
+0143 120044     216       lcall WriteData
+0146 7479       217       mov a, #'y'
+0148 120044     218       lcall WriteData
+014B 7420       219       mov a, #' '
+014D 120044     220       lcall WriteData
+0150 744C       221       mov a, #'L'
+0152 120044     222       lcall WriteData
+0155 7469       223       mov a, #'i'
+0157 120044     224       lcall WriteData
+015A 746F       225       mov a, #'o'
+015C 120044     226       lcall WriteData
+015F 7475       227       mov a, #'u'
+0161 120044     228       lcall WriteData
+0164 74C0       229       mov a, #0xC0 ; Move cursor to line 2 column 1
+0166 120057     230       lcall WriteCommand
+0169 7432       231       mov a, #'2'
+016B 120044     232       lcall WriteData
+016E 7434       233       mov a, #'4'
+0170 120044     234       lcall WriteData
+0173 7432       235       mov a, #'2'
+0175 120044     236       lcall WriteData
+0178 7430       237       mov a, #'0'
+017A 120044     238       lcall WriteData
+017D 7433       239       mov a, #'3'
+017F 120044     240       lcall WriteData
+0182 7431       241       mov a, #'1'
+0184 120044     242       lcall WriteData
+0187 7434       243       mov a, #'4'
+0189 120044     244       lcall WriteData
+018C 7434       245       mov a, #'4'
+018E 120044     246       lcall WriteData
+0191 7AFA       247        mov R2, #250
+0193 79FA       248   L12: mov R1, #250
+0195 78FA       249   L11: mov R0, #250
+0197 D8FE       250   L10: djnz R0, L10
+0199 D9FA       251            djnz R1, L11
+019B DAF6       252            djnz R2, L12
+019D 1200AB     253       lcall erase
+01A0 8081       254            sjmp M1
+01A2            255   END

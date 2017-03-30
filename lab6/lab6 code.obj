@@ -1,0 +1,601 @@
+<MODULE>
+lab6 code
+</MODULE>
+
+<OPTC51>
+--model-small
+</OPTC51>
+
+<PRINTF_FLOAT>
+printf_float
+</PRINTF_FLOAT>
+
+<SEGMENTS>
+R_GSINIT,code,0000,NO
+R_BSEG,bit,0001,NO
+R_XSEG,xdata,0000,NO
+BIT_BANK,data,0000,OV
+R_CONST,code,00E9,NO
+rbank0,data,0000,OV
+R_PSEG,xdata,0000,NO
+R_DINIT,code,0012,NO
+R_DSEG,data,000E,NO
+R_OSEG,data,0001,OV
+R_IXSEG,xdata,0000,NO
+R_ISEG,idata,0000,NO
+R_HOME,code,0000,NO
+R_XINIT,code,0000,NO
+R_CSEG,code,034F,NO
+</SEGMENTS>
+
+<LOCALS>
+L003002?,R_CSEG,0068,0000
+L008015?,R_CSEG,018A,0000
+L008013?,R_CSEG,0337,0000
+L008012?,R_CSEG,0258,0000
+L005007?,R_CSEG,00E4,0000
+L005004?,R_CSEG,00DC,0000
+L005003?,R_CSEG,00D4,0000
+L005002?,R_CSEG,00CC,0000
+L005001?,R_CSEG,00C4,0000
+L008025?,R_CSEG,0202,0000
+L008024?,R_CSEG,0200,0000
+_Timer2_ISR_sloc0_1_0,R_BSEG,0000,0001
+L006004?,R_CSEG,00F2,0000
+L006001?,R_CSEG,00ED,0000
+_main_voltage_1_56,R_DSEG,000A,0004
+__str_0,R_CONST,0000,0000
+__str_1,R_CONST,0005,0000
+__str_2,R_CONST,000E,0000
+__str_3,R_CONST,0070,0000
+__str_4,R_CONST,0073,0000
+__str_5,R_CONST,0082,0000
+__str_6,R_CONST,00A9,0000
+__str_7,R_CONST,00AC,0000
+__str_8,R_CONST,00D2,0000
+L008009?,R_CSEG,0301,0000
+L008008?,R_CSEG,02C3,0000
+L008007?,R_CSEG,02AC,0000
+L008005?,R_CSEG,02E1,0000
+L008002?,R_CSEG,02F8,0000
+_main_selection_1_56,R_DSEG,0008,0002
+L005014?,R_CSEG,00B8,0000
+L005012?,R_CSEG,00A8,0000
+L005010?,R_CSEG,00A6,0000
+</LOCALS>
+
+<PUBLICS>
+_InitPinADC,R_CSEG,009B,0000
+_Volts_at_Pin,R_CSEG,0106,0000
+_main,R_CSEG,015F,0000
+__c51_external_startup,R_CSEG,0000,0000
+_proceed,R_DSEG,0001,0001
+_InitPinADC_PARM_2,R_OSEG,0000,0001
+_PWM_1,R_DSEG,0002,0002
+_PWM_2,R_DSEG,0004,0002
+_Timer2_ISR,R_CSEG,0050,0000
+_InitADC,R_CSEG,0091,0000
+_pwm_count,R_DSEG,0000,0001
+_DRV,R_DSEG,0006,0002
+_ADC_at_Pin,R_CSEG,00E5,0000
+</PUBLICS>
+
+<EXTERNALS>
+_scanf,any,0000,0000
+___uint2fs,any,0000,0000
+___fsmul,any,0000,0000
+_printf,any,0000,0000
+_initADC,any,0000,0000
+_crt0,any,0000,0000
+___fsdiv,any,0000,0000
+</EXTERNALS>
+
+<CODE AT 0000>
+</CODE>
+
+<CODE R_HOME>
+</CODE>
+
+<CODE R_GSINIT>
+</CODE>
+
+<CODE R_CSEG>
+</CODE>
+
+<CODE AT 0000>
+02 addr16(_crt0;)  
+</CODE>
+
+<CODE AT 002B>
+02 addr16(_Timer2_ISR;)  
+</CODE>
+
+<CODE R_HOME>
+</CODE>
+
+<CODE R_GSINIT>
+</CODE>
+
+<CODE R_GSINIT>
+</CODE>
+
+<CODE R_DINIT>
+75 data8(_pwm_count;) 00
+E4
+F5 data8(_PWM_1;)
+F5 data8(_PWM_1;0x0001;+;)
+E4
+F5 data8(_PWM_2;)
+F5 data8(_PWM_2;0x0001;+;)
+E4
+F5 data8(_DRV;)
+F5 data8(_DRV;0x0001;+;)
+</CODE>
+
+<CODE R_CSEG>
+53 D9 BF
+75 FF 80
+75 EF 06
+43 A9 03
+43 B2 03
+75 98 10
+75 8D 30
+53 8E F4
+43 8E 08
+85 8D 8B
+53 89 0F
+43 89 20
+D2 8E
+D2 99
+43 A6 03
+43 A4 10
+75 E1 01
+75 E2 40
+75 C8 00
+43 8E 10
+75 CA 78
+75 CB EC
+75 CC FF
+75 CD FF
+D2 AD
+D2 CA
+D2 AF
+75 82 00
+22
+C0 E0
+C0 02
+C0 03
+C0 D0
+75 D0 00
+C2 CF
+05 data8(_pwm_count;)
+E5 data8(_pwm_count;)
+24 9B
+50 rel2(L003002?;)
+75 data8(_pwm_count;) 00
+AA data8(_pwm_count;)
+7B 00
+C3
+E5 data8(_PWM_1;)
+9A
+E5 data8(_PWM_1;0x0001;+;)
+9B
+92 data8(_Timer2_ISR_sloc0_1_0;)
+B3
+92 A0
+AA data8(_pwm_count;)
+7B 00
+C3
+E5 data8(_PWM_2;)
+9A
+E5 data8(_PWM_2;0x0001;+;)
+9B
+92 data8(_Timer2_ISR_sloc0_1_0;)
+B3
+92 A1
+D0 D0
+D0 03
+D0 02
+D0 E0
+32
+75 BC F8
+75 E8 80
+75 D1 08
+22
+AA 82
+85 data8(_InitPinADC_PARM_2;) F0
+05 F0
+74 01
+80 rel2(L005012?;)
+25 E0
+D5 F0 rel3(L005010?;)
+FB
+EA
+24 FC
+40 rel2(L005007?;)
+EA
+2A
+2A
+90 data16(L005014?;)  
+73
+02 addr16(L005001?;)  
+02 addr16(L005002?;)  
+02 addr16(L005003?;)  
+02 addr16(L005004?;)  
+EB
+F4
+52 F1
+EB
+42 D4
+22
+EB
+F4
+52 F2
+EB
+42 D5
+22
+EB
+F4
+52 F3
+EB
+42 D6
+22
+EB
+F4
+FA
+52 F4
+EB
+42 DF
+22
+85 82 BB
+75 BA 1F
+D2 EC
+20 EC rel3(L006001?;)
+D2 EC
+20 EC rel3(L006004?;)
+AA BD
+7B 00
+AD BE
+7C 00
+EC
+2A
+F5 82
+ED
+3B
+F5 83
+22
+12 addr16(_ADC_at_Pin;)  
+12 addr16(___uint2fs;)  
+AA 82
+AB 83
+AC F0
+FD
+C0 02
+C0 03
+C0 04
+C0 05
+90 33 33
+75 F0 53
+74 40
+12 addr16(___fsmul;)  
+AA 82
+AB 83
+AC F0
+FD
+E5 81
+24 FC
+F5 81
+E4
+C0 E0
+C0 E0
+74 80
+C0 E0
+74 44
+C0 E0
+8A 82
+8B 83
+8C F0
+ED
+12 addr16(___fsdiv;)  
+AA 82
+AB 83
+AC F0
+FD
+E5 81
+24 FC
+F5 81
+8A 82
+8B 83
+8C F0
+ED
+22
+75 data8(_main_voltage_1_56;) 00
+E4
+F5 data8(_main_voltage_1_56;0x0001;+;)
+F5 data8(_main_voltage_1_56;0x0002;+;)
+F5 data8(_main_voltage_1_56;0x0003;+;)
+74 data8(__str_0;)
+C0 E0
+74 data8(__str_0;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_printf;)  
+15 81
+15 81
+15 81
+75 data8(_InitPinADC_PARM_2;) 07
+75 82 01
+12 addr16(_InitPinADC;)  
+12 addr16(_initADC;)  
+75 82 07
+12 addr16(_Volts_at_Pin;)  
+85 82 data8(_main_voltage_1_56;)
+85 83 data8(_main_voltage_1_56;0x0001;+;)
+85 F0 data8(_main_voltage_1_56;0x0002;+;)
+F5 data8(_main_voltage_1_56;0x0003;+;)
+E4
+F5 data8(_PWM_1;)
+F5 data8(_PWM_1;0x0001;+;)
+F5 data8(_PWM_2;)
+F5 data8(_PWM_2;0x0001;+;)
+74 01
+C0 E0
+E4
+C0 E0
+74 01
+C0 E0
+E4
+C0 E0
+74 data8(__str_1;)
+C0 E0
+74 data8(__str_1;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_printf;)  
+E5 81
+24 F9
+F5 81
+74 data8(__str_2;)
+C0 E0
+74 data8(__str_2;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_printf;)  
+15 81
+15 81
+15 81
+C0 data8(_main_selection_1_56;)
+C0 data8(_main_selection_1_56;0x0001;+;)
+74 data8(__str_3;)
+C0 E0
+74 data8(__str_3;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_scanf;)  
+E5 81
+24 FB
+F5 81
+74 01
+B5 data8(_main_selection_1_56;) rel3(L008024?;)
+E4
+B5 data8(_main_selection_1_56;0x0001;+;) rel3(L008024?;)
+80 rel2(L008025?;)
+80 rel2(L008012?;)
+C0 data8(_main_voltage_1_56;)
+C0 data8(_main_voltage_1_56;0x0001;+;)
+C0 data8(_main_voltage_1_56;0x0002;+;)
+C0 data8(_main_voltage_1_56;0x0003;+;)
+74 data8(__str_4;)
+C0 E0
+74 data8(__str_4;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_printf;)  
+E5 81
+24 F9
+F5 81
+74 data8(__str_5;)
+C0 E0
+74 data8(__str_5;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_printf;)  
+15 81
+15 81
+15 81
+74 data8(_proceed;)
+C0 E0
+74 data8(_proceed;0x0008;>>;)
+C0 E0
+74 40
+C0 E0
+74 data8(__str_6;)
+C0 E0
+74 data8(__str_6;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_scanf;)  
+E5 81
+24 FA
+F5 81
+02 addr16(L008013?;)  
+74 data8(__str_7;)
+C0 E0
+74 data8(__str_7;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_printf;)  
+15 81
+15 81
+15 81
+74 data8(_DRV;)
+C0 E0
+74 data8(_DRV;0x0008;>>;)
+C0 E0
+74 40
+C0 E0
+74 data8(__str_3;)
+C0 E0
+74 data8(__str_3;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_scanf;)  
+E5 81
+24 FA
+F5 81
+C3
+E5 data8(_DRV;)
+94 9C
+E5 data8(_DRV;0x0001;+;)
+64 80
+94 7F
+40 rel2(L008007?;)
+74 64
+95 data8(_DRV;)
+E4
+64 80
+85 data8(_DRV;0x0001;+;) F0
+63 F0 80
+95 F0
+50 rel2(L008008?;)
+74 data8(__str_8;)
+C0 E0
+74 data8(__str_8;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_printf;)  
+15 81
+15 81
+15 81
+80 rel2(L008009?;)
+C3
+E4
+95 data8(_DRV;)
+E4
+64 80
+85 data8(_DRV;0x0001;+;) F0
+63 F0 80
+95 F0
+50 rel2(L008005?;)
+85 data8(_DRV;) data8(_PWM_1;)
+85 data8(_DRV;0x0001;+;) data8(_PWM_1;0x0001;+;)
+E4
+F5 data8(_PWM_2;)
+F5 data8(_PWM_2;0x0001;+;)
+80 rel2(L008009?;)
+E5 data8(_DRV;0x0001;+;)
+30 E7 rel3(L008002?;)
+E4
+F5 data8(_PWM_1;)
+F5 data8(_PWM_1;0x0001;+;)
+C3
+E4
+95 data8(_DRV;)
+F5 data8(_PWM_2;)
+E4
+95 data8(_DRV;0x0001;+;)
+F5 data8(_PWM_2;0x0001;+;)
+80 rel2(L008009?;)
+E4
+F5 data8(_PWM_1;)
+F5 data8(_PWM_1;0x0001;+;)
+F5 data8(_PWM_2;)
+F5 data8(_PWM_2;0x0001;+;)
+74 data8(__str_5;)
+C0 E0
+74 data8(__str_5;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_printf;)  
+15 81
+15 81
+15 81
+74 data8(_proceed;)
+C0 E0
+74 data8(_proceed;0x0008;>>;)
+C0 E0
+74 40
+C0 E0
+74 data8(__str_6;)
+C0 E0
+74 data8(__str_6;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_scanf;)  
+E5 81
+24 FA
+F5 81
+74 data8(__str_0;)
+C0 E0
+74 data8(__str_0;0x0008;>>;)
+C0 E0
+74 80
+C0 E0
+12 addr16(_printf;)  
+15 81
+15 81
+15 81
+02 addr16(L008015?;)  
+</CODE>
+
+<CODE R_CSEG>
+</CODE>
+
+<CODE R_XINIT>
+</CODE>
+
+<CODE R_CONST>
+1B
+5B 32 4A 
+00
+1B
+5B 25 64 3B 25 64 48 
+00
+0D
+43 68 6F 6F 73 65 20 62 65 74 77 65 65 6E 20 74 77
+6F 20 6F 70 74 69 6F 6E 73 3A 20 74 65 6D 70 65
+72 61 74 75 72 65 20 63 6F 6E 74 72 6F 6C 6C 65
+64 20 6D 6F 74 6F 72 20 28 31 
+29 2C 20 6F 72 20 75 73 65 72 2D 63 6F 6E 74 72 6F
+6C 6C 65 64 20 6D 6F 74 6F 72 20 28 6F 74 68 65
+72 29 3A 20 
+00
+25 64 
+00
+0D
+76 6F 6C 74 61 67 65 3A 20 25 2E 33 66 
+00
+0A
+54 79 70 65 20 
+27
+6F
+27
+20 61 6E 64 20 70 72 65 73 73 20 65 6E 74 65 72 20
+74 6F 20 65 6E 64 20 50 57 4D 3A 20 
+00
+25 73 
+00
+0D
+50 6C 65 61 73 65 20 49 6E 70 75 74 20 50 57 4D 20
+52 61 6E 67 65 20 31 30 30 20 74 6F 20 2D 31 30
+30 3A 20 
+00
+56 61 6C 75 65 20 4E 6F 74 20 57 69 74 68 69 6E 20
+52 61 6E 67 65 
+00
+</CODE>
+
+<CODE AT 002E>
+</CODE>

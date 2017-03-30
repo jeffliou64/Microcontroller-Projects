@@ -1,0 +1,846 @@
+0000              1   ;--------------------------------------------------------
+0000              2   ; File Created by C51
+0000              3   ; Version 1.0.0 #1069 (Apr 23 2015) (MSVC)
+0000              4   ; This file was generated Fri Feb 26 19:06:53 2016
+0000              5   ;--------------------------------------------------------
+                  5   $name hellolcd
+                  6   $optc51 --model-small
+0000              8            R_DSEG    segment data
+0000              9            R_CSEG    segment code
+0000             10            R_BSEG    segment bit
+0000             11            R_XSEG    segment xdata
+0000             12            R_PSEG    segment xdata
+0000             13            R_ISEG    segment idata
+0000             14            R_OSEG    segment data overlay
+0000             15            BIT_BANK  segment data overlay
+0000             16            R_HOME    segment code
+0000             17            R_GSINIT  segment code
+0000             18            R_IXSEG   segment xdata
+0000             19            R_CONST   segment code
+0000             20            R_XINIT   segment code
+0000             21            R_DINIT   segment code
+0000             22   
+0000             23   ;--------------------------------------------------------
+0000             24   ; Public variables in this module
+0000             25   ;--------------------------------------------------------
+0000             26            public _main
+0000             27            public _LCDprint
+0000             28            public _LCD_4BIT
+0000             29            public _WriteCommand
+0000             30            public _WriteData
+0000             31            public _LCD_byte
+0000             32            public _LCD_pulse
+0000             33            public _waitms
+0000             34            public _Timer3us
+0000             35            public __c51_external_startup
+0000             36            public _LCDprint_PARM_3
+0000             37            public _LCDprint_PARM_2
+0000             38   ;--------------------------------------------------------
+0000             39   ; Special Function Registers
+0000             40   ;--------------------------------------------------------
+0000             41   _P0             DATA 0x80
+0000             42   _SP             DATA 0x81
+0000             43   _DPL            DATA 0x82
+0000             44   _DPH            DATA 0x83
+0000             45   _EMI0TC         DATA 0x84
+0000             46   _EMI0CF         DATA 0x85
+0000             47   _OSCLCN         DATA 0x86
+0000             48   _PCON           DATA 0x87
+0000             49   _TCON           DATA 0x88
+0000             50   _TMOD           DATA 0x89
+0000             51   _TL0            DATA 0x8a
+0000             52   _TL1            DATA 0x8b
+0000             53   _TH0            DATA 0x8c
+0000             54   _TH1            DATA 0x8d
+0000             55   _CKCON          DATA 0x8e
+0000             56   _PSCTL          DATA 0x8f
+0000             57   _P1             DATA 0x90
+0000             58   _TMR3CN         DATA 0x91
+0000             59   _TMR4CN         DATA 0x91
+0000             60   _TMR3RLL        DATA 0x92
+0000             61   _TMR4RLL        DATA 0x92
+0000             62   _TMR3RLH        DATA 0x93
+0000             63   _TMR4RLH        DATA 0x93
+0000             64   _TMR3L          DATA 0x94
+0000             65   _TMR4L          DATA 0x94
+0000             66   _TMR3H          DATA 0x95
+0000             67   _TMR4H          DATA 0x95
+0000             68   _USB0ADR        DATA 0x96
+0000             69   _USB0DAT        DATA 0x97
+0000             70   _SCON           DATA 0x98
+0000             71   _SCON0          DATA 0x98
+0000             72   _SBUF           DATA 0x99
+0000             73   _SBUF0          DATA 0x99
+0000             74   _CPT1CN         DATA 0x9a
+0000             75   _CPT0CN         DATA 0x9b
+0000             76   _CPT1MD         DATA 0x9c
+0000             77   _CPT0MD         DATA 0x9d
+0000             78   _CPT1MX         DATA 0x9e
+0000             79   _CPT0MX         DATA 0x9f
+0000             80   _P2             DATA 0xa0
+0000             81   _SPI0CFG        DATA 0xa1
+0000             82   _SPI0CKR        DATA 0xa2
+0000             83   _SPI0DAT        DATA 0xa3
+0000             84   _P0MDOUT        DATA 0xa4
+0000             85   _P1MDOUT        DATA 0xa5
+0000             86   _P2MDOUT        DATA 0xa6
+0000             87   _P3MDOUT        DATA 0xa7
+0000             88   _IE             DATA 0xa8
+0000             89   _CLKSEL         DATA 0xa9
+0000             90   _EMI0CN         DATA 0xaa
+0000             91   __XPAGE         DATA 0xaa
+0000             92   _SBCON1         DATA 0xac
+0000             93   _P4MDOUT        DATA 0xae
+0000             94   _PFE0CN         DATA 0xaf
+0000             95   _P3             DATA 0xb0
+0000             96   _OSCXCN         DATA 0xb1
+0000             97   _OSCICN         DATA 0xb2
+0000             98   _OSCICL         DATA 0xb3
+0000             99   _SBRLL1         DATA 0xb4
+0000            100   _SBRLH1         DATA 0xb5
+0000            101   _FLSCL          DATA 0xb6
+0000            102   _FLKEY          DATA 0xb7
+0000            103   _IP             DATA 0xb8
+0000            104   _CLKMUL         DATA 0xb9
+0000            105   _SMBTC          DATA 0xb9
+0000            106   _AMX0N          DATA 0xba
+0000            107   _AMX0P          DATA 0xbb
+0000            108   _ADC0CF         DATA 0xbc
+0000            109   _ADC0L          DATA 0xbd
+0000            110   _ADC0H          DATA 0xbe
+0000            111   _SFRPAGE        DATA 0xbf
+0000            112   _SMB0CN         DATA 0xc0
+0000            113   _SMB1CN         DATA 0xc0
+0000            114   _SMB0CF         DATA 0xc1
+0000            115   _SMB1CF         DATA 0xc1
+0000            116   _SMB0DAT        DATA 0xc2
+0000            117   _SMB1DAT        DATA 0xc2
+0000            118   _ADC0GTL        DATA 0xc3
+0000            119   _ADC0GTH        DATA 0xc4
+0000            120   _ADC0LTL        DATA 0xc5
+0000            121   _ADC0LTH        DATA 0xc6
+0000            122   _P4             DATA 0xc7
+0000            123   _TMR2CN         DATA 0xc8
+0000            124   _TMR5CN         DATA 0xc8
+0000            125   _REG01CN        DATA 0xc9
+0000            126   _TMR2RLL        DATA 0xca
+0000            127   _TMR5RLL        DATA 0xca
+0000            128   _TMR2RLH        DATA 0xcb
+0000            129   _TMR5RLH        DATA 0xcb
+0000            130   _TMR2L          DATA 0xcc
+0000            131   _TMR5L          DATA 0xcc
+0000            132   _TMR2H          DATA 0xcd
+0000            133   _TMR5H          DATA 0xcd
+0000            134   _SMB0ADM        DATA 0xce
+0000            135   _SMB1ADM        DATA 0xce
+0000            136   _SMB0ADR        DATA 0xcf
+0000            137   _SMB1ADR        DATA 0xcf
+0000            138   _PSW            DATA 0xd0
+0000            139   _REF0CN         DATA 0xd1
+0000            140   _SCON1          DATA 0xd2
+0000            141   _SBUF1          DATA 0xd3
+0000            142   _P0SKIP         DATA 0xd4
+0000            143   _P1SKIP         DATA 0xd5
+0000            144   _P2SKIP         DATA 0xd6
+0000            145   _USB0XCN        DATA 0xd7
+0000            146   _PCA0CN         DATA 0xd8
+0000            147   _PCA0MD         DATA 0xd9
+0000            148   _PCA0CPM0       DATA 0xda
+0000            149   _PCA0CPM1       DATA 0xdb
+0000            150   _PCA0CPM2       DATA 0xdc
+0000            151   _PCA0CPM3       DATA 0xdd
+0000            152   _PCA0CPM4       DATA 0xde
+0000            153   _P3SKIP         DATA 0xdf
+0000            154   _ACC            DATA 0xe0
+0000            155   _XBR0           DATA 0xe1
+0000            156   _XBR1           DATA 0xe2
+0000            157   _XBR2           DATA 0xe3
+0000            158   _IT01CF         DATA 0xe4
+0000            159   _CKCON1         DATA 0xe4
+0000            160   _SMOD1          DATA 0xe5
+0000            161   _EIE1           DATA 0xe6
+0000            162   _EIE2           DATA 0xe7
+0000            163   _ADC0CN         DATA 0xe8
+0000            164   _PCA0CPL1       DATA 0xe9
+0000            165   _PCA0CPH1       DATA 0xea
+0000            166   _PCA0CPL2       DATA 0xeb
+0000            167   _PCA0CPH2       DATA 0xec
+0000            168   _PCA0CPL3       DATA 0xed
+0000            169   _PCA0CPH3       DATA 0xee
+0000            170   _RSTSRC         DATA 0xef
+0000            171   _B              DATA 0xf0
+0000            172   _P0MDIN         DATA 0xf1
+0000            173   _P1MDIN         DATA 0xf2
+0000            174   _P2MDIN         DATA 0xf3
+0000            175   _P3MDIN         DATA 0xf4
+0000            176   _P4MDIN         DATA 0xf5
+0000            177   _EIP1           DATA 0xf6
+0000            178   _EIP2           DATA 0xf7
+0000            179   _SPI0CN         DATA 0xf8
+0000            180   _PCA0L          DATA 0xf9
+0000            181   _PCA0H          DATA 0xfa
+0000            182   _PCA0CPL0       DATA 0xfb
+0000            183   _PCA0CPH0       DATA 0xfc
+0000            184   _PCA0CPL4       DATA 0xfd
+0000            185   _PCA0CPH4       DATA 0xfe
+0000            186   _VDM0CN         DATA 0xff
+0000            187   _DPTR           DATA 0x8382
+0000            188   _TMR2RL         DATA 0xcbca
+0000            189   _TMR3RL         DATA 0x9392
+0000            190   _TMR4RL         DATA 0x9392
+0000            191   _TMR5RL         DATA 0xcbca
+0000            192   _TMR2           DATA 0xcdcc
+0000            193   _TMR3           DATA 0x9594
+0000            194   _TMR4           DATA 0x9594
+0000            195   _TMR5           DATA 0xcdcc
+0000            196   _SBRL1          DATA 0xb5b4
+0000            197   _ADC0           DATA 0xbebd
+0000            198   _ADC0GT         DATA 0xc4c3
+0000            199   _ADC0LT         DATA 0xc6c5
+0000            200   _PCA0           DATA 0xfaf9
+0000            201   _PCA0CP1        DATA 0xeae9
+0000            202   _PCA0CP2        DATA 0xeceb
+0000            203   _PCA0CP3        DATA 0xeeed
+0000            204   _PCA0CP0        DATA 0xfcfb
+0000            205   _PCA0CP4        DATA 0xfefd
+0000            206   ;--------------------------------------------------------
+0000            207   ; special function bits
+0000            208   ;--------------------------------------------------------
+0000            209   _P0_0           BIT 0x80
+0000            210   _P0_1           BIT 0x81
+0000            211   _P0_2           BIT 0x82
+0000            212   _P0_3           BIT 0x83
+0000            213   _P0_4           BIT 0x84
+0000            214   _P0_5           BIT 0x85
+0000            215   _P0_6           BIT 0x86
+0000            216   _P0_7           BIT 0x87
+0000            217   _TF1            BIT 0x8f
+0000            218   _TR1            BIT 0x8e
+0000            219   _TF0            BIT 0x8d
+0000            220   _TR0            BIT 0x8c
+0000            221   _IE1            BIT 0x8b
+0000            222   _IT1            BIT 0x8a
+0000            223   _IE0            BIT 0x89
+0000            224   _IT0            BIT 0x88
+0000            225   _P1_0           BIT 0x90
+0000            226   _P1_1           BIT 0x91
+0000            227   _P1_2           BIT 0x92
+0000            228   _P1_3           BIT 0x93
+0000            229   _P1_4           BIT 0x94
+0000            230   _P1_5           BIT 0x95
+0000            231   _P1_6           BIT 0x96
+0000            232   _P1_7           BIT 0x97
+0000            233   _S0MODE         BIT 0x9f
+0000            234   _SCON0_6        BIT 0x9e
+0000            235   _MCE0           BIT 0x9d
+0000            236   _REN0           BIT 0x9c
+0000            237   _TB80           BIT 0x9b
+0000            238   _RB80           BIT 0x9a
+0000            239   _TI0            BIT 0x99
+0000            240   _RI0            BIT 0x98
+0000            241   _SCON_6         BIT 0x9e
+0000            242   _MCE            BIT 0x9d
+0000            243   _REN            BIT 0x9c
+0000            244   _TB8            BIT 0x9b
+0000            245   _RB8            BIT 0x9a
+0000            246   _TI             BIT 0x99
+0000            247   _RI             BIT 0x98
+0000            248   _P2_0           BIT 0xa0
+0000            249   _P2_1           BIT 0xa1
+0000            250   _P2_2           BIT 0xa2
+0000            251   _P2_3           BIT 0xa3
+0000            252   _P2_4           BIT 0xa4
+0000            253   _P2_5           BIT 0xa5
+0000            254   _P2_6           BIT 0xa6
+0000            255   _P2_7           BIT 0xa7
+0000            256   _EA             BIT 0xaf
+0000            257   _ESPI0          BIT 0xae
+0000            258   _ET2            BIT 0xad
+0000            259   _ES0            BIT 0xac
+0000            260   _ET1            BIT 0xab
+0000            261   _EX1            BIT 0xaa
+0000            262   _ET0            BIT 0xa9
+0000            263   _EX0            BIT 0xa8
+0000            264   _P3_0           BIT 0xb0
+0000            265   _P3_1           BIT 0xb1
+0000            266   _P3_2           BIT 0xb2
+0000            267   _P3_3           BIT 0xb3
+0000            268   _P3_4           BIT 0xb4
+0000            269   _P3_5           BIT 0xb5
+0000            270   _P3_6           BIT 0xb6
+0000            271   _P3_7           BIT 0xb7
+0000            272   _IP_7           BIT 0xbf
+0000            273   _PSPI0          BIT 0xbe
+0000            274   _PT2            BIT 0xbd
+0000            275   _PS0            BIT 0xbc
+0000            276   _PT1            BIT 0xbb
+0000            277   _PX1            BIT 0xba
+0000            278   _PT0            BIT 0xb9
+0000            279   _PX0            BIT 0xb8
+0000            280   _MASTER0        BIT 0xc7
+0000            281   _TXMODE0        BIT 0xc6
+0000            282   _STA0           BIT 0xc5
+0000            283   _STO0           BIT 0xc4
+0000            284   _ACKRQ0         BIT 0xc3
+0000            285   _ARBLOST0       BIT 0xc2
+0000            286   _ACK0           BIT 0xc1
+0000            287   _SI0            BIT 0xc0
+0000            288   _MASTER1        BIT 0xc7
+0000            289   _TXMODE1        BIT 0xc6
+0000            290   _STA1           BIT 0xc5
+0000            291   _STO1           BIT 0xc4
+0000            292   _ACKRQ1         BIT 0xc3
+0000            293   _ARBLOST1       BIT 0xc2
+0000            294   _ACK1           BIT 0xc1
+0000            295   _SI1            BIT 0xc0
+0000            296   _TF2            BIT 0xcf
+0000            297   _TF2H           BIT 0xcf
+0000            298   _TF2L           BIT 0xce
+0000            299   _TF2LEN         BIT 0xcd
+0000            300   _TF2CEN         BIT 0xcc
+0000            301   _T2SPLIT        BIT 0xcb
+0000            302   _TR2            BIT 0xca
+0000            303   _T2CSS          BIT 0xc9
+0000            304   _T2XCLK         BIT 0xc8
+0000            305   _TF5H           BIT 0xcf
+0000            306   _TF5L           BIT 0xce
+0000            307   _TF5LEN         BIT 0xcd
+0000            308   _TMR5CN_4       BIT 0xcc
+0000            309   _T5SPLIT        BIT 0xcb
+0000            310   _TR5            BIT 0xca
+0000            311   _TMR5CN_1       BIT 0xc9
+0000            312   _T5XCLK         BIT 0xc8
+0000            313   _CY             BIT 0xd7
+0000            314   _AC             BIT 0xd6
+0000            315   _F0             BIT 0xd5
+0000            316   _RS1            BIT 0xd4
+0000            317   _RS0            BIT 0xd3
+0000            318   _OV             BIT 0xd2
+0000            319   _F1             BIT 0xd1
+0000            320   _PARITY         BIT 0xd0
+0000            321   _CF             BIT 0xdf
+0000            322   _CR             BIT 0xde
+0000            323   _PCA0CN_5       BIT 0xde
+0000            324   _CCF4           BIT 0xdc
+0000            325   _CCF3           BIT 0xdb
+0000            326   _CCF2           BIT 0xda
+0000            327   _CCF1           BIT 0xd9
+0000            328   _CCF0           BIT 0xd8
+0000            329   _ACC_7          BIT 0xe7
+0000            330   _ACC_6          BIT 0xe6
+0000            331   _ACC_5          BIT 0xe5
+0000            332   _ACC_4          BIT 0xe4
+0000            333   _ACC_3          BIT 0xe3
+0000            334   _ACC_2          BIT 0xe2
+0000            335   _ACC_1          BIT 0xe1
+0000            336   _ACC_0          BIT 0xe0
+0000            337   _AD0EN          BIT 0xef
+0000            338   _AD0TM          BIT 0xee
+0000            339   _AD0INT         BIT 0xed
+0000            340   _AD0BUSY        BIT 0xec
+0000            341   _AD0WINT        BIT 0xeb
+0000            342   _AD0CM2         BIT 0xea
+0000            343   _AD0CM1         BIT 0xe9
+0000            344   _AD0CM0         BIT 0xe8
+0000            345   _B_7            BIT 0xf7
+0000            346   _B_6            BIT 0xf6
+0000            347   _B_5            BIT 0xf5
+0000            348   _B_4            BIT 0xf4
+0000            349   _B_3            BIT 0xf3
+0000            350   _B_2            BIT 0xf2
+0000            351   _B_1            BIT 0xf1
+0000            352   _B_0            BIT 0xf0
+0000            353   _SPIF           BIT 0xff
+0000            354   _WCOL           BIT 0xfe
+0000            355   _MODF           BIT 0xfd
+0000            356   _RXOVRN         BIT 0xfc
+0000            357   _NSSMD1         BIT 0xfb
+0000            358   _NSSMD0         BIT 0xfa
+0000            359   _TXBMT          BIT 0xf9
+0000            360   _SPIEN          BIT 0xf8
+0000            361   ;--------------------------------------------------------
+0000            362   ; overlayable register banks
+0000            363   ;--------------------------------------------------------
+0000            364            rbank0 segment data overlay
+0000            365   ;--------------------------------------------------------
+0000            366   ; internal ram data
+0000            367   ;--------------------------------------------------------
+0000            368            rseg R_DSEG
+0000            369   _LCDprint_PARM_2:
+0000            370            ds 1
+0001            371   ;--------------------------------------------------------
+0001            372   ; overlayable items in internal ram 
+0001            373   ;--------------------------------------------------------
+0000            374            rseg    R_OSEG
+0000            375   ;--------------------------------------------------------
+0000            376   ; indirectly addressable internal ram data
+0000            377   ;--------------------------------------------------------
+0000            378            rseg R_ISEG
+0000            379   ;--------------------------------------------------------
+0000            380   ; absolute internal ram data
+0000            381   ;--------------------------------------------------------
+0000            382            DSEG
+0000            383   ;--------------------------------------------------------
+0000            384   ; bit data
+0000            385   ;--------------------------------------------------------
+0000            386            rseg R_BSEG
+0000            387   _LCDprint_PARM_3:
+0000            388            DBIT    1
+0001            389   ;--------------------------------------------------------
+0001            390   ; paged external ram data
+0001            391   ;--------------------------------------------------------
+0000            392            rseg R_PSEG
+0000            393   ;--------------------------------------------------------
+0000            394   ; external ram data
+0000            395   ;--------------------------------------------------------
+0000            396            rseg R_XSEG
+0000            397   ;--------------------------------------------------------
+0000            398   ; absolute external ram data
+0000            399   ;--------------------------------------------------------
+0000            400            XSEG
+0000            401   ;--------------------------------------------------------
+0000            402   ; external initialized ram data
+0000            403   ;--------------------------------------------------------
+0000            404            rseg R_IXSEG
+0000            405            rseg R_HOME
+0000            406            rseg R_GSINIT
+0000            407            rseg R_CSEG
+0000            408   ;--------------------------------------------------------
+0000            409   ; Reset entry point and interrupt vectors
+0000            410   ;--------------------------------------------------------
+0000            411            CSEG at 0x0000
+0000 020100     412            ljmp    _crt0
+0003            413   ;--------------------------------------------------------
+0003            414   ; global & static initialisations
+0003            415   ;--------------------------------------------------------
+0000            416            rseg R_HOME
+0000            417            rseg R_GSINIT
+0000            418            rseg R_GSINIT
+0000            419   ;--------------------------------------------------------
+0000            420   ; data variables initialization
+0000            421   ;--------------------------------------------------------
+0000            422            rseg R_DINIT
+0000            423            ; The linker places a 'ret' at the end of segment R_DINIT.
+0000            424   ;--------------------------------------------------------
+0000            425   ; code
+0000            426   ;--------------------------------------------------------
+0000            427            rseg R_CSEG
+0000            428   ;------------------------------------------------------------
+0000            429   ;Allocation info for local variables in function '_c51_external_startup'
+0000            430   ;------------------------------------------------------------
+0000            431   ;------------------------------------------------------------
+0000            432   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:19: char _c51_external_startup (void)
+0000            433   ;        -----------------------------------------
+0000            434   ;         function _c51_external_startup
+0000            435   ;        -----------------------------------------
+0000            436   __c51_external_startup:
+0000            437            using   0
+0000            438   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:21: PCA0MD&=(~0x40) ;    // DISABLE WDT: clear Watchdog Enable bit
+0000 53D9BF     439            anl     _PCA0MD,#0xBF
+0003            440   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:22: VDM0CN=0x80; // enable VDD monitor
+0003 75FF80     441            mov     _VDM0CN,#0x80
+0006            442   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:23: RSTSRC=0x02|0x04; // Enable reset on missing clock detector and VDD
+0006 75EF06     443            mov     _RSTSRC,#0x06
+0009            444   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:29: CLKSEL|=0b_0000_0010; // SYSCLK derived from the Internal High-Frequency Oscillator / 2.
+0009 43A902     445            orl     _CLKSEL,#0x02
+000C            446   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:35: OSCICN |= 0x03; // Configure internal oscillator for its maximum frequency
+000C 43B203     447            orl     _OSCICN,#0x03
+000F            448   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:37: P0MDOUT|=0x10; // Enable Uart TX as push-pull output
+000F 43A410     449            orl     _P0MDOUT,#0x10
+0012            450   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:38: P1MDOUT|=0b_0000_1111; // LCD's D4 to D7 are connected to P1.3 to P1.0
+0012 43A50F     451            orl     _P1MDOUT,#0x0F
+0015            452   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:39: P2MDOUT|=0b_0000_0111; // P2.2 is LCD's RS, P2.1 is LCD's RW, P2.0 is LCD's E
+0015 43A607     453            orl     _P2MDOUT,#0x07
+0018            454   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:40: XBR0=0x01; // Enable UART on P0.4(TX) and P0.5(RX)                     
+0018 75E101     455            mov     _XBR0,#0x01
+001B            456   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:41: XBR1=0x40; // Enable crossbar and weak pull-ups
+001B 75E240     457            mov     _XBR1,#0x40
+001E            458   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:44: TH1 = 0x10000-((SYSCLK/BAUDRATE)/2L);
+001E 758D98     459            mov     _TH1,#0x98
+0021            460   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:45: CKCON &= ~0x0B;                  // T1M = 1; SCA1:0 = xx
+0021 538EF4     461            anl     _CKCON,#0xF4
+0024            462   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:46: CKCON |=  0x08;
+0024 438E08     463            orl     _CKCON,#0x08
+0027            464   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:60: TL1 = TH1;     // Init timer 1
+0027 858D8B     465            mov     _TL1,_TH1
+002A            466   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:61: TMOD &= 0x0f;  // TMOD: timer 1 in 8-bit autoreload
+002A 53890F     467            anl     _TMOD,#0x0F
+002D            468   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:62: TMOD |= 0x20;                       
+002D 438920     469            orl     _TMOD,#0x20
+0030            470   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:63: TR1 = 1;       // Start timer1
+0030 D28E       471            setb    _TR1
+0032            472   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:64: SCON = 0x52;
+0032 759852     473            mov     _SCON,#0x52
+0035            474   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:66: return 0;
+0035 758200     475            mov     dpl,#0x00
+0038 22         476            ret
+0039            477   ;------------------------------------------------------------
+0039            478   ;Allocation info for local variables in function 'Timer3us'
+0039            479   ;------------------------------------------------------------
+0039            480   ;us                        Allocated to registers r2 
+0039            481   ;i                         Allocated to registers r3 
+0039            482   ;------------------------------------------------------------
+0039            483   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:70: void Timer3us(unsigned char us)
+0039            484   ;        -----------------------------------------
+0039            485   ;         function Timer3us
+0039            486   ;        -----------------------------------------
+0039            487   _Timer3us:
+0039 AA82       488            mov     r2,dpl
+003B            489   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:75: CKCON|=0b_0100_0000;
+003B 438E40     490            orl     _CKCON,#0x40
+003E            491   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:77: TMR3RL = (-(SYSCLK)/1000000L); // Set Timer3 to overflow in 1us.
+003E 7592E8     492            mov     _TMR3RL,#0xE8
+0041 7593FF     493            mov     (_TMR3RL >> 8),#0xFF
+0044            494   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:78: TMR3 = TMR3RL;                 // Initialize Timer3 for first overflow
+0044 859294     495            mov     _TMR3,_TMR3RL
+0047 859395     496            mov     (_TMR3 >> 8),(_TMR3RL >> 8)
+004A            497   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:80: TMR3CN = 0x04;                 // Sart Timer3 and clear overflow flag
+004A 759104     498            mov     _TMR3CN,#0x04
+004D            499   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:81: for (i = 0; i < us; i++)       // Count <us> overflows
+004D 7B00       500            mov     r3,#0x00
+004F            501   L003004?:
+004F C3         502            clr     c
+0050 EB         503            mov     a,r3
+0051 9A         504            subb    a,r2
+0052 5001       505            jnc     L003007?
+0054            506   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:83: while (!(TMR3CN & 0x80));  // Wait for overflow
+0054            507   L003001?:
+0054 E591       508            mov     a,_TMR3CN
+0056 30E730     509            jnb     acc.7,L003001?
+0059            510   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:84: TMR3CN &= ~(0x80);         // Clear overflow indicator
+0059 53917F     511            anl     _TMR3CN,#0x7F
+005C            512   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:81: for (i = 0; i < us; i++)       // Count <us> overflows
+005C 0B         513            inc     r3
+005D 8001       514            sjmp    L003004?
+005F            515   L003007?:
+005F            516   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:86: TMR3CN = 0 ;                   // Stop Timer3 and clear overflow flag
+005F 759100     517            mov     _TMR3CN,#0x00
+0062 22         518            ret
+0063            519   ;------------------------------------------------------------
+0063            520   ;Allocation info for local variables in function 'waitms'
+0063            521   ;------------------------------------------------------------
+0063            522   ;ms                        Allocated to registers r2 r3 
+0063            523   ;j                         Allocated to registers r4 r5 
+0063            524   ;k                         Allocated to registers r6 
+0063            525   ;------------------------------------------------------------
+0063            526   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:89: void waitms (unsigned int ms)
+0063            527   ;        -----------------------------------------
+0063            528   ;         function waitms
+0063            529   ;        -----------------------------------------
+0063            530   _waitms:
+0063 AA82       531            mov     r2,dpl
+0065 AB83       532            mov     r3,dph
+0067            533   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:93: for(j=0; j<ms; j++)
+0067 7C00       534            mov     r4,#0x00
+0069 7D00       535            mov     r5,#0x00
+006B            536   L004005?:
+006B C3         537            clr     c
+006C EC         538            mov     a,r4
+006D 9A         539            subb    a,r2
+006E ED         540            mov     a,r5
+006F 9B         541            subb    a,r3
+0070 5001       542            jnc     L004009?
+0072            543   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:94: for (k=0; k<4; k++) Timer3us(250);
+0072 7E00       544            mov     r6,#0x00
+0074            545   L004001?:
+0074 BE04B0     546            cjne    r6,#0x04,L004018?
+0077            547   L004018?:
+0077 5001       548            jnc     L004007?
+0079 7582FA     549            mov     dpl,#0xFA
+007C C002       550            push    ar2
+007E C003       551            push    ar3
+0080 C004       552            push    ar4
+0082 C005       553            push    ar5
+0084 C006       554            push    ar6
+0086 120100     555            lcall   _Timer3us
+0089 D006       556            pop     ar6
+008B D005       557            pop     ar5
+008D D004       558            pop     ar4
+008F D003       559            pop     ar3
+0091 D002       560            pop     ar2
+0093 0E         561            inc     r6
+0094 8001       562            sjmp    L004001?
+0096            563   L004007?:
+0096            564   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:93: for(j=0; j<ms; j++)
+0096 0C         565            inc     r4
+0097 BC00F0     566            cjne    r4,#0x00,L004005?
+009A 0D         567            inc     r5
+009B 8001       568            sjmp    L004005?
+009D            569   L004009?:
+009D 22         570            ret
+009E            571   ;------------------------------------------------------------
+009E            572   ;Allocation info for local variables in function 'LCD_pulse'
+009E            573   ;------------------------------------------------------------
+009E            574   ;------------------------------------------------------------
+009E            575   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:97: void LCD_pulse (void)
+009E            576   ;        -----------------------------------------
+009E            577   ;         function LCD_pulse
+009E            578   ;        -----------------------------------------
+009E            579   _LCD_pulse:
+009E            580   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:99: LCD_E=1;
+009E D297       581            setb    _P1_7
+00A0            582   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:100: Timer3us(40);
+00A0 758228     583            mov     dpl,#0x28
+00A3 120100     584            lcall   _Timer3us
+00A6            585   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:101: LCD_E=0;
+00A6 C297       586            clr     _P1_7
+00A8 22         587            ret
+00A9            588   ;------------------------------------------------------------
+00A9            589   ;Allocation info for local variables in function 'LCD_byte'
+00A9            590   ;------------------------------------------------------------
+00A9            591   ;x                         Allocated to registers r2 
+00A9            592   ;------------------------------------------------------------
+00A9            593   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:104: void LCD_byte (unsigned char x)
+00A9            594   ;        -----------------------------------------
+00A9            595   ;         function LCD_byte
+00A9            596   ;        -----------------------------------------
+00A9            597   _LCD_byte:
+00A9 AA82       598            mov     r2,dpl
+00AB            599   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:107: ACC=x; //Send high nible
+00AB 8AE0       600            mov     _ACC,r2
+00AD            601   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:108: LCD_D7=ACC_7;
+00AD A2E7       602            mov     c,_ACC_7
+00AF 9287       603            mov     _P0_7,c
+00B1            604   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:109: LCD_D6=ACC_6;
+00B1 A2E6       605            mov     c,_ACC_6
+00B3 9290       606            mov     _P1_0,c
+00B5            607   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:110: LCD_D5=ACC_5;
+00B5 A2E5       608            mov     c,_ACC_5
+00B7 9291       609            mov     _P1_1,c
+00B9            610   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:111: LCD_D4=ACC_4;
+00B9 A2E4       611            mov     c,_ACC_4
+00BB 9292       612            mov     _P1_2,c
+00BD            613   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:112: LCD_pulse();
+00BD C002       614            push    ar2
+00BF 120100     615            lcall   _LCD_pulse
+00C2            616   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:113: Timer3us(40);
+00C2 758228     617            mov     dpl,#0x28
+00C5 120100     618            lcall   _Timer3us
+00C8 D002       619            pop     ar2
+00CA            620   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:114: ACC=x; //Send low nible
+00CA 8AE0       621            mov     _ACC,r2
+00CC            622   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:115: LCD_D7=ACC_3;
+00CC A2E3       623            mov     c,_ACC_3
+00CE 9287       624            mov     _P0_7,c
+00D0            625   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:116: LCD_D6=ACC_2;
+00D0 A2E2       626            mov     c,_ACC_2
+00D2 9290       627            mov     _P1_0,c
+00D4            628   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:117: LCD_D5=ACC_1;
+00D4 A2E1       629            mov     c,_ACC_1
+00D6 9291       630            mov     _P1_1,c
+00D8            631   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:118: LCD_D4=ACC_0;
+00D8 A2E0       632            mov     c,_ACC_0
+00DA 9292       633            mov     _P1_2,c
+00DC            634   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:119: LCD_pulse();
+00DC 020100     635            ljmp    _LCD_pulse
+00DF            636   ;------------------------------------------------------------
+00DF            637   ;Allocation info for local variables in function 'WriteData'
+00DF            638   ;------------------------------------------------------------
+00DF            639   ;x                         Allocated to registers r2 
+00DF            640   ;------------------------------------------------------------
+00DF            641   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:122: void WriteData (unsigned char x)
+00DF            642   ;        -----------------------------------------
+00DF            643   ;         function WriteData
+00DF            644   ;        -----------------------------------------
+00DF            645   _WriteData:
+00DF AA82       646            mov     r2,dpl
+00E1            647   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:124: LCD_RS=1;
+00E1 D2A1       648            setb    _P2_1
+00E3            649   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:125: LCD_byte(x);
+00E3 8A82       650            mov     dpl,r2
+00E5 120100     651            lcall   _LCD_byte
+00E8            652   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:126: waitms(2);
+00E8 900002     653            mov     dptr,#0x0002
+00EB 020100     654            ljmp    _waitms
+00EE            655   ;------------------------------------------------------------
+00EE            656   ;Allocation info for local variables in function 'WriteCommand'
+00EE            657   ;------------------------------------------------------------
+00EE            658   ;x                         Allocated to registers r2 
+00EE            659   ;------------------------------------------------------------
+00EE            660   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:129: void WriteCommand (unsigned char x)
+00EE            661   ;        -----------------------------------------
+00EE            662   ;         function WriteCommand
+00EE            663   ;        -----------------------------------------
+00EE            664   _WriteCommand:
+00EE AA82       665            mov     r2,dpl
+00F0            666   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:131: LCD_RS=0;
+00F0 C2A1       667            clr     _P2_1
+00F2            668   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:132: LCD_byte(x);
+00F2 8A82       669            mov     dpl,r2
+00F4 120100     670            lcall   _LCD_byte
+00F7            671   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:133: waitms(5);
+00F7 900005     672            mov     dptr,#0x0005
+00FA 020100     673            ljmp    _waitms
+00FD            674   ;------------------------------------------------------------
+00FD            675   ;Allocation info for local variables in function 'LCD_4BIT'
+00FD            676   ;------------------------------------------------------------
+00FD            677   ;------------------------------------------------------------
+00FD            678   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:136: void LCD_4BIT (void)
+00FD            679   ;        -----------------------------------------
+00FD            680   ;         function LCD_4BIT
+00FD            681   ;        -----------------------------------------
+00FD            682   _LCD_4BIT:
+00FD            683   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:138: LCD_E=0; // Resting state of LCD's enable is zero
+00FD C297       684            clr     _P1_7
+00FF            685   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:139: LCD_RW=0; // We are only writing to the LCD in this program
+00FF C2A0       686            clr     _P2_0
+0101            687   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:140: waitms(20);
+0101 900014     688            mov     dptr,#0x0014
+0104 120100     689            lcall   _waitms
+0107            690   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:142: WriteCommand(0x33);
+0107 758233     691            mov     dpl,#0x33
+010A 120100     692            lcall   _WriteCommand
+010D            693   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:143: WriteCommand(0x33);
+010D 758233     694            mov     dpl,#0x33
+0110 120100     695            lcall   _WriteCommand
+0113            696   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:144: WriteCommand(0x32); // Change to 4-bit mode
+0113 758232     697            mov     dpl,#0x32
+0116 120100     698            lcall   _WriteCommand
+0119            699   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:147: WriteCommand(0x28);
+0119 758228     700            mov     dpl,#0x28
+011C 120100     701            lcall   _WriteCommand
+011F            702   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:148: WriteCommand(0x0c);
+011F 75820C     703            mov     dpl,#0x0C
+0122 120100     704            lcall   _WriteCommand
+0125            705   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:149: WriteCommand(0x01); // Clear screen command (takes some time)
+0125 758201     706            mov     dpl,#0x01
+0128 120100     707            lcall   _WriteCommand
+012B            708   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:150: waitms(20); // Wait for clear screen command to finsih.
+012B 900014     709            mov     dptr,#0x0014
+012E 020100     710            ljmp    _waitms
+0131            711   ;------------------------------------------------------------
+0131            712   ;Allocation info for local variables in function 'LCDprint'
+0131            713   ;------------------------------------------------------------
+0131            714   ;line                      Allocated with name '_LCDprint_PARM_2'
+0131            715   ;string                    Allocated to registers r2 r3 r4 
+0131            716   ;j                         Allocated to registers r5 r6 
+0131            717   ;------------------------------------------------------------
+0131            718   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:153: void LCDprint(char * string, unsigned char line, bit clear)
+0131            719   ;        -----------------------------------------
+0131            720   ;         function LCDprint
+0131            721   ;        -----------------------------------------
+0131            722   _LCDprint:
+0131 AA82       723            mov     r2,dpl
+0133 AB83       724            mov     r3,dph
+0135 ACF0       725            mov     r4,b
+0137            726   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:157: WriteCommand(line==2?0xc0:0x80);
+0137 7402       727            mov     a,#0x02
+0139 B58870     728            cjne    a,_LCDprint_PARM_2,L010013?
+013C 7DC0       729            mov     r5,#0xC0
+013E 8001       730            sjmp    L010014?
+0140            731   L010013?:
+0140 7D80       732            mov     r5,#0x80
+0142            733   L010014?:
+0142 8D82       734            mov     dpl,r5
+0144 C002       735            push    ar2
+0146 C003       736            push    ar3
+0148 C004       737            push    ar4
+014A 120100     738            lcall   _WriteCommand
+014D            739   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:158: waitms(5);
+014D 900005     740            mov     dptr,#0x0005
+0150 120100     741            lcall   _waitms
+0153 D004       742            pop     ar4
+0155 D003       743            pop     ar3
+0157 D002       744            pop     ar2
+0159            745   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:159: for(j=0; string[j]!=0; j++)   WriteData(string[j]);// Write the message
+0159 7D00       746            mov     r5,#0x00
+015B 7E00       747            mov     r6,#0x00
+015D            748   L010003?:
+015D ED         749            mov     a,r5
+015E 2A         750            add     a,r2
+015F FF         751            mov     r7,a
+0160 EE         752            mov     a,r6
+0161 3B         753            addc    a,r3
+0162 F8         754            mov     r0,a
+0163 8C01       755            mov     ar1,r4
+0165 8F82       756            mov     dpl,r7
+0167 8883       757            mov     dph,r0
+0169 89F0       758            mov     b,r1
+016B 120100     759            lcall   __gptrget
+016E FF         760            mov     r7,a
+016F 6001       761            jz      L010006?
+0171 8F82       762            mov     dpl,r7
+0173 C002       763            push    ar2
+0175 C003       764            push    ar3
+0177 C004       765            push    ar4
+0179 C005       766            push    ar5
+017B C006       767            push    ar6
+017D 120100     768            lcall   _WriteData
+0180 D006       769            pop     ar6
+0182 D005       770            pop     ar5
+0184 D004       771            pop     ar4
+0186 D003       772            pop     ar3
+0188 D002       773            pop     ar2
+018A 0D         774            inc     r5
+018B BD00F0     775            cjne    r5,#0x00,L010003?
+018E 0E         776            inc     r6
+018F 8001       777            sjmp    L010003?
+0191            778   L010006?:
+0191            779   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:160: if(clear) for(; j<CHARS_PER_LINE; j++) WriteData(' '); // Clear the rest of the line
+0191 3000B0     780            jnb     _LCDprint_PARM_3,L010011?
+0194 8D02       781            mov     ar2,r5
+0196 8E03       782            mov     ar3,r6
+0198            783   L010007?:
+0198 C3         784            clr     c
+0199 EA         785            mov     a,r2
+019A 9410       786            subb    a,#0x10
+019C EB         787            mov     a,r3
+019D 6480       788            xrl     a,#0x80
+019F 9480       789            subb    a,#0x80
+01A1 5001       790            jnc     L010011?
+01A3 758220     791            mov     dpl,#0x20
+01A6 C002       792            push    ar2
+01A8 C003       793            push    ar3
+01AA 120100     794            lcall   _WriteData
+01AD D003       795            pop     ar3
+01AF D002       796            pop     ar2
+01B1 0A         797            inc     r2
+01B2 BA00F0     798            cjne    r2,#0x00,L010007?
+01B5 0B         799            inc     r3
+01B6 8001       800            sjmp    L010007?
+01B8            801   L010011?:
+01B8 22         802            ret
+01B9            803   ;------------------------------------------------------------
+01B9            804   ;Allocation info for local variables in function 'main'
+01B9            805   ;------------------------------------------------------------
+01B9            806   ;------------------------------------------------------------
+01B9            807   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:164: void main (void)
+01B9            808   ;        -----------------------------------------
+01B9            809   ;         function main
+01B9            810   ;        -----------------------------------------
+01B9            811   _main:
+01B9            812   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:167: LCD_4BIT();
+01B9 120100     813            lcall   _LCD_4BIT
+01BC            814   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:170: LCDprint("LCD 4-bit test:", 1, 1);
+01BC 758801     815            mov     _LCDprint_PARM_2,#0x01
+01BF D200       816            setb    _LCDprint_PARM_3
+01C1 909630     817            mov     dptr,#__str_0
+01C4 75F080     818            mov     b,#0x80
+01C7 120100     819            lcall   _LCDprint
+01CA            820   ;        C:\Users\jeffreyliou\Desktop\elec291\lab4\hellolcd.c:171: LCDprint("Hello, World!", 2, 1);
+01CA 758802     821            mov     _LCDprint_PARM_2,#0x02
+01CD D200       822            setb    _LCDprint_PARM_3
+01CF 909670     823            mov     dptr,#__str_1
+01D2 75F080     824            mov     b,#0x80
+01D5 020100     825            ljmp    _LCDprint
+01D8            826            rseg R_CSEG
+01D8            827   
+0000            828            rseg R_XINIT
+0000            829   
+0000            830            rseg R_CONST
+0000            831   __str_0:
+0000 4C434420   832            db 'LCD 4-bit test:'
+     342D6269
+     74207465
+     73743A
+000F 00         833            db 0x00
+0010            834   __str_1:
+0010 48656C6C   835            db 'Hello, World!'
+     6F2C2057
+     6F726C64
+     21
+001D 00         836            db 0x00
+001E            837   
+0003            838            CSEG
+0003            839   
+0003            840   end

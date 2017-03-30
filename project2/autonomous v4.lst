@@ -1,0 +1,1968 @@
+0000              1   ;--------------------------------------------------------
+0000              2   ; File Created by C51
+0000              3   ; Version 1.0.0 #1069 (Apr 23 2015) (MSVC)
+0000              4   ; This file was generated Thu Apr 07 01:07:38 2016
+0000              5   ;--------------------------------------------------------
+                  5   $name autonomous_v4
+                  6   $optc51 --model-small
+0000              8            R_DSEG    segment data
+0000              9            R_CSEG    segment code
+0000             10            R_BSEG    segment bit
+0000             11            R_XSEG    segment xdata
+0000             12            R_PSEG    segment xdata
+0000             13            R_ISEG    segment idata
+0000             14            R_OSEG    segment data overlay
+0000             15            BIT_BANK  segment data overlay
+0000             16            R_HOME    segment code
+0000             17            R_GSINIT  segment code
+0000             18            R_IXSEG   segment xdata
+0000             19            R_CONST   segment code
+0000             20            R_XINIT   segment code
+0000             21            R_DINIT   segment code
+0000             22   
+0000             23   ;--------------------------------------------------------
+0000             24   ; Public variables in this module
+0000             25   ;--------------------------------------------------------
+0000             26            public _InitPinADC_PARM_2
+0000             27            public _main
+0000             28            public _getchar1
+0000             29            public _Timer2_ISR
+0000             30            public _Volts_at_Pin
+0000             31            public _ADC_at_Pin
+0000             32            public _InitPinADC
+0000             33            public _InitADC
+0000             34            public _waitms
+0000             35            public _Timer3us
+0000             36            public __c51_external_startup
+0000             37            public _UART1_Init
+0000             38            public _switchs
+0000             39            public _interrupt_switch
+0000             40            public _PWM_4
+0000             41            public _PWM_3
+0000             42            public _PWM_2
+0000             43            public _PWM_1
+0000             44            public _proceed
+0000             45            public _pwm_count
+0000             46   ;--------------------------------------------------------
+0000             47   ; Special Function Registers
+0000             48   ;--------------------------------------------------------
+0000             49   _P0             DATA 0x80
+0000             50   _SP             DATA 0x81
+0000             51   _DPL            DATA 0x82
+0000             52   _DPH            DATA 0x83
+0000             53   _EMI0TC         DATA 0x84
+0000             54   _EMI0CF         DATA 0x85
+0000             55   _OSCLCN         DATA 0x86
+0000             56   _PCON           DATA 0x87
+0000             57   _TCON           DATA 0x88
+0000             58   _TMOD           DATA 0x89
+0000             59   _TL0            DATA 0x8a
+0000             60   _TL1            DATA 0x8b
+0000             61   _TH0            DATA 0x8c
+0000             62   _TH1            DATA 0x8d
+0000             63   _CKCON          DATA 0x8e
+0000             64   _PSCTL          DATA 0x8f
+0000             65   _P1             DATA 0x90
+0000             66   _TMR3CN         DATA 0x91
+0000             67   _TMR4CN         DATA 0x91
+0000             68   _TMR3RLL        DATA 0x92
+0000             69   _TMR4RLL        DATA 0x92
+0000             70   _TMR3RLH        DATA 0x93
+0000             71   _TMR4RLH        DATA 0x93
+0000             72   _TMR3L          DATA 0x94
+0000             73   _TMR4L          DATA 0x94
+0000             74   _TMR3H          DATA 0x95
+0000             75   _TMR4H          DATA 0x95
+0000             76   _USB0ADR        DATA 0x96
+0000             77   _USB0DAT        DATA 0x97
+0000             78   _SCON           DATA 0x98
+0000             79   _SCON0          DATA 0x98
+0000             80   _SBUF           DATA 0x99
+0000             81   _SBUF0          DATA 0x99
+0000             82   _CPT1CN         DATA 0x9a
+0000             83   _CPT0CN         DATA 0x9b
+0000             84   _CPT1MD         DATA 0x9c
+0000             85   _CPT0MD         DATA 0x9d
+0000             86   _CPT1MX         DATA 0x9e
+0000             87   _CPT0MX         DATA 0x9f
+0000             88   _P2             DATA 0xa0
+0000             89   _SPI0CFG        DATA 0xa1
+0000             90   _SPI0CKR        DATA 0xa2
+0000             91   _SPI0DAT        DATA 0xa3
+0000             92   _P0MDOUT        DATA 0xa4
+0000             93   _P1MDOUT        DATA 0xa5
+0000             94   _P2MDOUT        DATA 0xa6
+0000             95   _P3MDOUT        DATA 0xa7
+0000             96   _IE             DATA 0xa8
+0000             97   _CLKSEL         DATA 0xa9
+0000             98   _EMI0CN         DATA 0xaa
+0000             99   __XPAGE         DATA 0xaa
+0000            100   _SBCON1         DATA 0xac
+0000            101   _P4MDOUT        DATA 0xae
+0000            102   _PFE0CN         DATA 0xaf
+0000            103   _P3             DATA 0xb0
+0000            104   _OSCXCN         DATA 0xb1
+0000            105   _OSCICN         DATA 0xb2
+0000            106   _OSCICL         DATA 0xb3
+0000            107   _SBRLL1         DATA 0xb4
+0000            108   _SBRLH1         DATA 0xb5
+0000            109   _FLSCL          DATA 0xb6
+0000            110   _FLKEY          DATA 0xb7
+0000            111   _IP             DATA 0xb8
+0000            112   _CLKMUL         DATA 0xb9
+0000            113   _SMBTC          DATA 0xb9
+0000            114   _AMX0N          DATA 0xba
+0000            115   _AMX0P          DATA 0xbb
+0000            116   _ADC0CF         DATA 0xbc
+0000            117   _ADC0L          DATA 0xbd
+0000            118   _ADC0H          DATA 0xbe
+0000            119   _SFRPAGE        DATA 0xbf
+0000            120   _SMB0CN         DATA 0xc0
+0000            121   _SMB1CN         DATA 0xc0
+0000            122   _SMB0CF         DATA 0xc1
+0000            123   _SMB1CF         DATA 0xc1
+0000            124   _SMB0DAT        DATA 0xc2
+0000            125   _SMB1DAT        DATA 0xc2
+0000            126   _ADC0GTL        DATA 0xc3
+0000            127   _ADC0GTH        DATA 0xc4
+0000            128   _ADC0LTL        DATA 0xc5
+0000            129   _ADC0LTH        DATA 0xc6
+0000            130   _P4             DATA 0xc7
+0000            131   _TMR2CN         DATA 0xc8
+0000            132   _TMR5CN         DATA 0xc8
+0000            133   _REG01CN        DATA 0xc9
+0000            134   _TMR2RLL        DATA 0xca
+0000            135   _TMR5RLL        DATA 0xca
+0000            136   _TMR2RLH        DATA 0xcb
+0000            137   _TMR5RLH        DATA 0xcb
+0000            138   _TMR2L          DATA 0xcc
+0000            139   _TMR5L          DATA 0xcc
+0000            140   _TMR2H          DATA 0xcd
+0000            141   _TMR5H          DATA 0xcd
+0000            142   _SMB0ADM        DATA 0xce
+0000            143   _SMB1ADM        DATA 0xce
+0000            144   _SMB0ADR        DATA 0xcf
+0000            145   _SMB1ADR        DATA 0xcf
+0000            146   _PSW            DATA 0xd0
+0000            147   _REF0CN         DATA 0xd1
+0000            148   _SCON1          DATA 0xd2
+0000            149   _SBUF1          DATA 0xd3
+0000            150   _P0SKIP         DATA 0xd4
+0000            151   _P1SKIP         DATA 0xd5
+0000            152   _P2SKIP         DATA 0xd6
+0000            153   _USB0XCN        DATA 0xd7
+0000            154   _PCA0CN         DATA 0xd8
+0000            155   _PCA0MD         DATA 0xd9
+0000            156   _PCA0CPM0       DATA 0xda
+0000            157   _PCA0CPM1       DATA 0xdb
+0000            158   _PCA0CPM2       DATA 0xdc
+0000            159   _PCA0CPM3       DATA 0xdd
+0000            160   _PCA0CPM4       DATA 0xde
+0000            161   _P3SKIP         DATA 0xdf
+0000            162   _ACC            DATA 0xe0
+0000            163   _XBR0           DATA 0xe1
+0000            164   _XBR1           DATA 0xe2
+0000            165   _XBR2           DATA 0xe3
+0000            166   _IT01CF         DATA 0xe4
+0000            167   _CKCON1         DATA 0xe4
+0000            168   _SMOD1          DATA 0xe5
+0000            169   _EIE1           DATA 0xe6
+0000            170   _EIE2           DATA 0xe7
+0000            171   _ADC0CN         DATA 0xe8
+0000            172   _PCA0CPL1       DATA 0xe9
+0000            173   _PCA0CPH1       DATA 0xea
+0000            174   _PCA0CPL2       DATA 0xeb
+0000            175   _PCA0CPH2       DATA 0xec
+0000            176   _PCA0CPL3       DATA 0xed
+0000            177   _PCA0CPH3       DATA 0xee
+0000            178   _RSTSRC         DATA 0xef
+0000            179   _B              DATA 0xf0
+0000            180   _P0MDIN         DATA 0xf1
+0000            181   _P1MDIN         DATA 0xf2
+0000            182   _P2MDIN         DATA 0xf3
+0000            183   _P3MDIN         DATA 0xf4
+0000            184   _P4MDIN         DATA 0xf5
+0000            185   _EIP1           DATA 0xf6
+0000            186   _EIP2           DATA 0xf7
+0000            187   _SPI0CN         DATA 0xf8
+0000            188   _PCA0L          DATA 0xf9
+0000            189   _PCA0H          DATA 0xfa
+0000            190   _PCA0CPL0       DATA 0xfb
+0000            191   _PCA0CPH0       DATA 0xfc
+0000            192   _PCA0CPL4       DATA 0xfd
+0000            193   _PCA0CPH4       DATA 0xfe
+0000            194   _VDM0CN         DATA 0xff
+0000            195   _DPTR           DATA 0x8382
+0000            196   _TMR2RL         DATA 0xcbca
+0000            197   _TMR3RL         DATA 0x9392
+0000            198   _TMR4RL         DATA 0x9392
+0000            199   _TMR5RL         DATA 0xcbca
+0000            200   _TMR2           DATA 0xcdcc
+0000            201   _TMR3           DATA 0x9594
+0000            202   _TMR4           DATA 0x9594
+0000            203   _TMR5           DATA 0xcdcc
+0000            204   _SBRL1          DATA 0xb5b4
+0000            205   _ADC0           DATA 0xbebd
+0000            206   _ADC0GT         DATA 0xc4c3
+0000            207   _ADC0LT         DATA 0xc6c5
+0000            208   _PCA0           DATA 0xfaf9
+0000            209   _PCA0CP1        DATA 0xeae9
+0000            210   _PCA0CP2        DATA 0xeceb
+0000            211   _PCA0CP3        DATA 0xeeed
+0000            212   _PCA0CP0        DATA 0xfcfb
+0000            213   _PCA0CP4        DATA 0xfefd
+0000            214   ;--------------------------------------------------------
+0000            215   ; special function bits
+0000            216   ;--------------------------------------------------------
+0000            217   _P0_0           BIT 0x80
+0000            218   _P0_1           BIT 0x81
+0000            219   _P0_2           BIT 0x82
+0000            220   _P0_3           BIT 0x83
+0000            221   _P0_4           BIT 0x84
+0000            222   _P0_5           BIT 0x85
+0000            223   _P0_6           BIT 0x86
+0000            224   _P0_7           BIT 0x87
+0000            225   _TF1            BIT 0x8f
+0000            226   _TR1            BIT 0x8e
+0000            227   _TF0            BIT 0x8d
+0000            228   _TR0            BIT 0x8c
+0000            229   _IE1            BIT 0x8b
+0000            230   _IT1            BIT 0x8a
+0000            231   _IE0            BIT 0x89
+0000            232   _IT0            BIT 0x88
+0000            233   _P1_0           BIT 0x90
+0000            234   _P1_1           BIT 0x91
+0000            235   _P1_2           BIT 0x92
+0000            236   _P1_3           BIT 0x93
+0000            237   _P1_4           BIT 0x94
+0000            238   _P1_5           BIT 0x95
+0000            239   _P1_6           BIT 0x96
+0000            240   _P1_7           BIT 0x97
+0000            241   _S0MODE         BIT 0x9f
+0000            242   _SCON0_6        BIT 0x9e
+0000            243   _MCE0           BIT 0x9d
+0000            244   _REN0           BIT 0x9c
+0000            245   _TB80           BIT 0x9b
+0000            246   _RB80           BIT 0x9a
+0000            247   _TI0            BIT 0x99
+0000            248   _RI0            BIT 0x98
+0000            249   _SCON_6         BIT 0x9e
+0000            250   _MCE            BIT 0x9d
+0000            251   _REN            BIT 0x9c
+0000            252   _TB8            BIT 0x9b
+0000            253   _RB8            BIT 0x9a
+0000            254   _TI             BIT 0x99
+0000            255   _RI             BIT 0x98
+0000            256   _P2_0           BIT 0xa0
+0000            257   _P2_1           BIT 0xa1
+0000            258   _P2_2           BIT 0xa2
+0000            259   _P2_3           BIT 0xa3
+0000            260   _P2_4           BIT 0xa4
+0000            261   _P2_5           BIT 0xa5
+0000            262   _P2_6           BIT 0xa6
+0000            263   _P2_7           BIT 0xa7
+0000            264   _EA             BIT 0xaf
+0000            265   _ESPI0          BIT 0xae
+0000            266   _ET2            BIT 0xad
+0000            267   _ES0            BIT 0xac
+0000            268   _ET1            BIT 0xab
+0000            269   _EX1            BIT 0xaa
+0000            270   _ET0            BIT 0xa9
+0000            271   _EX0            BIT 0xa8
+0000            272   _P3_0           BIT 0xb0
+0000            273   _P3_1           BIT 0xb1
+0000            274   _P3_2           BIT 0xb2
+0000            275   _P3_3           BIT 0xb3
+0000            276   _P3_4           BIT 0xb4
+0000            277   _P3_5           BIT 0xb5
+0000            278   _P3_6           BIT 0xb6
+0000            279   _P3_7           BIT 0xb7
+0000            280   _IP_7           BIT 0xbf
+0000            281   _PSPI0          BIT 0xbe
+0000            282   _PT2            BIT 0xbd
+0000            283   _PS0            BIT 0xbc
+0000            284   _PT1            BIT 0xbb
+0000            285   _PX1            BIT 0xba
+0000            286   _PT0            BIT 0xb9
+0000            287   _PX0            BIT 0xb8
+0000            288   _MASTER0        BIT 0xc7
+0000            289   _TXMODE0        BIT 0xc6
+0000            290   _STA0           BIT 0xc5
+0000            291   _STO0           BIT 0xc4
+0000            292   _ACKRQ0         BIT 0xc3
+0000            293   _ARBLOST0       BIT 0xc2
+0000            294   _ACK0           BIT 0xc1
+0000            295   _SI0            BIT 0xc0
+0000            296   _MASTER1        BIT 0xc7
+0000            297   _TXMODE1        BIT 0xc6
+0000            298   _STA1           BIT 0xc5
+0000            299   _STO1           BIT 0xc4
+0000            300   _ACKRQ1         BIT 0xc3
+0000            301   _ARBLOST1       BIT 0xc2
+0000            302   _ACK1           BIT 0xc1
+0000            303   _SI1            BIT 0xc0
+0000            304   _TF2            BIT 0xcf
+0000            305   _TF2H           BIT 0xcf
+0000            306   _TF2L           BIT 0xce
+0000            307   _TF2LEN         BIT 0xcd
+0000            308   _TF2CEN         BIT 0xcc
+0000            309   _T2SPLIT        BIT 0xcb
+0000            310   _TR2            BIT 0xca
+0000            311   _T2CSS          BIT 0xc9
+0000            312   _T2XCLK         BIT 0xc8
+0000            313   _TF5H           BIT 0xcf
+0000            314   _TF5L           BIT 0xce
+0000            315   _TF5LEN         BIT 0xcd
+0000            316   _TMR5CN_4       BIT 0xcc
+0000            317   _T5SPLIT        BIT 0xcb
+0000            318   _TR5            BIT 0xca
+0000            319   _TMR5CN_1       BIT 0xc9
+0000            320   _T5XCLK         BIT 0xc8
+0000            321   _CY             BIT 0xd7
+0000            322   _AC             BIT 0xd6
+0000            323   _F0             BIT 0xd5
+0000            324   _RS1            BIT 0xd4
+0000            325   _RS0            BIT 0xd3
+0000            326   _OV             BIT 0xd2
+0000            327   _F1             BIT 0xd1
+0000            328   _PARITY         BIT 0xd0
+0000            329   _CF             BIT 0xdf
+0000            330   _CR             BIT 0xde
+0000            331   _PCA0CN_5       BIT 0xde
+0000            332   _CCF4           BIT 0xdc
+0000            333   _CCF3           BIT 0xdb
+0000            334   _CCF2           BIT 0xda
+0000            335   _CCF1           BIT 0xd9
+0000            336   _CCF0           BIT 0xd8
+0000            337   _ACC_7          BIT 0xe7
+0000            338   _ACC_6          BIT 0xe6
+0000            339   _ACC_5          BIT 0xe5
+0000            340   _ACC_4          BIT 0xe4
+0000            341   _ACC_3          BIT 0xe3
+0000            342   _ACC_2          BIT 0xe2
+0000            343   _ACC_1          BIT 0xe1
+0000            344   _ACC_0          BIT 0xe0
+0000            345   _AD0EN          BIT 0xef
+0000            346   _AD0TM          BIT 0xee
+0000            347   _AD0INT         BIT 0xed
+0000            348   _AD0BUSY        BIT 0xec
+0000            349   _AD0WINT        BIT 0xeb
+0000            350   _AD0CM2         BIT 0xea
+0000            351   _AD0CM1         BIT 0xe9
+0000            352   _AD0CM0         BIT 0xe8
+0000            353   _B_7            BIT 0xf7
+0000            354   _B_6            BIT 0xf6
+0000            355   _B_5            BIT 0xf5
+0000            356   _B_4            BIT 0xf4
+0000            357   _B_3            BIT 0xf3
+0000            358   _B_2            BIT 0xf2
+0000            359   _B_1            BIT 0xf1
+0000            360   _B_0            BIT 0xf0
+0000            361   _SPIF           BIT 0xff
+0000            362   _WCOL           BIT 0xfe
+0000            363   _MODF           BIT 0xfd
+0000            364   _RXOVRN         BIT 0xfc
+0000            365   _NSSMD1         BIT 0xfb
+0000            366   _NSSMD0         BIT 0xfa
+0000            367   _TXBMT          BIT 0xf9
+0000            368   _SPIEN          BIT 0xf8
+0000            369   ;--------------------------------------------------------
+0000            370   ; overlayable register banks
+0000            371   ;--------------------------------------------------------
+0000            372            rbank0 segment data overlay
+0000            373   ;--------------------------------------------------------
+0000            374   ; internal ram data
+0000            375   ;--------------------------------------------------------
+0000            376            rseg R_DSEG
+0000            377   _pwm_count:
+0000            378            ds 1
+0001            379   _proceed:
+0001            380            ds 1
+0002            381   _PWM_1:
+0002            382            ds 2
+0004            383   _PWM_2:
+0004            384            ds 2
+0006            385   _PWM_3:
+0006            386            ds 2
+0008            387   _PWM_4:
+0008            388            ds 2
+000A            389   _interrupt_switch:
+000A            390            ds 2
+000C            391   _switchs:
+000C            392            ds 2
+000E            393   _UART1_Init_sloc0_1_0:
+000E            394            ds 4
+0012            395   _main_V_1_72:
+0012            396            ds 12
+001E            397   _main_R_1_72:
+001E            398            ds 4
+0022            399   _main_L_1_72:
+0022            400            ds 4
+0026            401   ;--------------------------------------------------------
+0026            402   ; overlayable items in internal ram 
+0026            403   ;--------------------------------------------------------
+0000            404            rseg    R_OSEG
+0000            405            rseg    R_OSEG
+0000            406   _InitPinADC_PARM_2:
+0000            407            ds 1
+0001            408            rseg    R_OSEG
+0001            409            rseg    R_OSEG
+0001            410   ;--------------------------------------------------------
+0001            411   ; indirectly addressable internal ram data
+0001            412   ;--------------------------------------------------------
+0000            413            rseg R_ISEG
+0000            414   ;--------------------------------------------------------
+0000            415   ; absolute internal ram data
+0000            416   ;--------------------------------------------------------
+0000            417            DSEG
+0000            418   ;--------------------------------------------------------
+0000            419   ; bit data
+0000            420   ;--------------------------------------------------------
+0000            421            rseg R_BSEG
+0000            422   _Timer2_ISR_sloc0_1_0:
+0000            423            DBIT    1
+0001            424   ;--------------------------------------------------------
+0001            425   ; paged external ram data
+0001            426   ;--------------------------------------------------------
+0000            427            rseg R_PSEG
+0000            428   ;--------------------------------------------------------
+0000            429   ; external ram data
+0000            430   ;--------------------------------------------------------
+0000            431            rseg R_XSEG
+0000            432   ;--------------------------------------------------------
+0000            433   ; absolute external ram data
+0000            434   ;--------------------------------------------------------
+0000            435            XSEG
+0000            436   ;--------------------------------------------------------
+0000            437   ; external initialized ram data
+0000            438   ;--------------------------------------------------------
+0000            439            rseg R_IXSEG
+0000            440            rseg R_HOME
+0000            441            rseg R_GSINIT
+0000            442            rseg R_CSEG
+0000            443   ;--------------------------------------------------------
+0000            444   ; Reset entry point and interrupt vectors
+0000            445   ;--------------------------------------------------------
+0000            446            CSEG at 0x0000
+0000 020100     447            ljmp    _crt0
+002B            448            CSEG at 0x002b
+002B 020100     449            ljmp    _Timer2_ISR
+002E            450   ;--------------------------------------------------------
+002E            451   ; global & static initialisations
+002E            452   ;--------------------------------------------------------
+0000            453            rseg R_HOME
+0000            454            rseg R_GSINIT
+0000            455            rseg R_GSINIT
+0000            456   ;--------------------------------------------------------
+0000            457   ; data variables initialization
+0000            458   ;--------------------------------------------------------
+0000            459            rseg R_DINIT
+0000            460   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:13: volatile unsigned char pwm_count=0;
+0000 75E000     461            mov     _pwm_count,#0x00
+0003            462   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:15: volatile unsigned int PWM_1=0;
+0003 E4         463            clr     a
+0004 F560       464            mov     _PWM_1,a
+0006 F561       465            mov     (_PWM_1 + 1),a
+0008            466   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:16: volatile unsigned int PWM_2=0;
+0008 E4         467            clr     a
+0009 F520       468            mov     _PWM_2,a
+000B F521       469            mov     (_PWM_2 + 1),a
+000D            470   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:17: volatile unsigned int PWM_3=0;
+000D E4         471            clr     a
+000E F5E0       472            mov     _PWM_3,a
+0010 F5E1       473            mov     (_PWM_3 + 1),a
+0012            474   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:18: volatile unsigned int PWM_4=0;
+0012 E4         475            clr     a
+0013 F5A0       476            mov     _PWM_4,a
+0015 F5A1       477            mov     (_PWM_4 + 1),a
+0017            478   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:19: volatile unsigned int interrupt_switch=0;
+0017 E4         479            clr     a
+0018 F560       480            mov     _interrupt_switch,a
+001A F561       481            mov     (_interrupt_switch + 1),a
+001C            482   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:20: volatile unsigned int switchs=0;
+001C E4         483            clr     a
+001D F510       484            mov     _switchs,a
+001F F511       485            mov     (_switchs + 1),a
+0021            486            ; The linker places a 'ret' at the end of segment R_DINIT.
+0021            487   ;--------------------------------------------------------
+0021            488   ; code
+0021            489   ;--------------------------------------------------------
+0000            490            rseg R_CSEG
+0000            491   ;------------------------------------------------------------
+0000            492   ;Allocation info for local variables in function 'UART1_Init'
+0000            493   ;------------------------------------------------------------
+0000            494   ;baudrate                  Allocated to registers r2 r3 r4 r5 
+0000            495   ;sloc0                     Allocated with name '_UART1_Init_sloc0_1_0'
+0000            496   ;------------------------------------------------------------
+0000            497   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:23: void UART1_Init (unsigned long baudrate)
+0000            498   ;        -----------------------------------------
+0000            499   ;         function UART1_Init
+0000            500   ;        -----------------------------------------
+0000            501   _UART1_Init:
+0000            502            using   0
+0000 AA82       503            mov     r2,dpl
+0002 AB83       504            mov     r3,dph
+0004 ACF0       505            mov     r4,b
+0006 FD         506            mov     r5,a
+0007            507   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:25: SMOD1 = 0x0C; // no parity, 8 data bits, 1 stop bit
+0007 75E50C     508            mov     _SMOD1,#0x0C
+000A            509   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:26: SCON1 = 0x10;
+000A 75D210     510            mov     _SCON1,#0x10
+000D            511   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:27: if (((SYSCLK/baudrate)/2L)/0xFFFFL < 1)
+000D 8A00       512            mov     __divulong_PARM_2,r2
+000F 8B01       513            mov     (__divulong_PARM_2 + 1),r3
+0011 8C02       514            mov     (__divulong_PARM_2 + 2),r4
+0013 8D03       515            mov     (__divulong_PARM_2 + 3),r5
+0015 906C00     516            mov     dptr,#0x6C00
+0018 75F0DC     517            mov     b,#0xDC
+001B 7402       518            mov     a,#0x02
+001D 120100     519            lcall   __divulong
+0020 AA82       520            mov     r2,dpl
+0022 AB83       521            mov     r3,dph
+0024 ACF0       522            mov     r4,b
+0026 C3         523            clr     c
+0027 13         524            rrc     a
+0028 F5BB       525            mov     (_UART1_Init_sloc0_1_0 + 3),a
+002A EC         526            mov     a,r4
+002B 13         527            rrc     a
+002C F5BA       528            mov     (_UART1_Init_sloc0_1_0 + 2),a
+002E EB         529            mov     a,r3
+002F 13         530            rrc     a
+0030 F5B9       531            mov     (_UART1_Init_sloc0_1_0 + 1),a
+0032 EA         532            mov     a,r2
+0033 13         533            rrc     a
+0034 F5B8       534            mov     _UART1_Init_sloc0_1_0,a
+0036 7500FF     535            mov     __divulong_PARM_2,#0xFF
+0039 7501FF     536            mov     (__divulong_PARM_2 + 1),#0xFF
+003C 750200     537            mov     (__divulong_PARM_2 + 2),#0x00
+003F 750300     538            mov     (__divulong_PARM_2 + 3),#0x00
+0042 85B882     539            mov     dpl,_UART1_Init_sloc0_1_0
+0045 85B983     540            mov     dph,(_UART1_Init_sloc0_1_0 + 1)
+0048 85BAF0     541            mov     b,(_UART1_Init_sloc0_1_0 + 2)
+004B E5BB       542            mov     a,(_UART1_Init_sloc0_1_0 + 3)
+004D 120100     543            lcall   __divulong
+0050 AE82       544            mov     r6,dpl
+0052 AF83       545            mov     r7,dph
+0054 A8F0       546            mov     r0,b
+0056 F9         547            mov     r1,a
+0057 C3         548            clr     c
+0058 EE         549            mov     a,r6
+0059 9401       550            subb    a,#0x01
+005B EF         551            mov     a,r7
+005C 9400       552            subb    a,#0x00
+005E E8         553            mov     a,r0
+005F 9400       554            subb    a,#0x00
+0061 E9         555            mov     a,r1
+0062 9400       556            subb    a,#0x00
+0064 5001       557            jnc     L002008?
+0066            558   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:29: SBRL1 = 0x10000L-((SYSCLK/baudrate)/2L);
+0066 E4         559            clr     a
+0067 C3         560            clr     c
+0068 95B8       561            subb    a,_UART1_Init_sloc0_1_0
+006A FA         562            mov     r2,a
+006B E4         563            clr     a
+006C 95B9       564            subb    a,(_UART1_Init_sloc0_1_0 + 1)
+006E FB         565            mov     r3,a
+006F 7401       566            mov     a,#0x01
+0071 95BA       567            subb    a,(_UART1_Init_sloc0_1_0 + 2)
+0073 FC         568            mov     r4,a
+0074 E4         569            clr     a
+0075 95BB       570            subb    a,(_UART1_Init_sloc0_1_0 + 3)
+0077 FD         571            mov     r5,a
+0078 8AB4       572            mov     _SBRL1,r2
+007A 8BB5       573            mov     (_SBRL1 >> 8),r3
+007C            574   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:30: SBCON1 |= 0x03; // set prescaler to 1
+007C 43AC03     575            orl     _SBCON1,#0x03
+007F 020100     576            ljmp    L002009?
+0082            577   L002008?:
+0082            578   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:32: else if (((SYSCLK/baudrate)/2L)/0xFFFFL < 4)
+0082 C3         579            clr     c
+0083 EE         580            mov     a,r6
+0084 9404       581            subb    a,#0x04
+0086 EF         582            mov     a,r7
+0087 9400       583            subb    a,#0x00
+0089 E8         584            mov     a,r0
+008A 9400       585            subb    a,#0x00
+008C E9         586            mov     a,r1
+008D 9400       587            subb    a,#0x00
+008F 5001       588            jnc     L002005?
+0091            589   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:34: SBRL1 = 0x10000L-(((SYSCLK/baudrate)/2L)/4L);
+0091 E5BB       590            mov     a,(_UART1_Init_sloc0_1_0 + 3)
+0093 C3         591            clr     c
+0094 13         592            rrc     a
+0095 FD         593            mov     r5,a
+0096 E5BA       594            mov     a,(_UART1_Init_sloc0_1_0 + 2)
+0098 13         595            rrc     a
+0099 FC         596            mov     r4,a
+009A E5B9       597            mov     a,(_UART1_Init_sloc0_1_0 + 1)
+009C 13         598            rrc     a
+009D FB         599            mov     r3,a
+009E E5B8       600            mov     a,_UART1_Init_sloc0_1_0
+00A0 13         601            rrc     a
+00A1 FA         602            mov     r2,a
+00A2 ED         603            mov     a,r5
+00A3 C3         604            clr     c
+00A4 13         605            rrc     a
+00A5 FD         606            mov     r5,a
+00A6 EC         607            mov     a,r4
+00A7 13         608            rrc     a
+00A8 FC         609            mov     r4,a
+00A9 EB         610            mov     a,r3
+00AA 13         611            rrc     a
+00AB FB         612            mov     r3,a
+00AC EA         613            mov     a,r2
+00AD 13         614            rrc     a
+00AE FA         615            mov     r2,a
+00AF E4         616            clr     a
+00B0 C3         617            clr     c
+00B1 9A         618            subb    a,r2
+00B2 FA         619            mov     r2,a
+00B3 E4         620            clr     a
+00B4 9B         621            subb    a,r3
+00B5 FB         622            mov     r3,a
+00B6 7401       623            mov     a,#0x01
+00B8 9C         624            subb    a,r4
+00B9 FC         625            mov     r4,a
+00BA E4         626            clr     a
+00BB 9D         627            subb    a,r5
+00BC FD         628            mov     r5,a
+00BD 8AB4       629            mov     _SBRL1,r2
+00BF 8BB5       630            mov     (_SBRL1 >> 8),r3
+00C1            631   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:35: SBCON1 &= ~0x03;
+00C1 53ACFC     632            anl     _SBCON1,#0xFC
+00C4            633   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:36: SBCON1 |= 0x01; // set prescaler to 4
+00C4 43AC01     634            orl     _SBCON1,#0x01
+00C7 020100     635            ljmp    L002009?
+00CA            636   L002005?:
+00CA            637   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:38: else if (((SYSCLK/baudrate)/2L)/0xFFFFL < 12)
+00CA C3         638            clr     c
+00CB EE         639            mov     a,r6
+00CC 940C       640            subb    a,#0x0C
+00CE EF         641            mov     a,r7
+00CF 9400       642            subb    a,#0x00
+00D1 E8         643            mov     a,r0
+00D2 9400       644            subb    a,#0x00
+00D4 E9         645            mov     a,r1
+00D5 9400       646            subb    a,#0x00
+00D7 5001       647            jnc     L002002?
+00D9            648   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:40: SBRL1 = 0x10000L-(((SYSCLK/baudrate)/2L)/12L);
+00D9 75000C     649            mov     __divulong_PARM_2,#0x0C
+00DC E4         650            clr     a
+00DD F501       651            mov     (__divulong_PARM_2 + 1),a
+00DF F502       652            mov     (__divulong_PARM_2 + 2),a
+00E1 F503       653            mov     (__divulong_PARM_2 + 3),a
+00E3 85B882     654            mov     dpl,_UART1_Init_sloc0_1_0
+00E6 85B983     655            mov     dph,(_UART1_Init_sloc0_1_0 + 1)
+00E9 85BAF0     656            mov     b,(_UART1_Init_sloc0_1_0 + 2)
+00EC E5BB       657            mov     a,(_UART1_Init_sloc0_1_0 + 3)
+00EE 120100     658            lcall   __divulong
+00F1 AA82       659            mov     r2,dpl
+00F3 AB83       660            mov     r3,dph
+00F5 ACF0       661            mov     r4,b
+00F7 FD         662            mov     r5,a
+00F8 E4         663            clr     a
+00F9 C3         664            clr     c
+00FA 9A         665            subb    a,r2
+00FB FA         666            mov     r2,a
+00FC E4         667            clr     a
+00FD 9B         668            subb    a,r3
+00FE FB         669            mov     r3,a
+00FF 7401       670            mov     a,#0x01
+0101 9C         671            subb    a,r4
+0102 FC         672            mov     r4,a
+0103 E4         673            clr     a
+0104 9D         674            subb    a,r5
+0105 FD         675            mov     r5,a
+0106 8AB4       676            mov     _SBRL1,r2
+0108 8BB5       677            mov     (_SBRL1 >> 8),r3
+010A            678   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:41: SBCON1 &= ~0x03; // set prescaler to 12
+010A 53ACFC     679            anl     _SBCON1,#0xFC
+010D 8001       680            sjmp    L002009?
+010F            681   L002002?:
+010F            682   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:44: SBRL1 = 0x10000L-(((SYSCLK/baudrate)/2L)/48L);
+010F 750030     683            mov     __divulong_PARM_2,#0x30
+0112 E4         684            clr     a
+0113 F501       685            mov     (__divulong_PARM_2 + 1),a
+0115 F502       686            mov     (__divulong_PARM_2 + 2),a
+0117 F503       687            mov     (__divulong_PARM_2 + 3),a
+0119 85B882     688            mov     dpl,_UART1_Init_sloc0_1_0
+011C 85B983     689            mov     dph,(_UART1_Init_sloc0_1_0 + 1)
+011F 85BAF0     690            mov     b,(_UART1_Init_sloc0_1_0 + 2)
+0122 E5BB       691            mov     a,(_UART1_Init_sloc0_1_0 + 3)
+0124 120100     692            lcall   __divulong
+0127 AA82       693            mov     r2,dpl
+0129 AB83       694            mov     r3,dph
+012B ACF0       695            mov     r4,b
+012D FD         696            mov     r5,a
+012E E4         697            clr     a
+012F C3         698            clr     c
+0130 9A         699            subb    a,r2
+0131 FA         700            mov     r2,a
+0132 E4         701            clr     a
+0133 9B         702            subb    a,r3
+0134 FB         703            mov     r3,a
+0135 7401       704            mov     a,#0x01
+0137 9C         705            subb    a,r4
+0138 FC         706            mov     r4,a
+0139 E4         707            clr     a
+013A 9D         708            subb    a,r5
+013B FD         709            mov     r5,a
+013C 8AB4       710            mov     _SBRL1,r2
+013E 8BB5       711            mov     (_SBRL1 >> 8),r3
+0140            712   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:45: SBCON1 &= ~0x03;
+0140 53ACFC     713            anl     _SBCON1,#0xFC
+0143            714   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:46: SBCON1 |= 0x02; // set prescaler to ?
+0143 43AC02     715            orl     _SBCON1,#0x02
+0146            716   L002009?:
+0146            717   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:48: SCON1 |= 0x02; // indicate ready for TX
+0146 43D202     718            orl     _SCON1,#0x02
+0149            719   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:49: SBCON1 |= 0x40; // enable baud rate generator
+0149 43AC40     720            orl     _SBCON1,#0x40
+014C 22         721            ret
+014D            722   ;------------------------------------------------------------
+014D            723   ;Allocation info for local variables in function '_c51_external_startup'
+014D            724   ;------------------------------------------------------------
+014D            725   ;------------------------------------------------------------
+014D            726   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:53: char _c51_external_startup (void)
+014D            727   ;        -----------------------------------------
+014D            728   ;         function _c51_external_startup
+014D            729   ;        -----------------------------------------
+014D            730   __c51_external_startup:
+014D            731   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:55: PCA0MD&=(~0x40) ;    // DISABLE WDT: clear Watchdog Enable bit
+014D 53D9BF     732            anl     _PCA0MD,#0xBF
+0150            733   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:56: VDM0CN=0x80; // enable VDD monitor
+0150 75FF80     734            mov     _VDM0CN,#0x80
+0153            735   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:57: RSTSRC=0x02|0x04; // Enable reset on missing clock detector and VDD
+0153 75EF06     736            mov     _RSTSRC,#0x06
+0156            737   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:65: CLKSEL|=0b_0000_0011; // SYSCLK derived from the Internal High-Frequency Oscillator / 1.
+0156 43A903     738            orl     _CLKSEL,#0x03
+0159            739   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:69: OSCICN |= 0x03; // Configure internal oscillator for its maximum frequency
+0159 43B203     740            orl     _OSCICN,#0x03
+015C            741   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:72: SCON0 = 0x52; 
+015C 759852     742            mov     _SCON0,#0x52
+015F            743   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:73: UART1_Init(100);
+015F 900064     744            mov     dptr,#(0x64&0x00ff)
+0162 E4         745            clr     a
+0163 F5F0       746            mov     b,a
+0165 120100     747            lcall   _UART1_Init
+0168            748   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:75: TH1 = 0x10000-((SYSCLK/BAUDRATE)/2L);
+0168 758D30     749            mov     _TH1,#0x30
+016B            750   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:76: CKCON &= ~0x0B;                  // T1M = 1; SCA1:0 = xx
+016B 538EF4     751            anl     _CKCON,#0xF4
+016E            752   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:77: CKCON |=  0x08;
+016E 438E08     753            orl     _CKCON,#0x08
+0171            754   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:90: TL1 = TH1;      // Init Timer1
+0171 858D8B     755            mov     _TL1,_TH1
+0174            756   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:91: TMOD &= ~0xf0;  // TMOD: timer 1 in 8-bit autoreload
+0174 53890F     757            anl     _TMOD,#0x0F
+0177            758   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:92: TMOD |=  0x20;                       
+0177 438920     759            orl     _TMOD,#0x20
+017A            760   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:93: TR1 = 1; // START Timer1
+017A D28E       761            setb    _TR1
+017C            762   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:94: TI = 1;  // Indicate TX0 ready
+017C D299       763            setb    _TI
+017E            764   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:97: P0MDOUT |= 0x01;  // set P0.0 and P0.4 as push-pull outputs
+017E 43A401     765            orl     _P0MDOUT,#0x01
+0181            766   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:98: P2MDOUT |= 0b0000_0110;   // Make the LED (P2.2) a push-pull output.  P2.1 used for debuging.
+0181 43A606     767            orl     _P2MDOUT,#0x06
+0184            768   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:99: XBR0 = 0b0000_0101;       // Enable SMBus pins and UART pins P0.4(TX) and P0.5(RX)
+0184 75E105     769            mov     _XBR0,#0x05
+0187            770   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:100: XBR1 = 0x40;              // Enable crossbar and weak pull-ups
+0187 75E240     771            mov     _XBR1,#0x40
+018A            772   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:101: XBR2 = 0x01;
+018A 75E301     773            mov     _XBR2,#0x01
+018D            774   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:103: TMR2CN=0x00;   // Stop Timer2; Clear TF2;
+018D 75C800     775            mov     _TMR2CN,#0x00
+0190            776   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:104: CKCON|=0b_0001_0000;
+0190 438E10     777            orl     _CKCON,#0x10
+0193            778   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:105: TMR2RL=(-(SYSCLK/(2*48))/(100L)); // Initialize reload value
+0193 75CA78     779            mov     _TMR2RL,#0x78
+0196 75CBEC     780            mov     (_TMR2RL >> 8),#0xEC
+0199            781   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:106: TMR2=0xffff;   // Set to reload immediately
+0199 75CCFF     782            mov     _TMR2,#0xFF
+019C 75CDFF     783            mov     (_TMR2 >> 8),#0xFF
+019F            784   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:107: ET2=1;         // Enable Timer2 interrupts
+019F D2AD       785            setb    _ET2
+01A1            786   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:108: TR2=1;         // Start Timer2
+01A1 D2CA       787            setb    _TR2
+01A3            788   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:110: EA=1; // Enable interrupts
+01A3 D2AF       789            setb    _EA
+01A5            790   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:112: return 0;
+01A5 758200     791            mov     dpl,#0x00
+01A8 22         792            ret
+01A9            793   ;------------------------------------------------------------
+01A9            794   ;Allocation info for local variables in function 'Timer3us'
+01A9            795   ;------------------------------------------------------------
+01A9            796   ;us                        Allocated to registers r2 
+01A9            797   ;i                         Allocated to registers r3 
+01A9            798   ;------------------------------------------------------------
+01A9            799   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:116: void Timer3us(unsigned char us)
+01A9            800   ;        -----------------------------------------
+01A9            801   ;         function Timer3us
+01A9            802   ;        -----------------------------------------
+01A9            803   _Timer3us:
+01A9 AA82       804            mov     r2,dpl
+01AB            805   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:121: CKCON|=0b_0100_0000;
+01AB 438E40     806            orl     _CKCON,#0x40
+01AE            807   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:123: TMR3RL = (-(SYSCLK)/1000000L); // Set Timer3 to overflow in 1us.
+01AE 7592D0     808            mov     _TMR3RL,#0xD0
+01B1 7593FF     809            mov     (_TMR3RL >> 8),#0xFF
+01B4            810   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:124: TMR3 = TMR3RL;                 // Initialize Timer3 for first overflow
+01B4 859294     811            mov     _TMR3,_TMR3RL
+01B7 859395     812            mov     (_TMR3 >> 8),(_TMR3RL >> 8)
+01BA            813   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:126: TMR3CN = 0x04;                 // Sart Timer3 and clear overflow flag
+01BA 759104     814            mov     _TMR3CN,#0x04
+01BD            815   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:127: for (i = 0; i < us; i++)       // Count <us> overflows
+01BD 7B00       816            mov     r3,#0x00
+01BF            817   L004004?:
+01BF C3         818            clr     c
+01C0 EB         819            mov     a,r3
+01C1 9A         820            subb    a,r2
+01C2 5001       821            jnc     L004007?
+01C4            822   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:129: while (!(TMR3CN & 0x80));  // Wait for overflow
+01C4            823   L004001?:
+01C4 E591       824            mov     a,_TMR3CN
+01C6 30E718     825            jnb     acc.7,L004001?
+01C9            826   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:130: TMR3CN &= ~(0x80);         // Clear overflow indicator
+01C9 53917F     827            anl     _TMR3CN,#0x7F
+01CC            828   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:127: for (i = 0; i < us; i++)       // Count <us> overflows
+01CC 0B         829            inc     r3
+01CD 8001       830            sjmp    L004004?
+01CF            831   L004007?:
+01CF            832   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:132: TMR3CN = 0 ;                   // Stop Timer3 and clear overflow flag
+01CF 759100     833            mov     _TMR3CN,#0x00
+01D2 22         834            ret
+01D3            835   ;------------------------------------------------------------
+01D3            836   ;Allocation info for local variables in function 'waitms'
+01D3            837   ;------------------------------------------------------------
+01D3            838   ;ms                        Allocated to registers r2 r3 
+01D3            839   ;j                         Allocated to registers r2 r3 
+01D3            840   ;------------------------------------------------------------
+01D3            841   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:135: void waitms (unsigned int ms)
+01D3            842   ;        -----------------------------------------
+01D3            843   ;         function waitms
+01D3            844   ;        -----------------------------------------
+01D3            845   _waitms:
+01D3 AA82       846            mov     r2,dpl
+01D5 AB83       847            mov     r3,dph
+01D7            848   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:138: for(j=ms; j!=0; j--)
+01D7            849   L005001?:
+01D7 BA00D8     850            cjne    r2,#0x00,L005010?
+01DA BB00D8     851            cjne    r3,#0x00,L005010?
+01DD 22         852            ret
+01DE            853   L005010?:
+01DE            854   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:140: Timer3us(249);
+01DE 7582F9     855            mov     dpl,#0xF9
+01E1 C002       856            push    ar2
+01E3 C003       857            push    ar3
+01E5 120100     858            lcall   _Timer3us
+01E8            859   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:141: Timer3us(249);
+01E8 7582F9     860            mov     dpl,#0xF9
+01EB 120100     861            lcall   _Timer3us
+01EE            862   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:142: Timer3us(249);
+01EE 7582F9     863            mov     dpl,#0xF9
+01F1 120100     864            lcall   _Timer3us
+01F4            865   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:143: Timer3us(250);
+01F4 7582FA     866            mov     dpl,#0xFA
+01F7 120100     867            lcall   _Timer3us
+01FA D003       868            pop     ar3
+01FC D002       869            pop     ar2
+01FE            870   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:138: for(j=ms; j!=0; j--)
+01FE 1A         871            dec     r2
+01FF BAFF18     872            cjne    r2,#0xff,L005011?
+0202 1B         873            dec     r3
+0203            874   L005011?:
+0203 8001       875            sjmp    L005001?
+0205            876   ;------------------------------------------------------------
+0205            877   ;Allocation info for local variables in function 'InitADC'
+0205            878   ;------------------------------------------------------------
+0205            879   ;------------------------------------------------------------
+0205            880   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:147: void InitADC (void)
+0205            881   ;        -----------------------------------------
+0205            882   ;         function InitADC
+0205            883   ;        -----------------------------------------
+0205            884   _InitADC:
+0205            885   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:150: ADC0CF = 0xF8; // SAR clock = 31, Right-justified result
+0205 75BCF8     886            mov     _ADC0CF,#0xF8
+0208            887   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:151: ADC0CN = 0b_1000_0000; // AD0EN=1, AD0TM=0
+0208 75E880     888            mov     _ADC0CN,#0x80
+020B            889   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:152: REF0CN = 0b_0000_1000; //Select VDD as the voltage reference for the converter
+020B 75D108     890            mov     _REF0CN,#0x08
+020E 22         891            ret
+020F            892   ;------------------------------------------------------------
+020F            893   ;Allocation info for local variables in function 'InitPinADC'
+020F            894   ;------------------------------------------------------------
+020F            895   ;pinno                     Allocated with name '_InitPinADC_PARM_2'
+020F            896   ;portno                    Allocated to registers r2 
+020F            897   ;mask                      Allocated to registers r3 
+020F            898   ;------------------------------------------------------------
+020F            899   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:155: void InitPinADC (unsigned char portno, unsigned char pinno)
+020F            900   ;        -----------------------------------------
+020F            901   ;         function InitPinADC
+020F            902   ;        -----------------------------------------
+020F            903   _InitPinADC:
+020F AA82       904            mov     r2,dpl
+0211            905   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:159: mask=1<<pinno;
+0211 8540F0     906            mov     b,_InitPinADC_PARM_2
+0214 05F0       907            inc     b
+0216 7401       908            mov     a,#0x01
+0218 8001       909            sjmp    L007012?
+021A            910   L007010?:
+021A 25E0       911            add     a,acc
+021C            912   L007012?:
+021C D5F098     913            djnz    b,L007010?
+021F FB         914            mov     r3,a
+0220            915   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:161: switch (portno)
+0220 EA         916            mov     a,r2
+0221 24FC       917            add     a,#0xff - 0x03
+0223 4001       918            jc      L007007?
+0225 EA         919            mov     a,r2
+0226 2A         920            add     a,r2
+0227 2A         921            add     a,r2
+0228 909818     922            mov     dptr,#L007014?
+022B 73         923            jmp     @a+dptr
+022C            924   L007014?:
+022C 020100     925            ljmp    L007001?
+022F 020100     926            ljmp    L007002?
+0232 020100     927            ljmp    L007003?
+0235 020100     928            ljmp    L007004?
+0238            929   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:163: case 0:
+0238            930   L007001?:
+0238            931   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:164: P0MDIN &= (~mask); // Set pin as analog input
+0238 EB         932            mov     a,r3
+0239 F4         933            cpl     a
+023A 52F1       934            anl     _P0MDIN,a
+023C            935   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:165: P0SKIP |= mask; // Skip Crossbar decoding for this pin
+023C EB         936            mov     a,r3
+023D 42D4       937            orl     _P0SKIP,a
+023F            938   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:166: break;
+023F            939   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:167: case 1:
+023F 22         940            ret
+0240            941   L007002?:
+0240            942   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:168: P1MDIN &= (~mask); // Set pin as analog input
+0240 EB         943            mov     a,r3
+0241 F4         944            cpl     a
+0242 52F2       945            anl     _P1MDIN,a
+0244            946   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:169: P1SKIP |= mask; // Skip Crossbar decoding for this pin
+0244 EB         947            mov     a,r3
+0245 42D5       948            orl     _P1SKIP,a
+0247            949   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:170: break;
+0247            950   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:171: case 2:
+0247 22         951            ret
+0248            952   L007003?:
+0248            953   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:172: P2MDIN &= (~mask); // Set pin as analog input
+0248 EB         954            mov     a,r3
+0249 F4         955            cpl     a
+024A 52F3       956            anl     _P2MDIN,a
+024C            957   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:173: P2SKIP |= mask; // Skip Crossbar decoding for this pin
+024C EB         958            mov     a,r3
+024D 42D6       959            orl     _P2SKIP,a
+024F            960   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:174: break;
+024F            961   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:175: case 3:
+024F 22         962            ret
+0250            963   L007004?:
+0250            964   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:176: P3MDIN &= (~mask); // Set pin as analog input
+0250 EB         965            mov     a,r3
+0251 F4         966            cpl     a
+0252 FA         967            mov     r2,a
+0253 52F4       968            anl     _P3MDIN,a
+0255            969   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:177: P3SKIP |= mask; // Skip Crossbar decoding for this pin
+0255 EB         970            mov     a,r3
+0256 42DF       971            orl     _P3SKIP,a
+0258            972   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:181: }
+0258            973   L007007?:
+0258 22         974            ret
+0259            975   ;------------------------------------------------------------
+0259            976   ;Allocation info for local variables in function 'ADC_at_Pin'
+0259            977   ;------------------------------------------------------------
+0259            978   ;pin                       Allocated to registers 
+0259            979   ;------------------------------------------------------------
+0259            980   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:184: unsigned int ADC_at_Pin(unsigned char pin)
+0259            981   ;        -----------------------------------------
+0259            982   ;         function ADC_at_Pin
+0259            983   ;        -----------------------------------------
+0259            984   _ADC_at_Pin:
+0259 8582BB     985            mov     _AMX0P,dpl
+025C            986   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:187: AMX0N = LQFP32_MUX_GND;  // GND is negative input (Single-ended Mode)
+025C 75BA1F     987            mov     _AMX0N,#0x1F
+025F            988   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:189: AD0BUSY=1;
+025F D2EC       989            setb    _AD0BUSY
+0261            990   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:190: while (AD0BUSY); // Wait for dummy conversion to finish
+0261            991   L008001?:
+0261 20EC58     992            jb      _AD0BUSY,L008001?
+0264            993   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:192: AD0BUSY = 1;
+0264 D2EC       994            setb    _AD0BUSY
+0266            995   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:193: while (AD0BUSY); // Wait for conversion to complete
+0266            996   L008004?:
+0266 20EC98     997            jb      _AD0BUSY,L008004?
+0269            998   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:194: return (ADC0L+(ADC0H*0x100));
+0269 AABD       999            mov     r2,_ADC0L
+026B 7B00      1000            mov     r3,#0x00
+026D ADBE      1001            mov     r5,_ADC0H
+026F 7C00      1002            mov     r4,#0x00
+0271 EC        1003            mov     a,r4
+0272 2A        1004            add     a,r2
+0273 F582      1005            mov     dpl,a
+0275 ED        1006            mov     a,r5
+0276 3B        1007            addc    a,r3
+0277 F583      1008            mov     dph,a
+0279 22        1009            ret
+027A           1010   ;------------------------------------------------------------
+027A           1011   ;Allocation info for local variables in function 'Volts_at_Pin'
+027A           1012   ;------------------------------------------------------------
+027A           1013   ;pin                       Allocated to registers r2 
+027A           1014   ;------------------------------------------------------------
+027A           1015   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:197: float Volts_at_Pin(unsigned char pin)
+027A           1016   ;        -----------------------------------------
+027A           1017   ;         function Volts_at_Pin
+027A           1018   ;        -----------------------------------------
+027A           1019   _Volts_at_Pin:
+027A           1020   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:199: return ((ADC_at_Pin(pin)*3.30)/1024.0);
+027A 120100    1021            lcall   _ADC_at_Pin
+027D 120100    1022            lcall   ___uint2fs
+0280 AA82      1023            mov     r2,dpl
+0282 AB83      1024            mov     r3,dph
+0284 ACF0      1025            mov     r4,b
+0286 FD        1026            mov     r5,a
+0287 C002      1027            push    ar2
+0289 C003      1028            push    ar3
+028B C004      1029            push    ar4
+028D C005      1030            push    ar5
+028F 903333    1031            mov     dptr,#0x3333
+0292 75F053    1032            mov     b,#0x53
+0295 7440      1033            mov     a,#0x40
+0297 120100    1034            lcall   ___fsmul
+029A AA82      1035            mov     r2,dpl
+029C AB83      1036            mov     r3,dph
+029E ACF0      1037            mov     r4,b
+02A0 FD        1038            mov     r5,a
+02A1 E581      1039            mov     a,sp
+02A3 24FC      1040            add     a,#0xfc
+02A5 F581      1041            mov     sp,a
+02A7 E4        1042            clr     a
+02A8 C0E0      1043            push    acc
+02AA C0E0      1044            push    acc
+02AC 7480      1045            mov     a,#0x80
+02AE C0E0      1046            push    acc
+02B0 7444      1047            mov     a,#0x44
+02B2 C0E0      1048            push    acc
+02B4 8A82      1049            mov     dpl,r2
+02B6 8B83      1050            mov     dph,r3
+02B8 8CF0      1051            mov     b,r4
+02BA ED        1052            mov     a,r5
+02BB 120100    1053            lcall   ___fsdiv
+02BE AA82      1054            mov     r2,dpl
+02C0 AB83      1055            mov     r3,dph
+02C2 ACF0      1056            mov     r4,b
+02C4 FD        1057            mov     r5,a
+02C5 E581      1058            mov     a,sp
+02C7 24FC      1059            add     a,#0xfc
+02C9 F581      1060            mov     sp,a
+02CB 8A82      1061            mov     dpl,r2
+02CD 8B83      1062            mov     dph,r3
+02CF 8CF0      1063            mov     b,r4
+02D1 ED        1064            mov     a,r5
+02D2 22        1065            ret
+02D3           1066   ;------------------------------------------------------------
+02D3           1067   ;Allocation info for local variables in function 'Timer2_ISR'
+02D3           1068   ;------------------------------------------------------------
+02D3           1069   ;------------------------------------------------------------
+02D3           1070   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:202: void Timer2_ISR (void) interrupt 5
+02D3           1071   ;        -----------------------------------------
+02D3           1072   ;         function Timer2_ISR
+02D3           1073   ;        -----------------------------------------
+02D3           1074   _Timer2_ISR:
+02D3 C0E0      1075            push    acc
+02D5 C082      1076            push    dpl
+02D7 C083      1077            push    dph
+02D9 C002      1078            push    ar2
+02DB C003      1079            push    ar3
+02DD C0D0      1080            push    psw
+02DF 75D000    1081            mov     psw,#0x00
+02E2           1082   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:204: TF2H = 0; // Clear Timer2 interrupt flag
+02E2 C2CF      1083            clr     _TF2H
+02E4           1084   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:206: pwm_count++;
+02E4 05E0      1085            inc     _pwm_count
+02E6           1086   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:207: if(pwm_count>100) pwm_count=0;
+02E6 E5E0      1087            mov     a,_pwm_count
+02E8 249B      1088            add     a,#0xff - 0x64
+02EA 5001      1089            jnc     L010002?
+02EC 75E000    1090            mov     _pwm_count,#0x00
+02EF           1091   L010002?:
+02EF           1092   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:209: if (interrupt_switch==0)
+02EF E560      1093            mov     a,_interrupt_switch
+02F1 4561      1094            orl     a,(_interrupt_switch + 1)
+02F3 6001      1095            jz      L010019?
+02F5 020100    1096            ljmp    L010012?
+02F8           1097   L010019?:
+02F8           1098   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:211: switch(switchs)
+02F8 AA10      1099            mov     r2,_switchs
+02FA AB11      1100            mov     r3,(_switchs + 1)
+02FC C3        1101            clr     c
+02FD 7406      1102            mov     a,#0x06
+02FF 9A        1103            subb    a,r2
+0300 E4        1104            clr     a
+0301 9B        1105            subb    a,r3
+0302 5001      1106            jnc     L010020?
+0304 020100    1107            ljmp    L010012?
+0307           1108   L010020?:
+0307 EA        1109            mov     a,r2
+0308 2A        1110            add     a,r2
+0309 2A        1111            add     a,r2
+030A 909C18    1112            mov     dptr,#L010021?
+030D 73        1113            jmp     @a+dptr
+030E           1114   L010021?:
+030E 020100    1115            ljmp    L010003?
+0311 020100    1116            ljmp    L010004?
+0314 020100    1117            ljmp    L010005?
+0317 020100    1118            ljmp    L010006?
+031A 020100    1119            ljmp    L010007?
+031D 020100    1120            ljmp    L010008?
+0320 020100    1121            ljmp    L010009?
+0323           1122   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:213: case 0:
+0323           1123   L010003?:
+0323           1124   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:214: PWM_1 = 0;
+0323           1125   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:215: PWM_2 = 0;
+0323           1126   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:216: PWM_3 = 0;
+0323           1127   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:217: PWM_4 = 0;
+0323 E4        1128            clr     a
+0324 F560      1129            mov     _PWM_1,a
+0326 F561      1130            mov     (_PWM_1 + 1),a
+0328 F520      1131            mov     _PWM_2,a
+032A F521      1132            mov     (_PWM_2 + 1),a
+032C F5E0      1133            mov     _PWM_3,a
+032E F5E1      1134            mov     (_PWM_3 + 1),a
+0330 F5A0      1135            mov     _PWM_4,a
+0332 F5A1      1136            mov     (_PWM_4 + 1),a
+0334           1137   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:218: break;
+0334 020100    1138            ljmp    L010012?
+0337           1139   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:219: case 1:
+0337           1140   L010004?:
+0337           1141   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:220: PWM_1 = 0;
+0337 E4        1142            clr     a
+0338 F560      1143            mov     _PWM_1,a
+033A F561      1144            mov     (_PWM_1 + 1),a
+033C           1145   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:221: PWM_2 = 100;
+033C 752064    1146            mov     _PWM_2,#0x64
+033F E4        1147            clr     a
+0340 F521      1148            mov     (_PWM_2 + 1),a
+0342           1149   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:222: PWM_3 = 0;
+0342 E4        1150            clr     a
+0343 F5E0      1151            mov     _PWM_3,a
+0345 F5E1      1152            mov     (_PWM_3 + 1),a
+0347           1153   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:223: PWM_4 = 100;
+0347 75A064    1154            mov     _PWM_4,#0x64
+034A E4        1155            clr     a
+034B F5A1      1156            mov     (_PWM_4 + 1),a
+034D           1157   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:224: break;
+034D           1158   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:225: case 2:
+034D 8001      1159            sjmp    L010012?
+034F           1160   L010005?:
+034F           1161   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:226: PWM_1 = 100;
+034F 756064    1162            mov     _PWM_1,#0x64
+0352 E4        1163            clr     a
+0353 F561      1164            mov     (_PWM_1 + 1),a
+0355           1165   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:227: PWM_2 = 0;
+0355 E4        1166            clr     a
+0356 F520      1167            mov     _PWM_2,a
+0358 F521      1168            mov     (_PWM_2 + 1),a
+035A           1169   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:228: PWM_3 = 100;
+035A 75E064    1170            mov     _PWM_3,#0x64
+035D E4        1171            clr     a
+035E F5E1      1172            mov     (_PWM_3 + 1),a
+0360           1173   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:229: PWM_4 = 0;
+0360 E4        1174            clr     a
+0361 F5A0      1175            mov     _PWM_4,a
+0363 F5A1      1176            mov     (_PWM_4 + 1),a
+0365           1177   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:230: break;
+0365           1178   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:231: case 3:
+0365 8001      1179            sjmp    L010012?
+0367           1180   L010006?:
+0367           1181   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:232: PWM_1 = 100;
+0367 756064    1182            mov     _PWM_1,#0x64
+036A E4        1183            clr     a
+036B F561      1184            mov     (_PWM_1 + 1),a
+036D           1185   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:233: PWM_2 = 0;
+036D           1186   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:234: PWM_3 = 0;
+036D E4        1187            clr     a
+036E F520      1188            mov     _PWM_2,a
+0370 F521      1189            mov     (_PWM_2 + 1),a
+0372 F5E0      1190            mov     _PWM_3,a
+0374 F5E1      1191            mov     (_PWM_3 + 1),a
+0376           1192   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:235: PWM_4 = 50;
+0376 75A032    1193            mov     _PWM_4,#0x32
+0379 E4        1194            clr     a
+037A F5A1      1195            mov     (_PWM_4 + 1),a
+037C           1196   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:236: break;
+037C           1197   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:237: case 4:
+037C 8001      1198            sjmp    L010012?
+037E           1199   L010007?:
+037E           1200   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:238: PWM_1 = 0;
+037E E4        1201            clr     a
+037F F560      1202            mov     _PWM_1,a
+0381 F561      1203            mov     (_PWM_1 + 1),a
+0383           1204   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:239: PWM_2 = 50;
+0383 752032    1205            mov     _PWM_2,#0x32
+0386 E4        1206            clr     a
+0387 F521      1207            mov     (_PWM_2 + 1),a
+0389           1208   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:240: PWM_3 = 100;
+0389 75E064    1209            mov     _PWM_3,#0x64
+038C E4        1210            clr     a
+038D F5E1      1211            mov     (_PWM_3 + 1),a
+038F           1212   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:241: PWM_4 = 0;
+038F E4        1213            clr     a
+0390 F5A0      1214            mov     _PWM_4,a
+0392 F5A1      1215            mov     (_PWM_4 + 1),a
+0394           1216   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:242: break;
+0394           1217   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:243: case 5:
+0394 8001      1218            sjmp    L010012?
+0396           1219   L010008?:
+0396           1220   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:244: PWM_1 = 0;
+0396 E4        1221            clr     a
+0397 F560      1222            mov     _PWM_1,a
+0399 F561      1223            mov     (_PWM_1 + 1),a
+039B           1224   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:245: PWM_2 = 100;
+039B 752064    1225            mov     _PWM_2,#0x64
+039E E4        1226            clr     a
+039F F521      1227            mov     (_PWM_2 + 1),a
+03A1           1228   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:246: PWM_3 = 50;
+03A1 75E032    1229            mov     _PWM_3,#0x32
+03A4 E4        1230            clr     a
+03A5 F5E1      1231            mov     (_PWM_3 + 1),a
+03A7           1232   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:247: PWM_4 = 0;
+03A7 E4        1233            clr     a
+03A8 F5A0      1234            mov     _PWM_4,a
+03AA F5A1      1235            mov     (_PWM_4 + 1),a
+03AC           1236   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:248: break;
+03AC           1237   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:249: case 6:
+03AC 8001      1238            sjmp    L010012?
+03AE           1239   L010009?:
+03AE           1240   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:250: PWM_1 = 50;
+03AE 756032    1241            mov     _PWM_1,#0x32
+03B1 E4        1242            clr     a
+03B2 F561      1243            mov     (_PWM_1 + 1),a
+03B4           1244   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:251: PWM_2 = 0;
+03B4           1245   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:252: PWM_3 = 0;
+03B4 E4        1246            clr     a
+03B5 F520      1247            mov     _PWM_2,a
+03B7 F521      1248            mov     (_PWM_2 + 1),a
+03B9 F5E0      1249            mov     _PWM_3,a
+03BB F5E1      1250            mov     (_PWM_3 + 1),a
+03BD           1251   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:253: PWM_4 = 100;
+03BD 75A064    1252            mov     _PWM_4,#0x64
+03C0 E4        1253            clr     a
+03C1 F5A1      1254            mov     (_PWM_4 + 1),a
+03C3           1255   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:255: }
+03C3           1256   L010012?:
+03C3           1257   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:257: OUT0=pwm_count>PWM_1?0:1;
+03C3 AAE0      1258            mov     r2,_pwm_count
+03C5 7B00      1259            mov     r3,#0x00
+03C7 C3        1260            clr     c
+03C8 E560      1261            mov     a,_PWM_1
+03CA 9A        1262            subb    a,r2
+03CB E561      1263            mov     a,(_PWM_1 + 1)
+03CD 9B        1264            subb    a,r3
+03CE 92C8      1265            mov  _Timer2_ISR_sloc0_1_0,c
+03D0 B3        1266            cpl     c
+03D1 9296      1267            mov     _P1_6,c
+03D3           1268   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:258: OUT1=pwm_count>PWM_2?0:1;
+03D3 AAE0      1269            mov     r2,_pwm_count
+03D5 7B00      1270            mov     r3,#0x00
+03D7 C3        1271            clr     c
+03D8 E520      1272            mov     a,_PWM_2
+03DA 9A        1273            subb    a,r2
+03DB E521      1274            mov     a,(_PWM_2 + 1)
+03DD 9B        1275            subb    a,r3
+03DE 92C8      1276            mov  _Timer2_ISR_sloc0_1_0,c
+03E0 B3        1277            cpl     c
+03E1 9297      1278            mov     _P1_7,c
+03E3           1279   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:259: OUT2=pwm_count>PWM_3?0:1;
+03E3 AAE0      1280            mov     r2,_pwm_count
+03E5 7B00      1281            mov     r3,#0x00
+03E7 C3        1282            clr     c
+03E8 E5E0      1283            mov     a,_PWM_3
+03EA 9A        1284            subb    a,r2
+03EB E5E1      1285            mov     a,(_PWM_3 + 1)
+03ED 9B        1286            subb    a,r3
+03EE 92C8      1287            mov  _Timer2_ISR_sloc0_1_0,c
+03F0 B3        1288            cpl     c
+03F1 92A4      1289            mov     _P2_4,c
+03F3           1290   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:260: OUT3=pwm_count>PWM_4?0:1;
+03F3 AAE0      1291            mov     r2,_pwm_count
+03F5 7B00      1292            mov     r3,#0x00
+03F7 C3        1293            clr     c
+03F8 E5A0      1294            mov     a,_PWM_4
+03FA 9A        1295            subb    a,r2
+03FB E5A1      1296            mov     a,(_PWM_4 + 1)
+03FD 9B        1297            subb    a,r3
+03FE 92C8      1298            mov  _Timer2_ISR_sloc0_1_0,c
+0400 B3        1299            cpl     c
+0401 92A5      1300            mov     _P2_5,c
+0403 D0D0      1301            pop     psw
+0405 D003      1302            pop     ar3
+0407 D002      1303            pop     ar2
+0409 D083      1304            pop     dph
+040B D082      1305            pop     dpl
+040D D0E0      1306            pop     acc
+040F 32        1307            reti
+0410           1308   ;        eliminated unneeded push/pop b
+0410           1309   ;------------------------------------------------------------
+0410           1310   ;Allocation info for local variables in function 'getchar1'
+0410           1311   ;------------------------------------------------------------
+0410           1312   ;c                         Allocated to registers 
+0410           1313   ;------------------------------------------------------------
+0410           1314   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:263: char getchar1 (void)
+0410           1315   ;        -----------------------------------------
+0410           1316   ;         function getchar1
+0410           1317   ;        -----------------------------------------
+0410           1318   _getchar1:
+0410           1319   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:266: while (!(SCON1 & 0x01));
+0410           1320   L011001?:
+0410 E5D2      1321            mov     a,_SCON1
+0412 30E018    1322            jnb     acc.0,L011001?
+0415           1323   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:267: SCON1 &= ~0x01;
+0415 53D2FE    1324            anl     _SCON1,#0xFE
+0418           1325   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:268: c = SBUF1;
+0418 85D382    1326            mov     dpl,_SBUF1
+041B           1327   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:269: return (c);
+041B 22        1328            ret
+041C           1329   ;------------------------------------------------------------
+041C           1330   ;Allocation info for local variables in function 'main'
+041C           1331   ;------------------------------------------------------------
+041C           1332   ;V                         Allocated with name '_main_V_1_72'
+041C           1333   ;R                         Allocated with name '_main_R_1_72'
+041C           1334   ;L                         Allocated with name '_main_L_1_72'
+041C           1335   ;C                         Allocated to registers r2 
+041C           1336   ;thresholdL                Allocated to registers 
+041C           1337   ;thresholdR                Allocated to registers 
+041C           1338   ;z                         Allocated to registers r2 r3 
+041C           1339   ;------------------------------------------------------------
+041C           1340   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:272: void main (void)
+041C           1341   ;        -----------------------------------------
+041C           1342   ;         function main
+041C           1343   ;        -----------------------------------------
+041C           1344   _main:
+041C           1345   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:275: volatile float V[3], R=0, L=0;
+041C 753800    1346            mov     _main_R_1_72,#0x00
+041F 753900    1347            mov     (_main_R_1_72 + 1),#0x00
+0422 753A00    1348            mov     (_main_R_1_72 + 2),#0x00
+0425 753B00    1349            mov     (_main_R_1_72 + 3),#0x00
+0428 757800    1350            mov     _main_L_1_72,#0x00
+042B 757900    1351            mov     (_main_L_1_72 + 1),#0x00
+042E 757A00    1352            mov     (_main_L_1_72 + 2),#0x00
+0431 757B00    1353            mov     (_main_L_1_72 + 3),#0x00
+0434           1354   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:281: InitPinADC(2, 1); // Configure P2.1 as analog input
+0434 754001    1355            mov     _InitPinADC_PARM_2,#0x01
+0437 758202    1356            mov     dpl,#0x02
+043A 120100    1357            lcall   _InitPinADC
+043D           1358   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:282: InitPinADC(2, 2); // Configure P2.2 as analog input
+043D 754002    1359            mov     _InitPinADC_PARM_2,#0x02
+0440 758202    1360            mov     dpl,#0x02
+0443 120100    1361            lcall   _InitPinADC
+0446           1362   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:283: InitPinADC(2, 7);
+0446 754007    1363            mov     _InitPinADC_PARM_2,#0x07
+0449 758202    1364            mov     dpl,#0x02
+044C 120100    1365            lcall   _InitPinADC
+044F           1366   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:284: InitADC();
+044F 120100    1367            lcall   _InitADC
+0452           1368   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:285: if(Volts_at_Pin(LQFP32_MUX_P2_7)>2.5)
+0452 75820F    1369            mov     dpl,#0x0F
+0455 120100    1370            lcall   _Volts_at_Pin
+0458 AA82      1371            mov     r2,dpl
+045A AB83      1372            mov     r3,dph
+045C ACF0      1373            mov     r4,b
+045E FD        1374            mov     r5,a
+045F E4        1375            clr     a
+0460 C0E0      1376            push    acc
+0462 C0E0      1377            push    acc
+0464 7420      1378            mov     a,#0x20
+0466 C0E0      1379            push    acc
+0468 7440      1380            mov     a,#0x40
+046A C0E0      1381            push    acc
+046C 8A82      1382            mov     dpl,r2
+046E 8B83      1383            mov     dph,r3
+0470 8CF0      1384            mov     b,r4
+0472 ED        1385            mov     a,r5
+0473 120100    1386            lcall   ___fsgt
+0476 AA82      1387            mov     r2,dpl
+0478 E581      1388            mov     a,sp
+047A 24FC      1389            add     a,#0xfc
+047C F581      1390            mov     sp,a
+047E EA        1391            mov     a,r2
+047F 7001      1392            jnz     L012088?
+0481 020100    1393            ljmp    L012049?
+0484           1394   L012088?:
+0484           1395   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:287: interrupt_switch=0;
+0484 E4        1396            clr     a
+0485 F560      1397            mov     _interrupt_switch,a
+0487 F561      1398            mov     (_interrupt_switch + 1),a
+0489           1399   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:288: while(1)
+0489           1400   L012031?:
+0489           1401   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:290: PWM_1 = 0;
+0489           1402   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:291: PWM_2 = 0;
+0489           1403   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:292: PWM_3 = 0;
+0489           1404   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:293: PWM_4 = 0;
+0489 E4        1405            clr     a
+048A F560      1406            mov     _PWM_1,a
+048C F561      1407            mov     (_PWM_1 + 1),a
+048E F520      1408            mov     _PWM_2,a
+0490 F521      1409            mov     (_PWM_2 + 1),a
+0492 F5E0      1410            mov     _PWM_3,a
+0494 F5E1      1411            mov     (_PWM_3 + 1),a
+0496 F5A0      1412            mov     _PWM_4,a
+0498 F5A1      1413            mov     (_PWM_4 + 1),a
+049A           1414   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:294: L=0;
+049A 757800    1415            mov     _main_L_1_72,#0x00
+049D 757900    1416            mov     (_main_L_1_72 + 1),#0x00
+04A0 757A00    1417            mov     (_main_L_1_72 + 2),#0x00
+04A3 757B00    1418            mov     (_main_L_1_72 + 3),#0x00
+04A6           1419   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:295: R=0;
+04A6 753800    1420            mov     _main_R_1_72,#0x00
+04A9 753900    1421            mov     (_main_R_1_72 + 1),#0x00
+04AC 753A00    1422            mov     (_main_R_1_72 + 2),#0x00
+04AF 753B00    1423            mov     (_main_R_1_72 + 3),#0x00
+04B2           1424   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:296: for(z=0; z<30; z++)
+04B2 7A00      1425            mov     r2,#0x00
+04B4 7B00      1426            mov     r3,#0x00
+04B6           1427   L012051?:
+04B6 C3        1428            clr     c
+04B7 EA        1429            mov     a,r2
+04B8 941E      1430            subb    a,#0x1E
+04BA EB        1431            mov     a,r3
+04BB 6480      1432            xrl     a,#0x80
+04BD 9480      1433            subb    a,#0x80
+04BF 5001      1434            jnc     L012054?
+04C1           1435   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:298: V[0]=Volts_at_Pin(LQFP32_MUX_P2_3);
+04C1 75820B    1436            mov     dpl,#0x0B
+04C4 C002      1437            push    ar2
+04C6 C003      1438            push    ar3
+04C8 120100    1439            lcall   _Volts_at_Pin
+04CB AC82      1440            mov     r4,dpl
+04CD AD83      1441            mov     r5,dph
+04CF AEF0      1442            mov     r6,b
+04D1 FF        1443            mov     r7,a
+04D2 8CF8      1444            mov     _main_V_1_72,r4
+04D4 8DF9      1445            mov     (_main_V_1_72 + 1),r5
+04D6 8EFA      1446            mov     (_main_V_1_72 + 2),r6
+04D8 8FFB      1447            mov     (_main_V_1_72 + 3),r7
+04DA           1448   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:299: if(V[0]>L)
+04DA C078      1449            push    _main_L_1_72
+04DC C079      1450            push    (_main_L_1_72 + 1)
+04DE C07A      1451            push    (_main_L_1_72 + 2)
+04E0 C07B      1452            push    (_main_L_1_72 + 3)
+04E2 85F882    1453            mov     dpl,_main_V_1_72
+04E5 85F983    1454            mov     dph,(_main_V_1_72 + 1)
+04E8 85FAF0    1455            mov     b,(_main_V_1_72 + 2)
+04EB E5FB      1456            mov     a,(_main_V_1_72 + 3)
+04ED 120100    1457            lcall   ___fsgt
+04F0 AC82      1458            mov     r4,dpl
+04F2 E581      1459            mov     a,sp
+04F4 24FC      1460            add     a,#0xfc
+04F6 F581      1461            mov     sp,a
+04F8 D003      1462            pop     ar3
+04FA D002      1463            pop     ar2
+04FC EC        1464            mov     a,r4
+04FD 6001      1465            jz      L012002?
+04FF           1466   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:300: L=V[0];
+04FF 85F878    1467            mov     _main_L_1_72,_main_V_1_72
+0502 85F979    1468            mov     (_main_L_1_72 + 1),(_main_V_1_72 + 1)
+0505 85FA7A    1469            mov     (_main_L_1_72 + 2),(_main_V_1_72 + 2)
+0508 85FB7B    1470            mov     (_main_L_1_72 + 3),(_main_V_1_72 + 3)
+050B           1471   L012002?:
+050B           1472   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:301: V[0]=L;
+050B 8578F8    1473            mov     _main_V_1_72,_main_L_1_72
+050E 8579F9    1474            mov     (_main_V_1_72 + 1),(_main_L_1_72 + 1)
+0511 857AFA    1475            mov     (_main_V_1_72 + 2),(_main_L_1_72 + 2)
+0514 857BFB    1476            mov     (_main_V_1_72 + 3),(_main_L_1_72 + 3)
+0517           1477   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:296: for(z=0; z<30; z++)
+0517 0A        1478            inc     r2
+0518 BA0058    1479            cjne    r2,#0x00,L012051?
+051B 0B        1480            inc     r3
+051C 8001      1481            sjmp    L012051?
+051E           1482   L012054?:
+051E           1483   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:303: for(z=0; z<30; z++)
+051E 7A00      1484            mov     r2,#0x00
+0520 7B00      1485            mov     r3,#0x00
+0522           1486   L012055?:
+0522 C3        1487            clr     c
+0523 EA        1488            mov     a,r2
+0524 941E      1489            subb    a,#0x1E
+0526 EB        1490            mov     a,r3
+0527 6480      1491            xrl     a,#0x80
+0529 9480      1492            subb    a,#0x80
+052B 5001      1493            jnc     L012058?
+052D           1494   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:305: V[1]=Volts_at_Pin(LQFP32_MUX_P2_0);
+052D 758208    1495            mov     dpl,#0x08
+0530 C002      1496            push    ar2
+0532 C003      1497            push    ar3
+0534 120100    1498            lcall   _Volts_at_Pin
+0537 AC82      1499            mov     r4,dpl
+0539 AD83      1500            mov     r5,dph
+053B AEF0      1501            mov     r6,b
+053D FF        1502            mov     r7,a
+053E 8CFC      1503            mov     (_main_V_1_72 + 0x0004),r4
+0540 8DFD      1504            mov     ((_main_V_1_72 + 0x0004) + 1),r5
+0542 8EFE      1505            mov     ((_main_V_1_72 + 0x0004) + 2),r6
+0544 8FFF      1506            mov     ((_main_V_1_72 + 0x0004) + 3),r7
+0546           1507   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:306: if(V[1]>R)
+0546 C038      1508            push    _main_R_1_72
+0548 C039      1509            push    (_main_R_1_72 + 1)
+054A C03A      1510            push    (_main_R_1_72 + 2)
+054C C03B      1511            push    (_main_R_1_72 + 3)
+054E 85FC82    1512            mov     dpl,(_main_V_1_72 + 0x0004)
+0551 85FD83    1513            mov     dph,((_main_V_1_72 + 0x0004) + 1)
+0554 85FEF0    1514            mov     b,((_main_V_1_72 + 0x0004) + 2)
+0557 E5FF      1515            mov     a,((_main_V_1_72 + 0x0004) + 3)
+0559 120100    1516            lcall   ___fsgt
+055C AC82      1517            mov     r4,dpl
+055E E581      1518            mov     a,sp
+0560 24FC      1519            add     a,#0xfc
+0562 F581      1520            mov     sp,a
+0564 D003      1521            pop     ar3
+0566 D002      1522            pop     ar2
+0568 EC        1523            mov     a,r4
+0569 6001      1524            jz      L012004?
+056B           1525   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:307: R=V[1];
+056B 85FC38    1526            mov     _main_R_1_72,(_main_V_1_72 + 0x0004)
+056E 85FD39    1527            mov     (_main_R_1_72 + 1),((_main_V_1_72 + 0x0004) + 1)
+0571 85FE3A    1528            mov     (_main_R_1_72 + 2),((_main_V_1_72 + 0x0004) + 2)
+0574 85FF3B    1529            mov     (_main_R_1_72 + 3),((_main_V_1_72 + 0x0004) + 3)
+0577           1530   L012004?:
+0577           1531   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:308: V[1]=R;
+0577 8538FC    1532            mov     (_main_V_1_72 + 0x0004),_main_R_1_72
+057A 8539FD    1533            mov     ((_main_V_1_72 + 0x0004) + 1),(_main_R_1_72 + 1)
+057D 853AFE    1534            mov     ((_main_V_1_72 + 0x0004) + 2),(_main_R_1_72 + 2)
+0580 853BFF    1535            mov     ((_main_V_1_72 + 0x0004) + 3),(_main_R_1_72 + 3)
+0583           1536   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:303: for(z=0; z<30; z++)
+0583 0A        1537            inc     r2
+0584 BA0018    1538            cjne    r2,#0x00,L012055?
+0587 0B        1539            inc     r3
+0588 8001      1540            sjmp    L012055?
+058A           1541   L012058?:
+058A           1542   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:311: if (V[0] > thresholdL+0.1 && V[1] > thresholdR+0.1 )
+058A 7466      1543            mov     a,#0x66
+058C C0E0      1544            push    acc
+058E C0E0      1545            push    acc
+0590 C0E0      1546            push    acc
+0592 743F      1547            mov     a,#0x3F
+0594 C0E0      1548            push    acc
+0596 85F882    1549            mov     dpl,_main_V_1_72
+0599 85F983    1550            mov     dph,(_main_V_1_72 + 1)
+059C 85FAF0    1551            mov     b,(_main_V_1_72 + 2)
+059F E5FB      1552            mov     a,(_main_V_1_72 + 3)
+05A1 120100    1553            lcall   ___fsgt
+05A4 AA82      1554            mov     r2,dpl
+05A6 E581      1555            mov     a,sp
+05A8 24FC      1556            add     a,#0xfc
+05AA F581      1557            mov     sp,a
+05AC EA        1558            mov     a,r2
+05AD 6001      1559            jz      L012027?
+05AF 7466      1560            mov     a,#0x66
+05B1 C0E0      1561            push    acc
+05B3 C0E0      1562            push    acc
+05B5 C0E0      1563            push    acc
+05B7 743F      1564            mov     a,#0x3F
+05B9 C0E0      1565            push    acc
+05BB 85FC82    1566            mov     dpl,(_main_V_1_72 + 0x0004)
+05BE 85FD83    1567            mov     dph,((_main_V_1_72 + 0x0004) + 1)
+05C1 85FEF0    1568            mov     b,((_main_V_1_72 + 0x0004) + 2)
+05C4 E5FF      1569            mov     a,((_main_V_1_72 + 0x0004) + 3)
+05C6 120100    1570            lcall   ___fsgt
+05C9 AA82      1571            mov     r2,dpl
+05CB E581      1572            mov     a,sp
+05CD 24FC      1573            add     a,#0xfc
+05CF F581      1574            mov     sp,a
+05D1 EA        1575            mov     a,r2
+05D2 6001      1576            jz      L012027?
+05D4           1577   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:313: switchs=2;
+05D4 751002    1578            mov     _switchs,#0x02
+05D7 E4        1579            clr     a
+05D8 F511      1580            mov     (_switchs + 1),a
+05DA 020100    1581            ljmp    L012028?
+05DD           1582   L012027?:
+05DD           1583   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:315: else if (V[0] < thresholdL-0.2 && V[1] < thresholdR-0.2 && V[0] > 0.1 && V[1] > 0.1)
+05DD 749A      1584            mov     a,#0x9A
+05DF C0E0      1585            push    acc
+05E1 7499      1586            mov     a,#0x99
+05E3 C0E0      1587            push    acc
+05E5 7419      1588            mov     a,#0x19
+05E7 C0E0      1589            push    acc
+05E9 743F      1590            mov     a,#0x3F
+05EB C0E0      1591            push    acc
+05ED 85F882    1592            mov     dpl,_main_V_1_72
+05F0 85F983    1593            mov     dph,(_main_V_1_72 + 1)
+05F3 85FAF0    1594            mov     b,(_main_V_1_72 + 2)
+05F6 E5FB      1595            mov     a,(_main_V_1_72 + 3)
+05F8 120100    1596            lcall   ___fslt
+05FB AA82      1597            mov     r2,dpl
+05FD E581      1598            mov     a,sp
+05FF 24FC      1599            add     a,#0xfc
+0601 F581      1600            mov     sp,a
+0603 EA        1601            mov     a,r2
+0604 7001      1602            jnz     L012097?
+0606 020100    1603            ljmp    L012021?
+0609           1604   L012097?:
+0609 749A      1605            mov     a,#0x9A
+060B C0E0      1606            push    acc
+060D 7499      1607            mov     a,#0x99
+060F C0E0      1608            push    acc
+0611 7419      1609            mov     a,#0x19
+0613 C0E0      1610            push    acc
+0615 743F      1611            mov     a,#0x3F
+0617 C0E0      1612            push    acc
+0619 85FC82    1613            mov     dpl,(_main_V_1_72 + 0x0004)
+061C 85FD83    1614            mov     dph,((_main_V_1_72 + 0x0004) + 1)
+061F 85FEF0    1615            mov     b,((_main_V_1_72 + 0x0004) + 2)
+0622 E5FF      1616            mov     a,((_main_V_1_72 + 0x0004) + 3)
+0624 120100    1617            lcall   ___fslt
+0627 AA82      1618            mov     r2,dpl
+0629 E581      1619            mov     a,sp
+062B 24FC      1620            add     a,#0xfc
+062D F581      1621            mov     sp,a
+062F EA        1622            mov     a,r2
+0630 6001      1623            jz      L012021?
+0632 74CD      1624            mov     a,#0xCD
+0634 C0E0      1625            push    acc
+0636 74CC      1626            mov     a,#0xCC
+0638 C0E0      1627            push    acc
+063A C0E0      1628            push    acc
+063C 743D      1629            mov     a,#0x3D
+063E C0E0      1630            push    acc
+0640 85F882    1631            mov     dpl,_main_V_1_72
+0643 85F983    1632            mov     dph,(_main_V_1_72 + 1)
+0646 85FAF0    1633            mov     b,(_main_V_1_72 + 2)
+0649 E5FB      1634            mov     a,(_main_V_1_72 + 3)
+064B 120100    1635            lcall   ___fsgt
+064E AA82      1636            mov     r2,dpl
+0650 E581      1637            mov     a,sp
+0652 24FC      1638            add     a,#0xfc
+0654 F581      1639            mov     sp,a
+0656 EA        1640            mov     a,r2
+0657 6001      1641            jz      L012021?
+0659 74CD      1642            mov     a,#0xCD
+065B C0E0      1643            push    acc
+065D 74CC      1644            mov     a,#0xCC
+065F C0E0      1645            push    acc
+0661 C0E0      1646            push    acc
+0663 743D      1647            mov     a,#0x3D
+0665 C0E0      1648            push    acc
+0667 85FC82    1649            mov     dpl,(_main_V_1_72 + 0x0004)
+066A 85FD83    1650            mov     dph,((_main_V_1_72 + 0x0004) + 1)
+066D 85FEF0    1651            mov     b,((_main_V_1_72 + 0x0004) + 2)
+0670 E5FF      1652            mov     a,((_main_V_1_72 + 0x0004) + 3)
+0672 120100    1653            lcall   ___fsgt
+0675 AA82      1654            mov     r2,dpl
+0677 E581      1655            mov     a,sp
+0679 24FC      1656            add     a,#0xfc
+067B F581      1657            mov     sp,a
+067D EA        1658            mov     a,r2
+067E 6001      1659            jz      L012021?
+0680           1660   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:317: switchs=1;
+0680 751001    1661            mov     _switchs,#0x01
+0683 E4        1662            clr     a
+0684 F511      1663            mov     (_switchs + 1),a
+0686 020100    1664            ljmp    L012028?
+0689           1665   L012021?:
+0689           1666   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:319: else if (V[1]<=0.1 && V[0]<=0.1)
+0689 74CD      1667            mov     a,#0xCD
+068B C0E0      1668            push    acc
+068D 74CC      1669            mov     a,#0xCC
+068F C0E0      1670            push    acc
+0691 C0E0      1671            push    acc
+0693 743D      1672            mov     a,#0x3D
+0695 C0E0      1673            push    acc
+0697 85FC82    1674            mov     dpl,(_main_V_1_72 + 0x0004)
+069A 85FD83    1675            mov     dph,((_main_V_1_72 + 0x0004) + 1)
+069D 85FEF0    1676            mov     b,((_main_V_1_72 + 0x0004) + 2)
+06A0 E5FF      1677            mov     a,((_main_V_1_72 + 0x0004) + 3)
+06A2 120100    1678            lcall   ___fsgt
+06A5 AA82      1679            mov     r2,dpl
+06A7 E581      1680            mov     a,sp
+06A9 24FC      1681            add     a,#0xfc
+06AB F581      1682            mov     sp,a
+06AD EA        1683            mov     a,r2
+06AE 7001      1684            jnz     L012017?
+06B0 74CD      1685            mov     a,#0xCD
+06B2 C0E0      1686            push    acc
+06B4 74CC      1687            mov     a,#0xCC
+06B6 C0E0      1688            push    acc
+06B8 C0E0      1689            push    acc
+06BA 743D      1690            mov     a,#0x3D
+06BC C0E0      1691            push    acc
+06BE 85F882    1692            mov     dpl,_main_V_1_72
+06C1 85F983    1693            mov     dph,(_main_V_1_72 + 1)
+06C4 85FAF0    1694            mov     b,(_main_V_1_72 + 2)
+06C7 E5FB      1695            mov     a,(_main_V_1_72 + 3)
+06C9 120100    1696            lcall   ___fsgt
+06CC AA82      1697            mov     r2,dpl
+06CE E581      1698            mov     a,sp
+06D0 24FC      1699            add     a,#0xfc
+06D2 F581      1700            mov     sp,a
+06D4 EA        1701            mov     a,r2
+06D5           1702   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:321: switchs=0;
+06D5 7001      1703            jnz     L012017?
+06D7 F510      1704            mov     _switchs,a
+06D9 F511      1705            mov     (_switchs + 1),a
+06DB 020100    1706            ljmp    L012028?
+06DE           1707   L012017?:
+06DE           1708   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:323: else if (V[0] < thresholdL-0.2)
+06DE 749A      1709            mov     a,#0x9A
+06E0 C0E0      1710            push    acc
+06E2 7499      1711            mov     a,#0x99
+06E4 C0E0      1712            push    acc
+06E6 7419      1713            mov     a,#0x19
+06E8 C0E0      1714            push    acc
+06EA 743F      1715            mov     a,#0x3F
+06EC C0E0      1716            push    acc
+06EE 85F882    1717            mov     dpl,_main_V_1_72
+06F1 85F983    1718            mov     dph,(_main_V_1_72 + 1)
+06F4 85FAF0    1719            mov     b,(_main_V_1_72 + 2)
+06F7 E5FB      1720            mov     a,(_main_V_1_72 + 3)
+06F9 120100    1721            lcall   ___fslt
+06FC AA82      1722            mov     r2,dpl
+06FE E581      1723            mov     a,sp
+0700 24FC      1724            add     a,#0xfc
+0702 F581      1725            mov     sp,a
+0704 EA        1726            mov     a,r2
+0705 6001      1727            jz      L012014?
+0707           1728   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:325: switchs=3;
+0707 751003    1729            mov     _switchs,#0x03
+070A E4        1730            clr     a
+070B F511      1731            mov     (_switchs + 1),a
+070D 020100    1732            ljmp    L012028?
+0710           1733   L012014?:
+0710           1734   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:327: else if (V[1] < thresholdR-0.2)
+0710 749A      1735            mov     a,#0x9A
+0712 C0E0      1736            push    acc
+0714 7499      1737            mov     a,#0x99
+0716 C0E0      1738            push    acc
+0718 7419      1739            mov     a,#0x19
+071A C0E0      1740            push    acc
+071C 743F      1741            mov     a,#0x3F
+071E C0E0      1742            push    acc
+0720 85FC82    1743            mov     dpl,(_main_V_1_72 + 0x0004)
+0723 85FD83    1744            mov     dph,((_main_V_1_72 + 0x0004) + 1)
+0726 85FEF0    1745            mov     b,((_main_V_1_72 + 0x0004) + 2)
+0729 E5FF      1746            mov     a,((_main_V_1_72 + 0x0004) + 3)
+072B 120100    1747            lcall   ___fslt
+072E AA82      1748            mov     r2,dpl
+0730 E581      1749            mov     a,sp
+0732 24FC      1750            add     a,#0xfc
+0734 F581      1751            mov     sp,a
+0736 EA        1752            mov     a,r2
+0737 6001      1753            jz      L012011?
+0739           1754   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:329: switchs=4;
+0739 751004    1755            mov     _switchs,#0x04
+073C E4        1756            clr     a
+073D F511      1757            mov     (_switchs + 1),a
+073F 8001      1758            sjmp    L012028?
+0741           1759   L012011?:
+0741           1760   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:331: else if (V[0] > thresholdL+0.2)
+0741 E4        1761            clr     a
+0742 C0E0      1762            push    acc
+0744 C0E0      1763            push    acc
+0746 7480      1764            mov     a,#0x80
+0748 C0E0      1765            push    acc
+074A 743F      1766            mov     a,#0x3F
+074C C0E0      1767            push    acc
+074E 85F882    1768            mov     dpl,_main_V_1_72
+0751 85F983    1769            mov     dph,(_main_V_1_72 + 1)
+0754 85FAF0    1770            mov     b,(_main_V_1_72 + 2)
+0757 E5FB      1771            mov     a,(_main_V_1_72 + 3)
+0759 120100    1772            lcall   ___fsgt
+075C AA82      1773            mov     r2,dpl
+075E E581      1774            mov     a,sp
+0760 24FC      1775            add     a,#0xfc
+0762 F581      1776            mov     sp,a
+0764 EA        1777            mov     a,r2
+0765 6001      1778            jz      L012008?
+0767           1779   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:333: switchs=5;
+0767 751005    1780            mov     _switchs,#0x05
+076A E4        1781            clr     a
+076B F511      1782            mov     (_switchs + 1),a
+076D 8001      1783            sjmp    L012028?
+076F           1784   L012008?:
+076F           1785   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:335: else if (V[1] > thresholdR+0.2)
+076F E4        1786            clr     a
+0770 C0E0      1787            push    acc
+0772 C0E0      1788            push    acc
+0774 7480      1789            mov     a,#0x80
+0776 C0E0      1790            push    acc
+0778 743F      1791            mov     a,#0x3F
+077A C0E0      1792            push    acc
+077C 85FC82    1793            mov     dpl,(_main_V_1_72 + 0x0004)
+077F 85FD83    1794            mov     dph,((_main_V_1_72 + 0x0004) + 1)
+0782 85FEF0    1795            mov     b,((_main_V_1_72 + 0x0004) + 2)
+0785 E5FF      1796            mov     a,((_main_V_1_72 + 0x0004) + 3)
+0787 120100    1797            lcall   ___fsgt
+078A AA82      1798            mov     r2,dpl
+078C E581      1799            mov     a,sp
+078E 24FC      1800            add     a,#0xfc
+0790 F581      1801            mov     sp,a
+0792 EA        1802            mov     a,r2
+0793 6001      1803            jz      L012028?
+0795           1804   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:337: switchs=6;
+0795 751006    1805            mov     _switchs,#0x06
+0798 E4        1806            clr     a
+0799 F511      1807            mov     (_switchs + 1),a
+079B           1808   L012028?:
+079B           1809   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:339: waitms(4);
+079B 900004    1810            mov     dptr,#0x0004
+079E 120100    1811            lcall   _waitms
+07A1 020100    1812            ljmp    L012031?
+07A4           1813   L012049?:
+07A4           1814   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:344: interrupt_switch=1;
+07A4 756001    1815            mov     _interrupt_switch,#0x01
+07A7 E4        1816            clr     a
+07A8 F561      1817            mov     (_interrupt_switch + 1),a
+07AA           1818   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:345: while(1)
+07AA           1819   L012046?:
+07AA           1820   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:347: PWM_1 = 0;
+07AA           1821   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:348: PWM_2 = 0;
+07AA           1822   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:349: PWM_3 = 0;
+07AA           1823   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:350: PWM_4 = 0;
+07AA E4        1824            clr     a
+07AB F560      1825            mov     _PWM_1,a
+07AD F561      1826            mov     (_PWM_1 + 1),a
+07AF F520      1827            mov     _PWM_2,a
+07B1 F521      1828            mov     (_PWM_2 + 1),a
+07B3 F5E0      1829            mov     _PWM_3,a
+07B5 F5E1      1830            mov     (_PWM_3 + 1),a
+07B7 F5A0      1831            mov     _PWM_4,a
+07B9 F5A1      1832            mov     (_PWM_4 + 1),a
+07BB           1833   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:351: SCON1 |= 0x01;
+07BB 43D201    1834            orl     _SCON1,#0x01
+07BE           1835   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:352: C = getchar1();
+07BE 120100    1836            lcall   _getchar1
+07C1           1837   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:353: printf("char: %c\r", C);
+07C1 E582      1838            mov     a,dpl
+07C3 FA        1839            mov     r2,a
+07C4 FB        1840            mov     r3,a
+07C5 33        1841            rlc     a
+07C6 95E0      1842            subb    a,acc
+07C8 FC        1843            mov     r4,a
+07C9 C002      1844            push    ar2
+07CB C003      1845            push    ar3
+07CD C004      1846            push    ar4
+07CF 7458      1847            mov     a,#__str_0
+07D1 C0E0      1848            push    acc
+07D3 74A3      1849            mov     a,#(__str_0 >> 8)
+07D5 C0E0      1850            push    acc
+07D7 7480      1851            mov     a,#0x80
+07D9 C0E0      1852            push    acc
+07DB 120100    1853            lcall   _printf
+07DE E581      1854            mov     a,sp
+07E0 24FB      1855            add     a,#0xfb
+07E2 F581      1856            mov     sp,a
+07E4 D002      1857            pop     ar2
+07E6           1858   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:355: if (C == 'F')//input the voltage value for forward )
+07E6 BA46D8    1859            cjne    r2,#0x46,L012043?
+07E9           1860   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:357: PWM_1 = 0;
+07E9 E4        1861            clr     a
+07EA F560      1862            mov     _PWM_1,a
+07EC F561      1863            mov     (_PWM_1 + 1),a
+07EE           1864   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:358: PWM_2 = 100;
+07EE 752064    1865            mov     _PWM_2,#0x64
+07F1 E4        1866            clr     a
+07F2 F521      1867            mov     (_PWM_2 + 1),a
+07F4           1868   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:359: PWM_3 = 0;
+07F4 E4        1869            clr     a
+07F5 F5E0      1870            mov     _PWM_3,a
+07F7 F5E1      1871            mov     (_PWM_3 + 1),a
+07F9           1872   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:360: PWM_4 = 100;
+07F9 75A064    1873            mov     _PWM_4,#0x64
+07FC E4        1874            clr     a
+07FD F5A1      1875            mov     (_PWM_4 + 1),a
+07FF 8001      1876            sjmp    L012044?
+0801           1877   L012043?:
+0801           1878   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:362: else if (C == 'B')// for backward
+0801 BA4258    1879            cjne    r2,#0x42,L012040?
+0804           1880   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:364: PWM_1 = 100;
+0804 756064    1881            mov     _PWM_1,#0x64
+0807 E4        1882            clr     a
+0808 F561      1883            mov     (_PWM_1 + 1),a
+080A           1884   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:365: PWM_2 = 0;
+080A E4        1885            clr     a
+080B F520      1886            mov     _PWM_2,a
+080D F521      1887            mov     (_PWM_2 + 1),a
+080F           1888   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:366: PWM_3 = 100;
+080F 75E064    1889            mov     _PWM_3,#0x64
+0812 E4        1890            clr     a
+0813 F5E1      1891            mov     (_PWM_3 + 1),a
+0815           1892   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:367: PWM_4 = 0;
+0815 E4        1893            clr     a
+0816 F5A0      1894            mov     _PWM_4,a
+0818 F5A1      1895            mov     (_PWM_4 + 1),a
+081A 8001      1896            sjmp    L012044?
+081C           1897   L012040?:
+081C           1898   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:369: else if (C == 'R')//turn right
+081C BA5298    1899            cjne    r2,#0x52,L012037?
+081F           1900   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:371: PWM_1 = 0;
+081F E4        1901            clr     a
+0820 F560      1902            mov     _PWM_1,a
+0822 F561      1903            mov     (_PWM_1 + 1),a
+0824           1904   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:372: PWM_2 = 100;
+0824 752064    1905            mov     _PWM_2,#0x64
+0827 E4        1906            clr     a
+0828 F521      1907            mov     (_PWM_2 + 1),a
+082A           1908   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:373: PWM_3 = 50;
+082A 75E032    1909            mov     _PWM_3,#0x32
+082D E4        1910            clr     a
+082E F5E1      1911            mov     (_PWM_3 + 1),a
+0830           1912   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:374: PWM_4 = 0;
+0830 E4        1913            clr     a
+0831 F5A0      1914            mov     _PWM_4,a
+0833 F5A1      1915            mov     (_PWM_4 + 1),a
+0835 8001      1916            sjmp    L012044?
+0837           1917   L012037?:
+0837           1918   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:377: else if (C == 'L')//turn left
+0837 BA4CD8    1919            cjne    r2,#0x4C,L012034?
+083A           1920   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:379: PWM_1 = 50;
+083A 756032    1921            mov     _PWM_1,#0x32
+083D E4        1922            clr     a
+083E F561      1923            mov     (_PWM_1 + 1),a
+0840           1924   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:380: PWM_2 = 0;
+0840           1925   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:381: PWM_3 = 0;
+0840 E4        1926            clr     a
+0841 F520      1927            mov     _PWM_2,a
+0843 F521      1928            mov     (_PWM_2 + 1),a
+0845 F5E0      1929            mov     _PWM_3,a
+0847 F5E1      1930            mov     (_PWM_3 + 1),a
+0849           1931   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:382: PWM_4 = 100;
+0849 75A064    1932            mov     _PWM_4,#0x64
+084C E4        1933            clr     a
+084D F5A1      1934            mov     (_PWM_4 + 1),a
+084F 8001      1935            sjmp    L012044?
+0851           1936   L012034?:
+0851           1937   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:387: PWM_1 = 0;
+0851           1938   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:388: PWM_2 = 0;
+0851           1939   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:389: PWM_3 = 0;
+0851           1940   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:390: PWM_4 = 0;
+0851 E4        1941            clr     a
+0852 F560      1942            mov     _PWM_1,a
+0854 F561      1943            mov     (_PWM_1 + 1),a
+0856 F520      1944            mov     _PWM_2,a
+0858 F521      1945            mov     (_PWM_2 + 1),a
+085A F5E0      1946            mov     _PWM_3,a
+085C F5E1      1947            mov     (_PWM_3 + 1),a
+085E F5A0      1948            mov     _PWM_4,a
+0860 F5A1      1949            mov     (_PWM_4 + 1),a
+0862           1950   L012044?:
+0862           1951   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\autonomous v4.c:392: waitms(5);
+0862 900005    1952            mov     dptr,#0x0005
+0865 120100    1953            lcall   _waitms
+0868 020100    1954            ljmp    L012046?
+086B           1955            rseg R_CSEG
+086B           1956   
+0000           1957            rseg R_XINIT
+0000           1958   
+0000           1959            rseg R_CONST
+0000           1960   __str_0:
+0000 63686172  1961            db 'char: %c'
+     3A202563
+0008 0D        1962            db 0x0D
+0009 00        1963            db 0x00
+000A           1964   
+002E           1965            CSEG
+002E           1966   
+002E           1967   end

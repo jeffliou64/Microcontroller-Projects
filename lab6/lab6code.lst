@@ -1,0 +1,1332 @@
+0000              1   ;--------------------------------------------------------
+0000              2   ; File Created by C51
+0000              3   ; Version 1.0.0 #1069 (Apr 23 2015) (MSVC)
+0000              4   ; This file was generated Tue Mar 15 13:21:10 2016
+0000              5   ;--------------------------------------------------------
+                  5   $name lab6code
+                  6   $optc51 --model-small
+                  7   $printf_float
+0000              9            R_DSEG    segment data
+0000             10            R_CSEG    segment code
+0000             11            R_BSEG    segment bit
+0000             12            R_XSEG    segment xdata
+0000             13            R_PSEG    segment xdata
+0000             14            R_ISEG    segment idata
+0000             15            R_OSEG    segment data overlay
+0000             16            BIT_BANK  segment data overlay
+0000             17            R_HOME    segment code
+0000             18            R_GSINIT  segment code
+0000             19            R_IXSEG   segment xdata
+0000             20            R_CONST   segment code
+0000             21            R_XINIT   segment code
+0000             22            R_DINIT   segment code
+0000             23   
+0000             24   ;--------------------------------------------------------
+0000             25   ; Public variables in this module
+0000             26   ;--------------------------------------------------------
+0000             27            public _InitPinADC_PARM_2
+0000             28            public _main
+0000             29            public _Volts_at_Pin
+0000             30            public _ADC_at_Pin
+0000             31            public _InitPinADC
+0000             32            public _InitADC
+0000             33            public _waitms
+0000             34            public _Timer3us
+0000             35            public _Timer2_ISR
+0000             36            public _PORT_Init
+0000             37            public __c51_external_startup
+0000             38            public _DRV
+0000             39            public _PWM_2
+0000             40            public _PWM_1
+0000             41            public _proceed
+0000             42            public _pwm_count
+0000             43   ;--------------------------------------------------------
+0000             44   ; Special Function Registers
+0000             45   ;--------------------------------------------------------
+0000             46   _P0             DATA 0x80
+0000             47   _SP             DATA 0x81
+0000             48   _DPL            DATA 0x82
+0000             49   _DPH            DATA 0x83
+0000             50   _EMI0TC         DATA 0x84
+0000             51   _EMI0CF         DATA 0x85
+0000             52   _OSCLCN         DATA 0x86
+0000             53   _PCON           DATA 0x87
+0000             54   _TCON           DATA 0x88
+0000             55   _TMOD           DATA 0x89
+0000             56   _TL0            DATA 0x8a
+0000             57   _TL1            DATA 0x8b
+0000             58   _TH0            DATA 0x8c
+0000             59   _TH1            DATA 0x8d
+0000             60   _CKCON          DATA 0x8e
+0000             61   _PSCTL          DATA 0x8f
+0000             62   _P1             DATA 0x90
+0000             63   _TMR3CN         DATA 0x91
+0000             64   _TMR4CN         DATA 0x91
+0000             65   _TMR3RLL        DATA 0x92
+0000             66   _TMR4RLL        DATA 0x92
+0000             67   _TMR3RLH        DATA 0x93
+0000             68   _TMR4RLH        DATA 0x93
+0000             69   _TMR3L          DATA 0x94
+0000             70   _TMR4L          DATA 0x94
+0000             71   _TMR3H          DATA 0x95
+0000             72   _TMR4H          DATA 0x95
+0000             73   _USB0ADR        DATA 0x96
+0000             74   _USB0DAT        DATA 0x97
+0000             75   _SCON           DATA 0x98
+0000             76   _SCON0          DATA 0x98
+0000             77   _SBUF           DATA 0x99
+0000             78   _SBUF0          DATA 0x99
+0000             79   _CPT1CN         DATA 0x9a
+0000             80   _CPT0CN         DATA 0x9b
+0000             81   _CPT1MD         DATA 0x9c
+0000             82   _CPT0MD         DATA 0x9d
+0000             83   _CPT1MX         DATA 0x9e
+0000             84   _CPT0MX         DATA 0x9f
+0000             85   _P2             DATA 0xa0
+0000             86   _SPI0CFG        DATA 0xa1
+0000             87   _SPI0CKR        DATA 0xa2
+0000             88   _SPI0DAT        DATA 0xa3
+0000             89   _P0MDOUT        DATA 0xa4
+0000             90   _P1MDOUT        DATA 0xa5
+0000             91   _P2MDOUT        DATA 0xa6
+0000             92   _P3MDOUT        DATA 0xa7
+0000             93   _IE             DATA 0xa8
+0000             94   _CLKSEL         DATA 0xa9
+0000             95   _EMI0CN         DATA 0xaa
+0000             96   __XPAGE         DATA 0xaa
+0000             97   _SBCON1         DATA 0xac
+0000             98   _P4MDOUT        DATA 0xae
+0000             99   _PFE0CN         DATA 0xaf
+0000            100   _P3             DATA 0xb0
+0000            101   _OSCXCN         DATA 0xb1
+0000            102   _OSCICN         DATA 0xb2
+0000            103   _OSCICL         DATA 0xb3
+0000            104   _SBRLL1         DATA 0xb4
+0000            105   _SBRLH1         DATA 0xb5
+0000            106   _FLSCL          DATA 0xb6
+0000            107   _FLKEY          DATA 0xb7
+0000            108   _IP             DATA 0xb8
+0000            109   _CLKMUL         DATA 0xb9
+0000            110   _SMBTC          DATA 0xb9
+0000            111   _AMX0N          DATA 0xba
+0000            112   _AMX0P          DATA 0xbb
+0000            113   _ADC0CF         DATA 0xbc
+0000            114   _ADC0L          DATA 0xbd
+0000            115   _ADC0H          DATA 0xbe
+0000            116   _SFRPAGE        DATA 0xbf
+0000            117   _SMB0CN         DATA 0xc0
+0000            118   _SMB1CN         DATA 0xc0
+0000            119   _SMB0CF         DATA 0xc1
+0000            120   _SMB1CF         DATA 0xc1
+0000            121   _SMB0DAT        DATA 0xc2
+0000            122   _SMB1DAT        DATA 0xc2
+0000            123   _ADC0GTL        DATA 0xc3
+0000            124   _ADC0GTH        DATA 0xc4
+0000            125   _ADC0LTL        DATA 0xc5
+0000            126   _ADC0LTH        DATA 0xc6
+0000            127   _P4             DATA 0xc7
+0000            128   _TMR2CN         DATA 0xc8
+0000            129   _TMR5CN         DATA 0xc8
+0000            130   _REG01CN        DATA 0xc9
+0000            131   _TMR2RLL        DATA 0xca
+0000            132   _TMR5RLL        DATA 0xca
+0000            133   _TMR2RLH        DATA 0xcb
+0000            134   _TMR5RLH        DATA 0xcb
+0000            135   _TMR2L          DATA 0xcc
+0000            136   _TMR5L          DATA 0xcc
+0000            137   _TMR2H          DATA 0xcd
+0000            138   _TMR5H          DATA 0xcd
+0000            139   _SMB0ADM        DATA 0xce
+0000            140   _SMB1ADM        DATA 0xce
+0000            141   _SMB0ADR        DATA 0xcf
+0000            142   _SMB1ADR        DATA 0xcf
+0000            143   _PSW            DATA 0xd0
+0000            144   _REF0CN         DATA 0xd1
+0000            145   _SCON1          DATA 0xd2
+0000            146   _SBUF1          DATA 0xd3
+0000            147   _P0SKIP         DATA 0xd4
+0000            148   _P1SKIP         DATA 0xd5
+0000            149   _P2SKIP         DATA 0xd6
+0000            150   _USB0XCN        DATA 0xd7
+0000            151   _PCA0CN         DATA 0xd8
+0000            152   _PCA0MD         DATA 0xd9
+0000            153   _PCA0CPM0       DATA 0xda
+0000            154   _PCA0CPM1       DATA 0xdb
+0000            155   _PCA0CPM2       DATA 0xdc
+0000            156   _PCA0CPM3       DATA 0xdd
+0000            157   _PCA0CPM4       DATA 0xde
+0000            158   _P3SKIP         DATA 0xdf
+0000            159   _ACC            DATA 0xe0
+0000            160   _XBR0           DATA 0xe1
+0000            161   _XBR1           DATA 0xe2
+0000            162   _XBR2           DATA 0xe3
+0000            163   _IT01CF         DATA 0xe4
+0000            164   _CKCON1         DATA 0xe4
+0000            165   _SMOD1          DATA 0xe5
+0000            166   _EIE1           DATA 0xe6
+0000            167   _EIE2           DATA 0xe7
+0000            168   _ADC0CN         DATA 0xe8
+0000            169   _PCA0CPL1       DATA 0xe9
+0000            170   _PCA0CPH1       DATA 0xea
+0000            171   _PCA0CPL2       DATA 0xeb
+0000            172   _PCA0CPH2       DATA 0xec
+0000            173   _PCA0CPL3       DATA 0xed
+0000            174   _PCA0CPH3       DATA 0xee
+0000            175   _RSTSRC         DATA 0xef
+0000            176   _B              DATA 0xf0
+0000            177   _P0MDIN         DATA 0xf1
+0000            178   _P1MDIN         DATA 0xf2
+0000            179   _P2MDIN         DATA 0xf3
+0000            180   _P3MDIN         DATA 0xf4
+0000            181   _P4MDIN         DATA 0xf5
+0000            182   _EIP1           DATA 0xf6
+0000            183   _EIP2           DATA 0xf7
+0000            184   _SPI0CN         DATA 0xf8
+0000            185   _PCA0L          DATA 0xf9
+0000            186   _PCA0H          DATA 0xfa
+0000            187   _PCA0CPL0       DATA 0xfb
+0000            188   _PCA0CPH0       DATA 0xfc
+0000            189   _PCA0CPL4       DATA 0xfd
+0000            190   _PCA0CPH4       DATA 0xfe
+0000            191   _VDM0CN         DATA 0xff
+0000            192   _DPTR           DATA 0x8382
+0000            193   _TMR2RL         DATA 0xcbca
+0000            194   _TMR3RL         DATA 0x9392
+0000            195   _TMR4RL         DATA 0x9392
+0000            196   _TMR5RL         DATA 0xcbca
+0000            197   _TMR2           DATA 0xcdcc
+0000            198   _TMR3           DATA 0x9594
+0000            199   _TMR4           DATA 0x9594
+0000            200   _TMR5           DATA 0xcdcc
+0000            201   _SBRL1          DATA 0xb5b4
+0000            202   _ADC0           DATA 0xbebd
+0000            203   _ADC0GT         DATA 0xc4c3
+0000            204   _ADC0LT         DATA 0xc6c5
+0000            205   _PCA0           DATA 0xfaf9
+0000            206   _PCA0CP1        DATA 0xeae9
+0000            207   _PCA0CP2        DATA 0xeceb
+0000            208   _PCA0CP3        DATA 0xeeed
+0000            209   _PCA0CP0        DATA 0xfcfb
+0000            210   _PCA0CP4        DATA 0xfefd
+0000            211   ;--------------------------------------------------------
+0000            212   ; special function bits
+0000            213   ;--------------------------------------------------------
+0000            214   _P0_0           BIT 0x80
+0000            215   _P0_1           BIT 0x81
+0000            216   _P0_2           BIT 0x82
+0000            217   _P0_3           BIT 0x83
+0000            218   _P0_4           BIT 0x84
+0000            219   _P0_5           BIT 0x85
+0000            220   _P0_6           BIT 0x86
+0000            221   _P0_7           BIT 0x87
+0000            222   _TF1            BIT 0x8f
+0000            223   _TR1            BIT 0x8e
+0000            224   _TF0            BIT 0x8d
+0000            225   _TR0            BIT 0x8c
+0000            226   _IE1            BIT 0x8b
+0000            227   _IT1            BIT 0x8a
+0000            228   _IE0            BIT 0x89
+0000            229   _IT0            BIT 0x88
+0000            230   _P1_0           BIT 0x90
+0000            231   _P1_1           BIT 0x91
+0000            232   _P1_2           BIT 0x92
+0000            233   _P1_3           BIT 0x93
+0000            234   _P1_4           BIT 0x94
+0000            235   _P1_5           BIT 0x95
+0000            236   _P1_6           BIT 0x96
+0000            237   _P1_7           BIT 0x97
+0000            238   _S0MODE         BIT 0x9f
+0000            239   _SCON0_6        BIT 0x9e
+0000            240   _MCE0           BIT 0x9d
+0000            241   _REN0           BIT 0x9c
+0000            242   _TB80           BIT 0x9b
+0000            243   _RB80           BIT 0x9a
+0000            244   _TI0            BIT 0x99
+0000            245   _RI0            BIT 0x98
+0000            246   _SCON_6         BIT 0x9e
+0000            247   _MCE            BIT 0x9d
+0000            248   _REN            BIT 0x9c
+0000            249   _TB8            BIT 0x9b
+0000            250   _RB8            BIT 0x9a
+0000            251   _TI             BIT 0x99
+0000            252   _RI             BIT 0x98
+0000            253   _P2_0           BIT 0xa0
+0000            254   _P2_1           BIT 0xa1
+0000            255   _P2_2           BIT 0xa2
+0000            256   _P2_3           BIT 0xa3
+0000            257   _P2_4           BIT 0xa4
+0000            258   _P2_5           BIT 0xa5
+0000            259   _P2_6           BIT 0xa6
+0000            260   _P2_7           BIT 0xa7
+0000            261   _EA             BIT 0xaf
+0000            262   _ESPI0          BIT 0xae
+0000            263   _ET2            BIT 0xad
+0000            264   _ES0            BIT 0xac
+0000            265   _ET1            BIT 0xab
+0000            266   _EX1            BIT 0xaa
+0000            267   _ET0            BIT 0xa9
+0000            268   _EX0            BIT 0xa8
+0000            269   _P3_0           BIT 0xb0
+0000            270   _P3_1           BIT 0xb1
+0000            271   _P3_2           BIT 0xb2
+0000            272   _P3_3           BIT 0xb3
+0000            273   _P3_4           BIT 0xb4
+0000            274   _P3_5           BIT 0xb5
+0000            275   _P3_6           BIT 0xb6
+0000            276   _P3_7           BIT 0xb7
+0000            277   _IP_7           BIT 0xbf
+0000            278   _PSPI0          BIT 0xbe
+0000            279   _PT2            BIT 0xbd
+0000            280   _PS0            BIT 0xbc
+0000            281   _PT1            BIT 0xbb
+0000            282   _PX1            BIT 0xba
+0000            283   _PT0            BIT 0xb9
+0000            284   _PX0            BIT 0xb8
+0000            285   _MASTER0        BIT 0xc7
+0000            286   _TXMODE0        BIT 0xc6
+0000            287   _STA0           BIT 0xc5
+0000            288   _STO0           BIT 0xc4
+0000            289   _ACKRQ0         BIT 0xc3
+0000            290   _ARBLOST0       BIT 0xc2
+0000            291   _ACK0           BIT 0xc1
+0000            292   _SI0            BIT 0xc0
+0000            293   _MASTER1        BIT 0xc7
+0000            294   _TXMODE1        BIT 0xc6
+0000            295   _STA1           BIT 0xc5
+0000            296   _STO1           BIT 0xc4
+0000            297   _ACKRQ1         BIT 0xc3
+0000            298   _ARBLOST1       BIT 0xc2
+0000            299   _ACK1           BIT 0xc1
+0000            300   _SI1            BIT 0xc0
+0000            301   _TF2            BIT 0xcf
+0000            302   _TF2H           BIT 0xcf
+0000            303   _TF2L           BIT 0xce
+0000            304   _TF2LEN         BIT 0xcd
+0000            305   _TF2CEN         BIT 0xcc
+0000            306   _T2SPLIT        BIT 0xcb
+0000            307   _TR2            BIT 0xca
+0000            308   _T2CSS          BIT 0xc9
+0000            309   _T2XCLK         BIT 0xc8
+0000            310   _TF5H           BIT 0xcf
+0000            311   _TF5L           BIT 0xce
+0000            312   _TF5LEN         BIT 0xcd
+0000            313   _TMR5CN_4       BIT 0xcc
+0000            314   _T5SPLIT        BIT 0xcb
+0000            315   _TR5            BIT 0xca
+0000            316   _TMR5CN_1       BIT 0xc9
+0000            317   _T5XCLK         BIT 0xc8
+0000            318   _CY             BIT 0xd7
+0000            319   _AC             BIT 0xd6
+0000            320   _F0             BIT 0xd5
+0000            321   _RS1            BIT 0xd4
+0000            322   _RS0            BIT 0xd3
+0000            323   _OV             BIT 0xd2
+0000            324   _F1             BIT 0xd1
+0000            325   _PARITY         BIT 0xd0
+0000            326   _CF             BIT 0xdf
+0000            327   _CR             BIT 0xde
+0000            328   _PCA0CN_5       BIT 0xde
+0000            329   _CCF4           BIT 0xdc
+0000            330   _CCF3           BIT 0xdb
+0000            331   _CCF2           BIT 0xda
+0000            332   _CCF1           BIT 0xd9
+0000            333   _CCF0           BIT 0xd8
+0000            334   _ACC_7          BIT 0xe7
+0000            335   _ACC_6          BIT 0xe6
+0000            336   _ACC_5          BIT 0xe5
+0000            337   _ACC_4          BIT 0xe4
+0000            338   _ACC_3          BIT 0xe3
+0000            339   _ACC_2          BIT 0xe2
+0000            340   _ACC_1          BIT 0xe1
+0000            341   _ACC_0          BIT 0xe0
+0000            342   _AD0EN          BIT 0xef
+0000            343   _AD0TM          BIT 0xee
+0000            344   _AD0INT         BIT 0xed
+0000            345   _AD0BUSY        BIT 0xec
+0000            346   _AD0WINT        BIT 0xeb
+0000            347   _AD0CM2         BIT 0xea
+0000            348   _AD0CM1         BIT 0xe9
+0000            349   _AD0CM0         BIT 0xe8
+0000            350   _B_7            BIT 0xf7
+0000            351   _B_6            BIT 0xf6
+0000            352   _B_5            BIT 0xf5
+0000            353   _B_4            BIT 0xf4
+0000            354   _B_3            BIT 0xf3
+0000            355   _B_2            BIT 0xf2
+0000            356   _B_1            BIT 0xf1
+0000            357   _B_0            BIT 0xf0
+0000            358   _SPIF           BIT 0xff
+0000            359   _WCOL           BIT 0xfe
+0000            360   _MODF           BIT 0xfd
+0000            361   _RXOVRN         BIT 0xfc
+0000            362   _NSSMD1         BIT 0xfb
+0000            363   _NSSMD0         BIT 0xfa
+0000            364   _TXBMT          BIT 0xf9
+0000            365   _SPIEN          BIT 0xf8
+0000            366   ;--------------------------------------------------------
+0000            367   ; overlayable register banks
+0000            368   ;--------------------------------------------------------
+0000            369            rbank0 segment data overlay
+0000            370   ;--------------------------------------------------------
+0000            371   ; internal ram data
+0000            372   ;--------------------------------------------------------
+0000            373            rseg R_DSEG
+0000            374   _pwm_count:
+0000            375            ds 1
+0001            376   _proceed:
+0001            377            ds 1
+0002            378   _PWM_1:
+0002            379            ds 2
+0004            380   _PWM_2:
+0004            381            ds 2
+0006            382   _DRV:
+0006            383            ds 2
+0008            384   _main_selection_1_64:
+0008            385            ds 2
+000A            386   _main_voltage_1_64:
+000A            387            ds 4
+000E            388   ;--------------------------------------------------------
+000E            389   ; overlayable items in internal ram 
+000E            390   ;--------------------------------------------------------
+0000            391            rseg    R_OSEG
+0000            392            rseg    R_OSEG
+0000            393   _InitPinADC_PARM_2:
+0000            394            ds 1
+0001            395            rseg    R_OSEG
+0001            396   ;--------------------------------------------------------
+0001            397   ; indirectly addressable internal ram data
+0001            398   ;--------------------------------------------------------
+0000            399            rseg R_ISEG
+0000            400   ;--------------------------------------------------------
+0000            401   ; absolute internal ram data
+0000            402   ;--------------------------------------------------------
+0000            403            DSEG
+0000            404   ;--------------------------------------------------------
+0000            405   ; bit data
+0000            406   ;--------------------------------------------------------
+0000            407            rseg R_BSEG
+0000            408   _Timer2_ISR_sloc0_1_0:
+0000            409            DBIT    1
+0001            410   ;--------------------------------------------------------
+0001            411   ; paged external ram data
+0001            412   ;--------------------------------------------------------
+0000            413            rseg R_PSEG
+0000            414   ;--------------------------------------------------------
+0000            415   ; external ram data
+0000            416   ;--------------------------------------------------------
+0000            417            rseg R_XSEG
+0000            418   ;--------------------------------------------------------
+0000            419   ; absolute external ram data
+0000            420   ;--------------------------------------------------------
+0000            421            XSEG
+0000            422   ;--------------------------------------------------------
+0000            423   ; external initialized ram data
+0000            424   ;--------------------------------------------------------
+0000            425            rseg R_IXSEG
+0000            426            rseg R_HOME
+0000            427            rseg R_GSINIT
+0000            428            rseg R_CSEG
+0000            429   ;--------------------------------------------------------
+0000            430   ; Reset entry point and interrupt vectors
+0000            431   ;--------------------------------------------------------
+0000            432            CSEG at 0x0000
+0000 020100     433            ljmp    _crt0
+002B            434            CSEG at 0x002b
+002B 020100     435            ljmp    _Timer2_ISR
+002E            436   ;--------------------------------------------------------
+002E            437   ; global & static initialisations
+002E            438   ;--------------------------------------------------------
+0000            439            rseg R_HOME
+0000            440            rseg R_GSINIT
+0000            441            rseg R_GSINIT
+0000            442   ;--------------------------------------------------------
+0000            443   ; data variables initialization
+0000            444   ;--------------------------------------------------------
+0000            445            rseg R_DINIT
+0000            446   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:22: volatile unsigned char pwm_count=0;
+0000 756000     447            mov     _pwm_count,#0x00
+0003            448   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:24: volatile unsigned int PWM_1=0;
+0003 E4         449            clr     a
+0004 F5E0       450            mov     _PWM_1,a
+0006 F5E1       451            mov     (_PWM_1 + 1),a
+0008            452   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:25: volatile unsigned int PWM_2=0;
+0008 E4         453            clr     a
+0009 F5A0       454            mov     _PWM_2,a
+000B F5A1       455            mov     (_PWM_2 + 1),a
+000D            456   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:26: volatile int DRV = 0;
+000D E4         457            clr     a
+000E F560       458            mov     _DRV,a
+0010 F561       459            mov     (_DRV + 1),a
+0012            460            ; The linker places a 'ret' at the end of segment R_DINIT.
+0012            461   ;--------------------------------------------------------
+0012            462   ; code
+0012            463   ;--------------------------------------------------------
+0000            464            rseg R_CSEG
+0000            465   ;------------------------------------------------------------
+0000            466   ;Allocation info for local variables in function '_c51_external_startup'
+0000            467   ;------------------------------------------------------------
+0000            468   ;------------------------------------------------------------
+0000            469   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:29: char _c51_external_startup (void)
+0000            470   ;        -----------------------------------------
+0000            471   ;         function _c51_external_startup
+0000            472   ;        -----------------------------------------
+0000            473   __c51_external_startup:
+0000            474            using   0
+0000            475   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:31: PCA0MD&=(~0x40) ;    // DISABLE WDT: clear Watchdog Enable bit
+0000 53D9BF     476            anl     _PCA0MD,#0xBF
+0003            477   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:32: VDM0CN=0x80; // enable VDD monitor
+0003 75FF80     478            mov     _VDM0CN,#0x80
+0006            479   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:33: RSTSRC=0x02|0x04; // Enable reset on missing clock detector and VDD
+0006 75EF06     480            mov     _RSTSRC,#0x06
+0009            481   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:41: CLKSEL|=0b_0000_0011; // SYSCLK derived from the Internal High-Frequency Oscillator / 1.
+0009 43A903     482            orl     _CLKSEL,#0x03
+000C            483   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:45: OSCICN |= 0x03; // Configure internal oscillator for its maximum frequency
+000C 43B203     484            orl     _OSCICN,#0x03
+000F            485   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:48: SCON0 = 0x10; 
+000F 759810     486            mov     _SCON0,#0x10
+0012            487   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:50: TH1 = 0x10000-((SYSCLK/BAUDRATE)/2L);
+0012 758D30     488            mov     _TH1,#0x30
+0015            489   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:51: CKCON &= ~0x0B;                  // T1M = 1; SCA1:0 = xx
+0015 538EF4     490            anl     _CKCON,#0xF4
+0018            491   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:52: CKCON |=  0x08;
+0018 438E08     492            orl     _CKCON,#0x08
+001B            493   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:65: TL1 = TH1;      // Init Timer1
+001B 858D8B     494            mov     _TL1,_TH1
+001E            495   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:66: TMOD &= ~0xf0;  // TMOD: timer 1 in 8-bit autoreload
+001E 53890F     496            anl     _TMOD,#0x0F
+0021            497   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:67: TMOD |=  0x20;                       
+0021 438920     498            orl     _TMOD,#0x20
+0024            499   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:68: TR1 = 1; // START Timer1
+0024 D28E       500            setb    _TR1
+0026            501   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:69: TI = 1;  // Indicate TX0 ready
+0026 D299       502            setb    _TI
+0028            503   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:72: P2MDOUT|=0b_0000_0011;
+0028 43A603     504            orl     _P2MDOUT,#0x03
+002B            505   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:73: P0MDOUT |= 0x10; // Enable UTX as push-pull output
+002B 43A410     506            orl     _P0MDOUT,#0x10
+002E            507   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:74: XBR0     = 0x01; // Enable UART on P0.4(TX) and P0.5(RX)                     
+002E 75E101     508            mov     _XBR0,#0x01
+0031            509   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:75: XBR1     = 0x40; // Enable crossbar and weak pull-ups
+0031 75E240     510            mov     _XBR1,#0x40
+0034            511   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:78: TMR2CN=0x00;   // Stop Timer2; Clear TF2;
+0034 75C800     512            mov     _TMR2CN,#0x00
+0037            513   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:79: CKCON|=0b_0001_0000;
+0037 438E10     514            orl     _CKCON,#0x10
+003A            515   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:80: TMR2RL=(-(SYSCLK/(2*48))/(100L)); // Initialize reload value
+003A 75CA78     516            mov     _TMR2RL,#0x78
+003D 75CBEC     517            mov     (_TMR2RL >> 8),#0xEC
+0040            518   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:81: TMR2=0xffff;   // Set to reload immediately
+0040 75CCFF     519            mov     _TMR2,#0xFF
+0043 75CDFF     520            mov     (_TMR2 >> 8),#0xFF
+0046            521   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:82: ET2=1;         // Enable Timer2 interrupts
+0046 D2AD       522            setb    _ET2
+0048            523   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:83: TR2=1;         // Start Timer2
+0048 D2CA       524            setb    _TR2
+004A            525   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:85: EA=1; // Enable interrupts
+004A D2AF       526            setb    _EA
+004C            527   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:87: return 0;
+004C 758200     528            mov     dpl,#0x00
+004F 22         529            ret
+0050            530   ;------------------------------------------------------------
+0050            531   ;Allocation info for local variables in function 'PORT_Init'
+0050            532   ;------------------------------------------------------------
+0050            533   ;------------------------------------------------------------
+0050            534   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:90: void PORT_Init (void)
+0050            535   ;        -----------------------------------------
+0050            536   ;         function PORT_Init
+0050            537   ;        -----------------------------------------
+0050            538   _PORT_Init:
+0050            539   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:92: P0MDOUT |= 0x10; // Enable UART TX as push-pull output
+0050 43A410     540            orl     _P0MDOUT,#0x10
+0053            541   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:93: XBR0=0b_0000_0001; // Enable UART on P0.4(TX) and P0.5(RX)                    
+0053 75E101     542            mov     _XBR0,#0x01
+0056            543   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:94: XBR1=0b_0101_0000; // Enable crossbar.  Enable T0 input.
+0056 75E250     544            mov     _XBR1,#0x50
+0059            545   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:95: XBR2=0b_0000_0000;
+0059 75E300     546            mov     _XBR2,#0x00
+005C 22         547            ret
+005D            548   ;------------------------------------------------------------
+005D            549   ;Allocation info for local variables in function 'Timer2_ISR'
+005D            550   ;------------------------------------------------------------
+005D            551   ;------------------------------------------------------------
+005D            552   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:98: void Timer2_ISR (void) interrupt 5
+005D            553   ;        -----------------------------------------
+005D            554   ;         function Timer2_ISR
+005D            555   ;        -----------------------------------------
+005D            556   _Timer2_ISR:
+005D C0E0       557            push    acc
+005F C002       558            push    ar2
+0061 C003       559            push    ar3
+0063 C0D0       560            push    psw
+0065 75D000     561            mov     psw,#0x00
+0068            562   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:100: TF2H = 0; // Clear Timer2 interrupt flag
+0068 C2CF       563            clr     _TF2H
+006A            564   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:102: pwm_count++;
+006A 0560       565            inc     _pwm_count
+006C            566   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:103: if(pwm_count>100) pwm_count=0;
+006C E560       567            mov     a,_pwm_count
+006E 249B       568            add     a,#0xff - 0x64
+0070 5001       569            jnc     L004002?
+0072 756000     570            mov     _pwm_count,#0x00
+0075            571   L004002?:
+0075            572   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:105: OUT0=pwm_count>PWM_1?0:1;
+0075 AA60       573            mov     r2,_pwm_count
+0077 7B00       574            mov     r3,#0x00
+0079 C3         575            clr     c
+007A E5E0       576            mov     a,_PWM_1
+007C 9A         577            subb    a,r2
+007D E5E1       578            mov     a,(_PWM_1 + 1)
+007F 9B         579            subb    a,r3
+0080 92D8       580            mov  _Timer2_ISR_sloc0_1_0,c
+0082 B3         581            cpl     c
+0083 92A0       582            mov     _P2_0,c
+0085            583   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:106: OUT1=pwm_count>PWM_2?0:1;
+0085 AA60       584            mov     r2,_pwm_count
+0087 7B00       585            mov     r3,#0x00
+0089 C3         586            clr     c
+008A E5A0       587            mov     a,_PWM_2
+008C 9A         588            subb    a,r2
+008D E5A1       589            mov     a,(_PWM_2 + 1)
+008F 9B         590            subb    a,r3
+0090 92D8       591            mov  _Timer2_ISR_sloc0_1_0,c
+0092 B3         592            cpl     c
+0093 92A1       593            mov     _P2_1,c
+0095 D0D0       594            pop     psw
+0097 D003       595            pop     ar3
+0099 D002       596            pop     ar2
+009B D0E0       597            pop     acc
+009D 32         598            reti
+009E            599   ;        eliminated unneeded push/pop dpl
+009E            600   ;        eliminated unneeded push/pop dph
+009E            601   ;        eliminated unneeded push/pop b
+009E            602   ;------------------------------------------------------------
+009E            603   ;Allocation info for local variables in function 'Timer3us'
+009E            604   ;------------------------------------------------------------
+009E            605   ;us                        Allocated to registers r2 
+009E            606   ;i                         Allocated to registers r3 
+009E            607   ;------------------------------------------------------------
+009E            608   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:110: void Timer3us(unsigned char us)
+009E            609   ;        -----------------------------------------
+009E            610   ;         function Timer3us
+009E            611   ;        -----------------------------------------
+009E            612   _Timer3us:
+009E AA82       613            mov     r2,dpl
+00A0            614   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:115: CKCON|=0b_0100_0000;
+00A0 438E40     615            orl     _CKCON,#0x40
+00A3            616   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:117: TMR3RL = (-(SYSCLK)/1000000L); // Set Timer3 to overflow in 1us.
+00A3 7592D0     617            mov     _TMR3RL,#0xD0
+00A6 7593FF     618            mov     (_TMR3RL >> 8),#0xFF
+00A9            619   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:118: TMR3 = TMR3RL;                 // Initialize Timer3 for first overflow
+00A9 859294     620            mov     _TMR3,_TMR3RL
+00AC 859395     621            mov     (_TMR3 >> 8),(_TMR3RL >> 8)
+00AF            622   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:120: TMR3CN = 0x04;                 // Sart Timer3 and clear overflow flag
+00AF 759104     623            mov     _TMR3CN,#0x04
+00B2            624   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:121: for (i = 0; i < us; i++)       // Count <us> overflows
+00B2 7B00       625            mov     r3,#0x00
+00B4            626   L005004?:
+00B4 C3         627            clr     c
+00B5 EB         628            mov     a,r3
+00B6 9A         629            subb    a,r2
+00B7 5001       630            jnc     L005007?
+00B9            631   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:123: while (!(TMR3CN & 0x80));  // Wait for overflow
+00B9            632   L005001?:
+00B9 E591       633            mov     a,_TMR3CN
+00BB 30E7D8     634            jnb     acc.7,L005001?
+00BE            635   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:124: TMR3CN &= ~(0x80);         // Clear overflow indicator
+00BE 53917F     636            anl     _TMR3CN,#0x7F
+00C1            637   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:121: for (i = 0; i < us; i++)       // Count <us> overflows
+00C1 0B         638            inc     r3
+00C2 8001       639            sjmp    L005004?
+00C4            640   L005007?:
+00C4            641   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:126: TMR3CN = 0 ;                   // Stop Timer3 and clear overflow flag
+00C4 759100     642            mov     _TMR3CN,#0x00
+00C7 22         643            ret
+00C8            644   ;------------------------------------------------------------
+00C8            645   ;Allocation info for local variables in function 'waitms'
+00C8            646   ;------------------------------------------------------------
+00C8            647   ;ms                        Allocated to registers r2 r3 
+00C8            648   ;j                         Allocated to registers r2 r3 
+00C8            649   ;------------------------------------------------------------
+00C8            650   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:129: void waitms (unsigned int ms)
+00C8            651   ;        -----------------------------------------
+00C8            652   ;         function waitms
+00C8            653   ;        -----------------------------------------
+00C8            654   _waitms:
+00C8 AA82       655            mov     r2,dpl
+00CA AB83       656            mov     r3,dph
+00CC            657   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:132: for(j=ms; j!=0; j--)
+00CC            658   L006001?:
+00CC BA0098     659            cjne    r2,#0x00,L006010?
+00CF BB0098     660            cjne    r3,#0x00,L006010?
+00D2 22         661            ret
+00D3            662   L006010?:
+00D3            663   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:134: Timer3us(249);
+00D3 7582F9     664            mov     dpl,#0xF9
+00D6 C002       665            push    ar2
+00D8 C003       666            push    ar3
+00DA 120100     667            lcall   _Timer3us
+00DD            668   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:135: Timer3us(249);
+00DD 7582F9     669            mov     dpl,#0xF9
+00E0 120100     670            lcall   _Timer3us
+00E3            671   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:136: Timer3us(249);
+00E3 7582F9     672            mov     dpl,#0xF9
+00E6 120100     673            lcall   _Timer3us
+00E9            674   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:137: Timer3us(250);
+00E9 7582FA     675            mov     dpl,#0xFA
+00EC 120100     676            lcall   _Timer3us
+00EF D003       677            pop     ar3
+00F1 D002       678            pop     ar2
+00F3            679   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:132: for(j=ms; j!=0; j--)
+00F3 1A         680            dec     r2
+00F4 BAFFD8     681            cjne    r2,#0xff,L006011?
+00F7 1B         682            dec     r3
+00F8            683   L006011?:
+00F8 8001       684            sjmp    L006001?
+00FA            685   ;------------------------------------------------------------
+00FA            686   ;Allocation info for local variables in function 'InitADC'
+00FA            687   ;------------------------------------------------------------
+00FA            688   ;------------------------------------------------------------
+00FA            689   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:141: void InitADC (void)
+00FA            690   ;        -----------------------------------------
+00FA            691   ;         function InitADC
+00FA            692   ;        -----------------------------------------
+00FA            693   _InitADC:
+00FA            694   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:144: ADC0CF = 0xF8; // SAR clock = 31, Right-justified result
+00FA 75BCF8     695            mov     _ADC0CF,#0xF8
+00FD            696   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:145: ADC0CN = 0b_1000_0000; // AD0EN=1, AD0TM=0
+00FD 75E880     697            mov     _ADC0CN,#0x80
+0100            698   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:146: REF0CN = 0b_0000_1000; //Select VDD as the voltage reference for the converter
+0100 75D108     699            mov     _REF0CN,#0x08
+0103 22         700            ret
+0104            701   ;------------------------------------------------------------
+0104            702   ;Allocation info for local variables in function 'InitPinADC'
+0104            703   ;------------------------------------------------------------
+0104            704   ;pinno                     Allocated with name '_InitPinADC_PARM_2'
+0104            705   ;portno                    Allocated to registers r2 
+0104            706   ;mask                      Allocated to registers r3 
+0104            707   ;------------------------------------------------------------
+0104            708   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:149: void InitPinADC (unsigned char portno, unsigned char pinno)
+0104            709   ;        -----------------------------------------
+0104            710   ;         function InitPinADC
+0104            711   ;        -----------------------------------------
+0104            712   _InitPinADC:
+0104 AA82       713            mov     r2,dpl
+0106            714   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:153: mask=1<<pinno;
+0106 8570F0     715            mov     b,_InitPinADC_PARM_2
+0109 05F0       716            inc     b
+010B 7401       717            mov     a,#0x01
+010D 8001       718            sjmp    L008012?
+010F            719   L008010?:
+010F 25E0       720            add     a,acc
+0111            721   L008012?:
+0111 D5F098     722            djnz    b,L008010?
+0114 FB         723            mov     r3,a
+0115            724   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:155: switch (portno)
+0115 EA         725            mov     a,r2
+0116 24FC       726            add     a,#0xff - 0x03
+0118 4001       727            jc      L008007?
+011A EA         728            mov     a,r2
+011B 2A         729            add     a,r2
+011C 2A         730            add     a,r2
+011D 909718     731            mov     dptr,#L008014?
+0120 73         732            jmp     @a+dptr
+0121            733   L008014?:
+0121 020100     734            ljmp    L008001?
+0124 020100     735            ljmp    L008002?
+0127 020100     736            ljmp    L008003?
+012A 020100     737            ljmp    L008004?
+012D            738   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:157: case 0:
+012D            739   L008001?:
+012D            740   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:158: P0MDIN &= (~mask); // Set pin as analog input
+012D EB         741            mov     a,r3
+012E F4         742            cpl     a
+012F 52F1       743            anl     _P0MDIN,a
+0131            744   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:159: P0SKIP |= mask; // Skip Crossbar decoding for this pin
+0131 EB         745            mov     a,r3
+0132 42D4       746            orl     _P0SKIP,a
+0134            747   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:160: break;
+0134            748   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:161: case 1:
+0134 22         749            ret
+0135            750   L008002?:
+0135            751   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:162: P1MDIN &= (~mask); // Set pin as analog input
+0135 EB         752            mov     a,r3
+0136 F4         753            cpl     a
+0137 52F2       754            anl     _P1MDIN,a
+0139            755   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:163: P1SKIP |= mask; // Skip Crossbar decoding for this pin
+0139 EB         756            mov     a,r3
+013A 42D5       757            orl     _P1SKIP,a
+013C            758   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:164: break;
+013C            759   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:165: case 2:
+013C 22         760            ret
+013D            761   L008003?:
+013D            762   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:166: P2MDIN &= (~mask); // Set pin as analog input
+013D EB         763            mov     a,r3
+013E F4         764            cpl     a
+013F 52F3       765            anl     _P2MDIN,a
+0141            766   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:167: P2SKIP |= mask; // Skip Crossbar decoding for this pin
+0141 EB         767            mov     a,r3
+0142 42D6       768            orl     _P2SKIP,a
+0144            769   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:168: break;
+0144            770   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:169: case 3:
+0144 22         771            ret
+0145            772   L008004?:
+0145            773   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:170: P3MDIN &= (~mask); // Set pin as analog input
+0145 EB         774            mov     a,r3
+0146 F4         775            cpl     a
+0147 FA         776            mov     r2,a
+0148 52F4       777            anl     _P3MDIN,a
+014A            778   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:171: P3SKIP |= mask; // Skip Crossbar decoding for this pin
+014A EB         779            mov     a,r3
+014B 42DF       780            orl     _P3SKIP,a
+014D            781   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:175: }
+014D            782   L008007?:
+014D 22         783            ret
+014E            784   ;------------------------------------------------------------
+014E            785   ;Allocation info for local variables in function 'ADC_at_Pin'
+014E            786   ;------------------------------------------------------------
+014E            787   ;pin                       Allocated to registers 
+014E            788   ;------------------------------------------------------------
+014E            789   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:178: unsigned int ADC_at_Pin(unsigned char pin)
+014E            790   ;        -----------------------------------------
+014E            791   ;         function ADC_at_Pin
+014E            792   ;        -----------------------------------------
+014E            793   _ADC_at_Pin:
+014E 8582BB     794            mov     _AMX0P,dpl
+0151            795   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:181: AMX0N = LQFP32_MUX_GND;  // GND is negative input (Single-ended Mode)
+0151 75BA1F     796            mov     _AMX0N,#0x1F
+0154            797   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:183: AD0BUSY=1;
+0154 D2EC       798            setb    _AD0BUSY
+0156            799   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:184: while (AD0BUSY); // Wait for dummy conversion to finish
+0156            800   L009001?:
+0156 20EC58     801            jb      _AD0BUSY,L009001?
+0159            802   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:186: AD0BUSY = 1;
+0159 D2EC       803            setb    _AD0BUSY
+015B            804   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:187: while (AD0BUSY); // Wait for conversion to complete
+015B            805   L009004?:
+015B 20EC98     806            jb      _AD0BUSY,L009004?
+015E            807   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:188: return (ADC0L+(ADC0H*0x100));
+015E AABD       808            mov     r2,_ADC0L
+0160 7B00       809            mov     r3,#0x00
+0162 ADBE       810            mov     r5,_ADC0H
+0164 7C00       811            mov     r4,#0x00
+0166 EC         812            mov     a,r4
+0167 2A         813            add     a,r2
+0168 F582       814            mov     dpl,a
+016A ED         815            mov     a,r5
+016B 3B         816            addc    a,r3
+016C F583       817            mov     dph,a
+016E 22         818            ret
+016F            819   ;------------------------------------------------------------
+016F            820   ;Allocation info for local variables in function 'Volts_at_Pin'
+016F            821   ;------------------------------------------------------------
+016F            822   ;pin                       Allocated to registers r2 
+016F            823   ;------------------------------------------------------------
+016F            824   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:191: float Volts_at_Pin(unsigned char pin)
+016F            825   ;        -----------------------------------------
+016F            826   ;         function Volts_at_Pin
+016F            827   ;        -----------------------------------------
+016F            828   _Volts_at_Pin:
+016F            829   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:193: return ((ADC_at_Pin(pin)*3.30)/1024.0);
+016F 120100     830            lcall   _ADC_at_Pin
+0172 120100     831            lcall   ___uint2fs
+0175 AA82       832            mov     r2,dpl
+0177 AB83       833            mov     r3,dph
+0179 ACF0       834            mov     r4,b
+017B FD         835            mov     r5,a
+017C C002       836            push    ar2
+017E C003       837            push    ar3
+0180 C004       838            push    ar4
+0182 C005       839            push    ar5
+0184 903333     840            mov     dptr,#0x3333
+0187 75F053     841            mov     b,#0x53
+018A 7440       842            mov     a,#0x40
+018C 120100     843            lcall   ___fsmul
+018F AA82       844            mov     r2,dpl
+0191 AB83       845            mov     r3,dph
+0193 ACF0       846            mov     r4,b
+0195 FD         847            mov     r5,a
+0196 E581       848            mov     a,sp
+0198 24FC       849            add     a,#0xfc
+019A F581       850            mov     sp,a
+019C E4         851            clr     a
+019D C0E0       852            push    acc
+019F C0E0       853            push    acc
+01A1 7480       854            mov     a,#0x80
+01A3 C0E0       855            push    acc
+01A5 7444       856            mov     a,#0x44
+01A7 C0E0       857            push    acc
+01A9 8A82       858            mov     dpl,r2
+01AB 8B83       859            mov     dph,r3
+01AD 8CF0       860            mov     b,r4
+01AF ED         861            mov     a,r5
+01B0 120100     862            lcall   ___fsdiv
+01B3 AA82       863            mov     r2,dpl
+01B5 AB83       864            mov     r3,dph
+01B7 ACF0       865            mov     r4,b
+01B9 FD         866            mov     r5,a
+01BA E581       867            mov     a,sp
+01BC 24FC       868            add     a,#0xfc
+01BE F581       869            mov     sp,a
+01C0 8A82       870            mov     dpl,r2
+01C2 8B83       871            mov     dph,r3
+01C4 8CF0       872            mov     b,r4
+01C6 ED         873            mov     a,r5
+01C7 22         874            ret
+01C8            875   ;------------------------------------------------------------
+01C8            876   ;Allocation info for local variables in function 'main'
+01C8            877   ;------------------------------------------------------------
+01C8            878   ;selection                 Allocated with name '_main_selection_1_64'
+01C8            879   ;voltage                   Allocated with name '_main_voltage_1_64'
+01C8            880   ;------------------------------------------------------------
+01C8            881   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:196: void main (void)
+01C8            882   ;        -----------------------------------------
+01C8            883   ;         function main
+01C8            884   ;        -----------------------------------------
+01C8            885   _main:
+01C8            886   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:198: int selection = 0;
+01C8            887   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:199: volatile float voltage = 0;
+01C8 E4         888            clr a
+01C9 F538       889            mov _main_selection_1_64,a
+01CB F539       890            mov (_main_selection_1_64 + 1),a
+01CD F588       891            mov _main_voltage_1_64,a
+01CF F589       892            mov (_main_voltage_1_64 + 1),a
+01D1 F58A       893            mov (_main_voltage_1_64 + 2),a
+01D3 F58B       894            mov (_main_voltage_1_64 + 3),a
+01D5            895   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:202: PORT_Init();     // Initialize Port I/O
+01D5 120100     896            lcall   _PORT_Init
+01D8            897   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:204: printf("\x1b[2J"); // Clear screen using ANSI escape sequence.
+01D8 74D8       898            mov     a,#__str_0
+01DA C0E0       899            push    acc
+01DC 7499       900            mov     a,#(__str_0 >> 8)
+01DE C0E0       901            push    acc
+01E0 7480       902            mov     a,#0x80
+01E2 C0E0       903            push    acc
+01E4 120100     904            lcall   _printf
+01E7 1581       905            dec     sp
+01E9 1581       906            dec     sp
+01EB 1581       907            dec     sp
+01ED            908   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:205: InitPinADC(1, 7);
+01ED 757007     909            mov     _InitPinADC_PARM_2,#0x07
+01F0 758201     910            mov     dpl,#0x01
+01F3 120100     911            lcall   _InitPinADC
+01F6            912   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:206: InitADC();
+01F6 120100     913            lcall   _InitADC
+01F9            914   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:208: while(1)
+01F9            915   L011015?:
+01F9            916   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:211: PWM_1 = 0;
+01F9            917   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:212: PWM_2 = 0;
+01F9 E4         918            clr     a
+01FA F5E0       919            mov     _PWM_1,a
+01FC F5E1       920            mov     (_PWM_1 + 1),a
+01FE F5A0       921            mov     _PWM_2,a
+0200 F5A1       922            mov     (_PWM_2 + 1),a
+0202            923   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:213: printf(GOTO_YX, 1,1);
+0202 7401       924            mov     a,#0x01
+0204 C0E0       925            push    acc
+0206 E4         926            clr     a
+0207 C0E0       927            push    acc
+0209 7401       928            mov     a,#0x01
+020B C0E0       929            push    acc
+020D E4         930            clr     a
+020E C0E0       931            push    acc
+0210 7498       932            mov     a,#__str_1
+0212 C0E0       933            push    acc
+0214 749A       934            mov     a,#(__str_1 >> 8)
+0216 C0E0       935            push    acc
+0218 7480       936            mov     a,#0x80
+021A C0E0       937            push    acc
+021C 120100     938            lcall   _printf
+021F E581       939            mov     a,sp
+0221 24F9       940            add     a,#0xf9
+0223 F581       941            mov     sp,a
+0225            942   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:214: printf("Choose between two options: temperature controlled motor (1), or user-controlled motor (other): ");
+0225 74D8       943            mov     a,#__str_2
+0227 C0E0       944            push    acc
+0229 749A       945            mov     a,#(__str_2 >> 8)
+022B C0E0       946            push    acc
+022D 7480       947            mov     a,#0x80
+022F C0E0       948            push    acc
+0231 120100     949            lcall   _printf
+0234 1581       950            dec     sp
+0236 1581       951            dec     sp
+0238 1581       952            dec     sp
+023A            953   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:215: scanf("%d\n", &selection);
+023A 7438       954            mov     a,#_main_selection_1_64
+023C C0E0       955            push    acc
+023E 7492       956            mov     a,#(_main_selection_1_64 >> 8)
+0240 C0E0       957            push    acc
+0242 7440       958            mov     a,#0x40
+0244 C0E0       959            push    acc
+0246 7418       960            mov     a,#__str_3
+0248 C0E0       961            push    acc
+024A 749B       962            mov     a,#(__str_3 >> 8)
+024C C0E0       963            push    acc
+024E 7480       964            mov     a,#0x80
+0250 C0E0       965            push    acc
+0252 120100     966            lcall   _scanf
+0255 E581       967            mov     a,sp
+0257 24FA       968            add     a,#0xfa
+0259 F581       969            mov     sp,a
+025B            970   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:217: printf("\x1b[2J");
+025B 74D8       971            mov     a,#__str_0
+025D C0E0       972            push    acc
+025F 7499       973            mov     a,#(__str_0 >> 8)
+0261 C0E0       974            push    acc
+0263 7480       975            mov     a,#0x80
+0265 C0E0       976            push    acc
+0267 120100     977            lcall   _printf
+026A 1581       978            dec     sp
+026C 1581       979            dec     sp
+026E 1581       980            dec     sp
+0270            981   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:218: while (selection==1)
+0270            982   L011001?:
+0270 7401       983            mov     a,#0x01
+0272 B538D8     984            cjne    a,_main_selection_1_64,L011025?
+0275 E4         985            clr     a
+0276 B539D8     986            cjne    a,(_main_selection_1_64 + 1),L011025?
+0279 8001       987            sjmp    L011026?
+027B            988   L011025?:
+027B 020100     989            ljmp    L011003?
+027E            990   L011026?:
+027E            991   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:220: voltage = Volts_at_Pin(LQFP32_MUX_P1_7);
+027E 758207     992            mov     dpl,#0x07
+0281 120100     993            lcall   _Volts_at_Pin
+0284 858288     994            mov     _main_voltage_1_64,dpl
+0287 858389     995            mov     (_main_voltage_1_64 + 1),dph
+028A 85F08A     996            mov     (_main_voltage_1_64 + 2),b
+028D F58B       997            mov     (_main_voltage_1_64 + 3),a
+028F            998   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:222: DRV=((voltage-2.93)/0.05)*100;
+028F 741F       999            mov     a,#0x1F
+0291 C0E0      1000            push    acc
+0293 7485      1001            mov     a,#0x85
+0295 C0E0      1002            push    acc
+0297 743B      1003            mov     a,#0x3B
+0299 C0E0      1004            push    acc
+029B 7440      1005            mov     a,#0x40
+029D C0E0      1006            push    acc
+029F 858882    1007            mov     dpl,_main_voltage_1_64
+02A2 858983    1008            mov     dph,(_main_voltage_1_64 + 1)
+02A5 858AF0    1009            mov     b,(_main_voltage_1_64 + 2)
+02A8 E58B      1010            mov     a,(_main_voltage_1_64 + 3)
+02AA 120100    1011            lcall   ___fssub
+02AD AA82      1012            mov     r2,dpl
+02AF AB83      1013            mov     r3,dph
+02B1 ACF0      1014            mov     r4,b
+02B3 FD        1015            mov     r5,a
+02B4 E581      1016            mov     a,sp
+02B6 24FC      1017            add     a,#0xfc
+02B8 F581      1018            mov     sp,a
+02BA 74CD      1019            mov     a,#0xCD
+02BC C0E0      1020            push    acc
+02BE 74CC      1021            mov     a,#0xCC
+02C0 C0E0      1022            push    acc
+02C2 744C      1023            mov     a,#0x4C
+02C4 C0E0      1024            push    acc
+02C6 743D      1025            mov     a,#0x3D
+02C8 C0E0      1026            push    acc
+02CA 8A82      1027            mov     dpl,r2
+02CC 8B83      1028            mov     dph,r3
+02CE 8CF0      1029            mov     b,r4
+02D0 ED        1030            mov     a,r5
+02D1 120100    1031            lcall   ___fsdiv
+02D4 AA82      1032            mov     r2,dpl
+02D6 AB83      1033            mov     r3,dph
+02D8 ACF0      1034            mov     r4,b
+02DA FD        1035            mov     r5,a
+02DB E581      1036            mov     a,sp
+02DD 24FC      1037            add     a,#0xfc
+02DF F581      1038            mov     sp,a
+02E1 C002      1039            push    ar2
+02E3 C003      1040            push    ar3
+02E5 C004      1041            push    ar4
+02E7 C005      1042            push    ar5
+02E9 900000    1043            mov     dptr,#0x0000
+02EC 75F0C8    1044            mov     b,#0xC8
+02EF 7442      1045            mov     a,#0x42
+02F1 120100    1046            lcall   ___fsmul
+02F4 AA82      1047            mov     r2,dpl
+02F6 AB83      1048            mov     r3,dph
+02F8 ACF0      1049            mov     r4,b
+02FA FD        1050            mov     r5,a
+02FB E581      1051            mov     a,sp
+02FD 24FC      1052            add     a,#0xfc
+02FF F581      1053            mov     sp,a
+0301 8A82      1054            mov     dpl,r2
+0303 8B83      1055            mov     dph,r3
+0305 8CF0      1056            mov     b,r4
+0307 ED        1057            mov     a,r5
+0308 120100    1058            lcall   ___fs2sint
+030B 858260    1059            mov     _DRV,dpl
+030E 858361    1060            mov     (_DRV + 1),dph
+0311           1061   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:223: printf("\rvoltage: %.3f, DRV: %d        ", voltage, DRV);
+0311 C060      1062            push    _DRV
+0313 C061      1063            push    (_DRV + 1)
+0315 C088      1064            push    _main_voltage_1_64
+0317 C089      1065            push    (_main_voltage_1_64 + 1)
+0319 C08A      1066            push    (_main_voltage_1_64 + 2)
+031B C08B      1067            push    (_main_voltage_1_64 + 3)
+031D 7418      1068            mov     a,#__str_4
+031F C0E0      1069            push    acc
+0321 749D      1070            mov     a,#(__str_4 >> 8)
+0323 C0E0      1071            push    acc
+0325 7480      1072            mov     a,#0x80
+0327 C0E0      1073            push    acc
+0329 120100    1074            lcall   _printf
+032C E581      1075            mov     a,sp
+032E 24F7      1076            add     a,#0xf7
+0330 F581      1077            mov     sp,a
+0332           1078   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:224: PWM_1 = DRV;
+0332 8560E0    1079            mov     _PWM_1,_DRV
+0335 8561E1    1080            mov     (_PWM_1 + 1),(_DRV + 1)
+0338           1081   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:225: PWM_2 = 0;
+0338 E4        1082            clr     a
+0339 F5A0      1083            mov     _PWM_2,a
+033B F5A1      1084            mov     (_PWM_2 + 1),a
+033D           1085   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:227: waitms(15);
+033D 90000F    1086            mov     dptr,#0x000F
+0340 120100    1087            lcall   _waitms
+0343 020100    1088            ljmp    L011001?
+0346           1089   L011003?:
+0346           1090   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:232: printf("\rPlease Input PWM Range 100 to -100: ");
+0346 7458      1091            mov     a,#__str_5
+0348 C0E0      1092            push    acc
+034A 749D      1093            mov     a,#(__str_5 >> 8)
+034C C0E0      1094            push    acc
+034E 7480      1095            mov     a,#0x80
+0350 C0E0      1096            push    acc
+0352 120100    1097            lcall   _printf
+0355 1581      1098            dec     sp
+0357 1581      1099            dec     sp
+0359 1581      1100            dec     sp
+035B           1101   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:233: scanf("%d", &DRV);
+035B 7460      1102            mov     a,#_DRV
+035D C0E0      1103            push    acc
+035F 7441      1104            mov     a,#(_DRV >> 8)
+0361 C0E0      1105            push    acc
+0363 7440      1106            mov     a,#0x40
+0365 C0E0      1107            push    acc
+0367 7498      1108            mov     a,#__str_6
+0369 C0E0      1109            push    acc
+036B 749D      1110            mov     a,#(__str_6 >> 8)
+036D C0E0      1111            push    acc
+036F 7480      1112            mov     a,#0x80
+0371 C0E0      1113            push    acc
+0373 120100    1114            lcall   _scanf
+0376 E581      1115            mov     a,sp
+0378 24FA      1116            add     a,#0xfa
+037A F581      1117            mov     sp,a
+037C           1118   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:234: if(DRV < -100 || DRV > 100)
+037C C3        1119            clr     c
+037D E560      1120            mov     a,_DRV
+037F 949C      1121            subb    a,#0x9C
+0381 E561      1122            mov     a,(_DRV + 1)
+0383 6480      1123            xrl     a,#0x80
+0385 947F      1124            subb    a,#0x7f
+0387 4001      1125            jc      L011010?
+0389 7464      1126            mov     a,#0x64
+038B 9560      1127            subb    a,_DRV
+038D E4        1128            clr     a
+038E 6480      1129            xrl     a,#0x80
+0390 8561F0    1130            mov     b,(_DRV + 1)
+0393 63F080    1131            xrl     b,#0x80
+0396 95F0      1132            subb    a,b
+0398 5001      1133            jnc     L011011?
+039A           1134   L011010?:
+039A           1135   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:235: printf("Value Not Within Range");
+039A 7458      1136            mov     a,#__str_7
+039C C0E0      1137            push    acc
+039E 749E      1138            mov     a,#(__str_7 >> 8)
+03A0 C0E0      1139            push    acc
+03A2 7480      1140            mov     a,#0x80
+03A4 C0E0      1141            push    acc
+03A6 120100    1142            lcall   _printf
+03A9 1581      1143            dec     sp
+03AB 1581      1144            dec     sp
+03AD 1581      1145            dec     sp
+03AF 8001      1146            sjmp    L011012?
+03B1           1147   L011011?:
+03B1           1148   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:236: else if(DRV > 0)
+03B1 C3        1149            clr     c
+03B2 E4        1150            clr     a
+03B3 9560      1151            subb    a,_DRV
+03B5 E4        1152            clr     a
+03B6 6480      1153            xrl     a,#0x80
+03B8 8561F0    1154            mov     b,(_DRV + 1)
+03BB 63F080    1155            xrl     b,#0x80
+03BE 95F0      1156            subb    a,b
+03C0 5001      1157            jnc     L011008?
+03C2           1158   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:238: PWM_1 = DRV;
+03C2 8560E0    1159            mov     _PWM_1,_DRV
+03C5 8561E1    1160            mov     (_PWM_1 + 1),(_DRV + 1)
+03C8           1161   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:239: PWM_2 = 0;
+03C8 E4        1162            clr     a
+03C9 F5A0      1163            mov     _PWM_2,a
+03CB F5A1      1164            mov     (_PWM_2 + 1),a
+03CD 8001      1165            sjmp    L011012?
+03CF           1166   L011008?:
+03CF           1167   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:241: else if(DRV < 0)
+03CF E561      1168            mov     a,(_DRV + 1)
+03D1 30E718    1169            jnb     acc.7,L011005?
+03D4           1170   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:243: PWM_1 = 0;
+03D4 E4        1171            clr     a
+03D5 F5E0      1172            mov     _PWM_1,a
+03D7 F5E1      1173            mov     (_PWM_1 + 1),a
+03D9           1174   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:244: PWM_2 = -DRV;
+03D9 C3        1175            clr     c
+03DA E4        1176            clr     a
+03DB 9560      1177            subb    a,_DRV
+03DD F5A0      1178            mov     _PWM_2,a
+03DF E4        1179            clr     a
+03E0 9561      1180            subb    a,(_DRV + 1)
+03E2 F5A1      1181            mov     (_PWM_2 + 1),a
+03E4 8001      1182            sjmp    L011012?
+03E6           1183   L011005?:
+03E6           1184   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:248: PWM_1 = 0;
+03E6           1185   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:249: PWM_2 = 0;
+03E6 E4        1186            clr     a
+03E7 F5E0      1187            mov     _PWM_1,a
+03E9 F5E1      1188            mov     (_PWM_1 + 1),a
+03EB F5A0      1189            mov     _PWM_2,a
+03ED F5A1      1190            mov     (_PWM_2 + 1),a
+03EF           1191   L011012?:
+03EF           1192   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:251: printf("\nType 'o' and press enter to end PWM: ");
+03EF 7458      1193            mov     a,#__str_8
+03F1 C0E0      1194            push    acc
+03F3 749F      1195            mov     a,#(__str_8 >> 8)
+03F5 C0E0      1196            push    acc
+03F7 7480      1197            mov     a,#0x80
+03F9 C0E0      1198            push    acc
+03FB 120100    1199            lcall   _printf
+03FE 1581      1200            dec     sp
+0400 1581      1201            dec     sp
+0402 1581      1202            dec     sp
+0404           1203   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:252: scanf("%s", &proceed);
+0404 7420      1204            mov     a,#_proceed
+0406 C0E0      1205            push    acc
+0408 7442      1206            mov     a,#(_proceed >> 8)
+040A C0E0      1207            push    acc
+040C 7440      1208            mov     a,#0x40
+040E C0E0      1209            push    acc
+0410 7498      1210            mov     a,#__str_9
+0412 C0E0      1211            push    acc
+0414 749F      1212            mov     a,#(__str_9 >> 8)
+0416 C0E0      1213            push    acc
+0418 7480      1214            mov     a,#0x80
+041A C0E0      1215            push    acc
+041C 120100    1216            lcall   _scanf
+041F E581      1217            mov     a,sp
+0421 24FA      1218            add     a,#0xfa
+0423 F581      1219            mov     sp,a
+0425           1220   ;        C:\Users\jeffreyliou\Desktop\elec291\lab6\lab6code.c:255: printf("\x1b[2J");
+0425 74D8      1221            mov     a,#__str_0
+0427 C0E0      1222            push    acc
+0429 7499      1223            mov     a,#(__str_0 >> 8)
+042B C0E0      1224            push    acc
+042D 7480      1225            mov     a,#0x80
+042F C0E0      1226            push    acc
+0431 120100    1227            lcall   _printf
+0434 1581      1228            dec     sp
+0436 1581      1229            dec     sp
+0438 1581      1230            dec     sp
+043A 020100    1231            ljmp    L011015?
+043D           1232            rseg R_CSEG
+043D           1233   
+0000           1234            rseg R_XINIT
+0000           1235   
+0000           1236            rseg R_CONST
+0000           1237   __str_0:
+0000 1B        1238            db 0x1B
+0001 5B324A    1239            db '[2J'
+0004 00        1240            db 0x00
+0005           1241   __str_1:
+0005 1B        1242            db 0x1B
+0006 5B25643B  1243            db '[%d;%dH'
+     256448
+000D 00        1244            db 0x00
+000E           1245   __str_2:
+000E 43686F6F  1246            db 'Choose between two options: temperature controlled motor (1)'
+     73652062
+     65747765
+     656E2074
+     776F206F
+     7074696F
+     6E733A20
+     74656D70
+     65726174
+     75726520
+     636F6E74
+     726F6C6C
+     6564206D
+     6F746F72
+     20283129
+004A 2C206F72  1247            db ', or user-controlled motor (other): '
+     20757365
+     722D636F
+     6E74726F
+     6C6C6564
+     206D6F74
+     6F722028
+     6F746865
+     72293A20
+006E 00        1248            db 0x00
+006F           1249   __str_3:
+006F 2564      1250            db '%d'
+0071 0A        1251            db 0x0A
+0072 00        1252            db 0x00
+0073           1253   __str_4:
+0073 0D        1254            db 0x0D
+0074 766F6C74  1255            db 'voltage: %.3f, DRV: %d        '
+     6167653A
+     20252E33
+     662C2044
+     52563A20
+     25642020
+     20202020
+     2020
+0092 00        1256            db 0x00
+0093           1257   __str_5:
+0093 0D        1258            db 0x0D
+0094 506C6561  1259            db 'Please Input PWM Range 100 to -100: '
+     73652049
+     6E707574
+     2050574D
+     2052616E
+     67652031
+     30302074
+     6F202D31
+     30303A20
+00B8 00        1260            db 0x00
+00B9           1261   __str_6:
+00B9 2564      1262            db '%d'
+00BB 00        1263            db 0x00
+00BC           1264   __str_7:
+00BC 56616C75  1265            db 'Value Not Within Range'
+     65204E6F
+     74205769
+     7468696E
+     2052616E
+     6765
+00D2 00        1266            db 0x00
+00D3           1267   __str_8:
+00D3 0A        1268            db 0x0A
+00D4 54797065  1269            db 'Type '
+     20
+00D9 27        1270            db 0x27
+00DA 6F        1271            db 'o'
+00DB 27        1272            db 0x27
+00DC 20616E64  1273            db ' and press enter to end PWM: '
+     20707265
+     73732065
+     6E746572
+     20746F20
+     656E6420
+     50574D3A
+     20
+00F9 00        1274            db 0x00
+00FA           1275   __str_9:
+00FA 2573      1276            db '%s'
+00FC 00        1277            db 0x00
+00FD           1278   
+002E           1279            CSEG
+002E           1280   
+002E           1281   end

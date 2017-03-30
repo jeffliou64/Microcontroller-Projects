@@ -1,0 +1,2350 @@
+0000              1   ;--------------------------------------------------------
+0000              2   ; File Created by C51
+0000              3   ; Version 1.0.0 #1069 (Apr 23 2015) (MSVC)
+0000              4   ; This file was generated Tue Mar 15 12:23:25 2016
+0000              5   ;--------------------------------------------------------
+                  5   $name any_pin_with_cp437
+                  6   $optc51 --model-small
+                  7   $printf_float
+0000              9            R_DSEG    segment data
+0000             10            R_CSEG    segment code
+0000             11            R_BSEG    segment bit
+0000             12            R_XSEG    segment xdata
+0000             13            R_PSEG    segment xdata
+0000             14            R_ISEG    segment idata
+0000             15            R_OSEG    segment data overlay
+0000             16            BIT_BANK  segment data overlay
+0000             17            R_HOME    segment code
+0000             18            R_GSINIT  segment code
+0000             19            R_IXSEG   segment xdata
+0000             20            R_CONST   segment code
+0000             21            R_XINIT   segment code
+0000             22            R_DINIT   segment code
+0000             23   
+0000             24   ;--------------------------------------------------------
+0000             25   ; Public variables in this module
+0000             26   ;--------------------------------------------------------
+0000             27            public _InitPinADC_PARM_2
+0000             28            public _main
+0000             29            public _Volts_at_Pin
+0000             30            public _ADC_at_Pin
+0000             31            public _InitPinADC
+0000             32            public _InitADC
+0000             33            public _waitms
+0000             34            public _Timer3us
+0000             35            public __c51_external_startup
+0000             36            public _TIMER0_Init
+0000             37            public _UART0_Init
+0000             38            public _SYSCLK_Init
+0000             39            public _PORT_Init
+0000             40            public _overflow_count
+0000             41   ;--------------------------------------------------------
+0000             42   ; Special Function Registers
+0000             43   ;--------------------------------------------------------
+0000             44   _P0             DATA 0x80
+0000             45   _SP             DATA 0x81
+0000             46   _DPL            DATA 0x82
+0000             47   _DPH            DATA 0x83
+0000             48   _EMI0TC         DATA 0x84
+0000             49   _EMI0CF         DATA 0x85
+0000             50   _OSCLCN         DATA 0x86
+0000             51   _PCON           DATA 0x87
+0000             52   _TCON           DATA 0x88
+0000             53   _TMOD           DATA 0x89
+0000             54   _TL0            DATA 0x8a
+0000             55   _TL1            DATA 0x8b
+0000             56   _TH0            DATA 0x8c
+0000             57   _TH1            DATA 0x8d
+0000             58   _CKCON          DATA 0x8e
+0000             59   _PSCTL          DATA 0x8f
+0000             60   _P1             DATA 0x90
+0000             61   _TMR3CN         DATA 0x91
+0000             62   _TMR4CN         DATA 0x91
+0000             63   _TMR3RLL        DATA 0x92
+0000             64   _TMR4RLL        DATA 0x92
+0000             65   _TMR3RLH        DATA 0x93
+0000             66   _TMR4RLH        DATA 0x93
+0000             67   _TMR3L          DATA 0x94
+0000             68   _TMR4L          DATA 0x94
+0000             69   _TMR3H          DATA 0x95
+0000             70   _TMR4H          DATA 0x95
+0000             71   _USB0ADR        DATA 0x96
+0000             72   _USB0DAT        DATA 0x97
+0000             73   _SCON           DATA 0x98
+0000             74   _SCON0          DATA 0x98
+0000             75   _SBUF           DATA 0x99
+0000             76   _SBUF0          DATA 0x99
+0000             77   _CPT1CN         DATA 0x9a
+0000             78   _CPT0CN         DATA 0x9b
+0000             79   _CPT1MD         DATA 0x9c
+0000             80   _CPT0MD         DATA 0x9d
+0000             81   _CPT1MX         DATA 0x9e
+0000             82   _CPT0MX         DATA 0x9f
+0000             83   _P2             DATA 0xa0
+0000             84   _SPI0CFG        DATA 0xa1
+0000             85   _SPI0CKR        DATA 0xa2
+0000             86   _SPI0DAT        DATA 0xa3
+0000             87   _P0MDOUT        DATA 0xa4
+0000             88   _P1MDOUT        DATA 0xa5
+0000             89   _P2MDOUT        DATA 0xa6
+0000             90   _P3MDOUT        DATA 0xa7
+0000             91   _IE             DATA 0xa8
+0000             92   _CLKSEL         DATA 0xa9
+0000             93   _EMI0CN         DATA 0xaa
+0000             94   __XPAGE         DATA 0xaa
+0000             95   _SBCON1         DATA 0xac
+0000             96   _P4MDOUT        DATA 0xae
+0000             97   _PFE0CN         DATA 0xaf
+0000             98   _P3             DATA 0xb0
+0000             99   _OSCXCN         DATA 0xb1
+0000            100   _OSCICN         DATA 0xb2
+0000            101   _OSCICL         DATA 0xb3
+0000            102   _SBRLL1         DATA 0xb4
+0000            103   _SBRLH1         DATA 0xb5
+0000            104   _FLSCL          DATA 0xb6
+0000            105   _FLKEY          DATA 0xb7
+0000            106   _IP             DATA 0xb8
+0000            107   _CLKMUL         DATA 0xb9
+0000            108   _SMBTC          DATA 0xb9
+0000            109   _AMX0N          DATA 0xba
+0000            110   _AMX0P          DATA 0xbb
+0000            111   _ADC0CF         DATA 0xbc
+0000            112   _ADC0L          DATA 0xbd
+0000            113   _ADC0H          DATA 0xbe
+0000            114   _SFRPAGE        DATA 0xbf
+0000            115   _SMB0CN         DATA 0xc0
+0000            116   _SMB1CN         DATA 0xc0
+0000            117   _SMB0CF         DATA 0xc1
+0000            118   _SMB1CF         DATA 0xc1
+0000            119   _SMB0DAT        DATA 0xc2
+0000            120   _SMB1DAT        DATA 0xc2
+0000            121   _ADC0GTL        DATA 0xc3
+0000            122   _ADC0GTH        DATA 0xc4
+0000            123   _ADC0LTL        DATA 0xc5
+0000            124   _ADC0LTH        DATA 0xc6
+0000            125   _P4             DATA 0xc7
+0000            126   _TMR2CN         DATA 0xc8
+0000            127   _TMR5CN         DATA 0xc8
+0000            128   _REG01CN        DATA 0xc9
+0000            129   _TMR2RLL        DATA 0xca
+0000            130   _TMR5RLL        DATA 0xca
+0000            131   _TMR2RLH        DATA 0xcb
+0000            132   _TMR5RLH        DATA 0xcb
+0000            133   _TMR2L          DATA 0xcc
+0000            134   _TMR5L          DATA 0xcc
+0000            135   _TMR2H          DATA 0xcd
+0000            136   _TMR5H          DATA 0xcd
+0000            137   _SMB0ADM        DATA 0xce
+0000            138   _SMB1ADM        DATA 0xce
+0000            139   _SMB0ADR        DATA 0xcf
+0000            140   _SMB1ADR        DATA 0xcf
+0000            141   _PSW            DATA 0xd0
+0000            142   _REF0CN         DATA 0xd1
+0000            143   _SCON1          DATA 0xd2
+0000            144   _SBUF1          DATA 0xd3
+0000            145   _P0SKIP         DATA 0xd4
+0000            146   _P1SKIP         DATA 0xd5
+0000            147   _P2SKIP         DATA 0xd6
+0000            148   _USB0XCN        DATA 0xd7
+0000            149   _PCA0CN         DATA 0xd8
+0000            150   _PCA0MD         DATA 0xd9
+0000            151   _PCA0CPM0       DATA 0xda
+0000            152   _PCA0CPM1       DATA 0xdb
+0000            153   _PCA0CPM2       DATA 0xdc
+0000            154   _PCA0CPM3       DATA 0xdd
+0000            155   _PCA0CPM4       DATA 0xde
+0000            156   _P3SKIP         DATA 0xdf
+0000            157   _ACC            DATA 0xe0
+0000            158   _XBR0           DATA 0xe1
+0000            159   _XBR1           DATA 0xe2
+0000            160   _XBR2           DATA 0xe3
+0000            161   _IT01CF         DATA 0xe4
+0000            162   _CKCON1         DATA 0xe4
+0000            163   _SMOD1          DATA 0xe5
+0000            164   _EIE1           DATA 0xe6
+0000            165   _EIE2           DATA 0xe7
+0000            166   _ADC0CN         DATA 0xe8
+0000            167   _PCA0CPL1       DATA 0xe9
+0000            168   _PCA0CPH1       DATA 0xea
+0000            169   _PCA0CPL2       DATA 0xeb
+0000            170   _PCA0CPH2       DATA 0xec
+0000            171   _PCA0CPL3       DATA 0xed
+0000            172   _PCA0CPH3       DATA 0xee
+0000            173   _RSTSRC         DATA 0xef
+0000            174   _B              DATA 0xf0
+0000            175   _P0MDIN         DATA 0xf1
+0000            176   _P1MDIN         DATA 0xf2
+0000            177   _P2MDIN         DATA 0xf3
+0000            178   _P3MDIN         DATA 0xf4
+0000            179   _P4MDIN         DATA 0xf5
+0000            180   _EIP1           DATA 0xf6
+0000            181   _EIP2           DATA 0xf7
+0000            182   _SPI0CN         DATA 0xf8
+0000            183   _PCA0L          DATA 0xf9
+0000            184   _PCA0H          DATA 0xfa
+0000            185   _PCA0CPL0       DATA 0xfb
+0000            186   _PCA0CPH0       DATA 0xfc
+0000            187   _PCA0CPL4       DATA 0xfd
+0000            188   _PCA0CPH4       DATA 0xfe
+0000            189   _VDM0CN         DATA 0xff
+0000            190   _DPTR           DATA 0x8382
+0000            191   _TMR2RL         DATA 0xcbca
+0000            192   _TMR3RL         DATA 0x9392
+0000            193   _TMR4RL         DATA 0x9392
+0000            194   _TMR5RL         DATA 0xcbca
+0000            195   _TMR2           DATA 0xcdcc
+0000            196   _TMR3           DATA 0x9594
+0000            197   _TMR4           DATA 0x9594
+0000            198   _TMR5           DATA 0xcdcc
+0000            199   _SBRL1          DATA 0xb5b4
+0000            200   _ADC0           DATA 0xbebd
+0000            201   _ADC0GT         DATA 0xc4c3
+0000            202   _ADC0LT         DATA 0xc6c5
+0000            203   _PCA0           DATA 0xfaf9
+0000            204   _PCA0CP1        DATA 0xeae9
+0000            205   _PCA0CP2        DATA 0xeceb
+0000            206   _PCA0CP3        DATA 0xeeed
+0000            207   _PCA0CP0        DATA 0xfcfb
+0000            208   _PCA0CP4        DATA 0xfefd
+0000            209   ;--------------------------------------------------------
+0000            210   ; special function bits
+0000            211   ;--------------------------------------------------------
+0000            212   _P0_0           BIT 0x80
+0000            213   _P0_1           BIT 0x81
+0000            214   _P0_2           BIT 0x82
+0000            215   _P0_3           BIT 0x83
+0000            216   _P0_4           BIT 0x84
+0000            217   _P0_5           BIT 0x85
+0000            218   _P0_6           BIT 0x86
+0000            219   _P0_7           BIT 0x87
+0000            220   _TF1            BIT 0x8f
+0000            221   _TR1            BIT 0x8e
+0000            222   _TF0            BIT 0x8d
+0000            223   _TR0            BIT 0x8c
+0000            224   _IE1            BIT 0x8b
+0000            225   _IT1            BIT 0x8a
+0000            226   _IE0            BIT 0x89
+0000            227   _IT0            BIT 0x88
+0000            228   _P1_0           BIT 0x90
+0000            229   _P1_1           BIT 0x91
+0000            230   _P1_2           BIT 0x92
+0000            231   _P1_3           BIT 0x93
+0000            232   _P1_4           BIT 0x94
+0000            233   _P1_5           BIT 0x95
+0000            234   _P1_6           BIT 0x96
+0000            235   _P1_7           BIT 0x97
+0000            236   _S0MODE         BIT 0x9f
+0000            237   _SCON0_6        BIT 0x9e
+0000            238   _MCE0           BIT 0x9d
+0000            239   _REN0           BIT 0x9c
+0000            240   _TB80           BIT 0x9b
+0000            241   _RB80           BIT 0x9a
+0000            242   _TI0            BIT 0x99
+0000            243   _RI0            BIT 0x98
+0000            244   _SCON_6         BIT 0x9e
+0000            245   _MCE            BIT 0x9d
+0000            246   _REN            BIT 0x9c
+0000            247   _TB8            BIT 0x9b
+0000            248   _RB8            BIT 0x9a
+0000            249   _TI             BIT 0x99
+0000            250   _RI             BIT 0x98
+0000            251   _P2_0           BIT 0xa0
+0000            252   _P2_1           BIT 0xa1
+0000            253   _P2_2           BIT 0xa2
+0000            254   _P2_3           BIT 0xa3
+0000            255   _P2_4           BIT 0xa4
+0000            256   _P2_5           BIT 0xa5
+0000            257   _P2_6           BIT 0xa6
+0000            258   _P2_7           BIT 0xa7
+0000            259   _EA             BIT 0xaf
+0000            260   _ESPI0          BIT 0xae
+0000            261   _ET2            BIT 0xad
+0000            262   _ES0            BIT 0xac
+0000            263   _ET1            BIT 0xab
+0000            264   _EX1            BIT 0xaa
+0000            265   _ET0            BIT 0xa9
+0000            266   _EX0            BIT 0xa8
+0000            267   _P3_0           BIT 0xb0
+0000            268   _P3_1           BIT 0xb1
+0000            269   _P3_2           BIT 0xb2
+0000            270   _P3_3           BIT 0xb3
+0000            271   _P3_4           BIT 0xb4
+0000            272   _P3_5           BIT 0xb5
+0000            273   _P3_6           BIT 0xb6
+0000            274   _P3_7           BIT 0xb7
+0000            275   _IP_7           BIT 0xbf
+0000            276   _PSPI0          BIT 0xbe
+0000            277   _PT2            BIT 0xbd
+0000            278   _PS0            BIT 0xbc
+0000            279   _PT1            BIT 0xbb
+0000            280   _PX1            BIT 0xba
+0000            281   _PT0            BIT 0xb9
+0000            282   _PX0            BIT 0xb8
+0000            283   _MASTER0        BIT 0xc7
+0000            284   _TXMODE0        BIT 0xc6
+0000            285   _STA0           BIT 0xc5
+0000            286   _STO0           BIT 0xc4
+0000            287   _ACKRQ0         BIT 0xc3
+0000            288   _ARBLOST0       BIT 0xc2
+0000            289   _ACK0           BIT 0xc1
+0000            290   _SI0            BIT 0xc0
+0000            291   _MASTER1        BIT 0xc7
+0000            292   _TXMODE1        BIT 0xc6
+0000            293   _STA1           BIT 0xc5
+0000            294   _STO1           BIT 0xc4
+0000            295   _ACKRQ1         BIT 0xc3
+0000            296   _ARBLOST1       BIT 0xc2
+0000            297   _ACK1           BIT 0xc1
+0000            298   _SI1            BIT 0xc0
+0000            299   _TF2            BIT 0xcf
+0000            300   _TF2H           BIT 0xcf
+0000            301   _TF2L           BIT 0xce
+0000            302   _TF2LEN         BIT 0xcd
+0000            303   _TF2CEN         BIT 0xcc
+0000            304   _T2SPLIT        BIT 0xcb
+0000            305   _TR2            BIT 0xca
+0000            306   _T2CSS          BIT 0xc9
+0000            307   _T2XCLK         BIT 0xc8
+0000            308   _TF5H           BIT 0xcf
+0000            309   _TF5L           BIT 0xce
+0000            310   _TF5LEN         BIT 0xcd
+0000            311   _TMR5CN_4       BIT 0xcc
+0000            312   _T5SPLIT        BIT 0xcb
+0000            313   _TR5            BIT 0xca
+0000            314   _TMR5CN_1       BIT 0xc9
+0000            315   _T5XCLK         BIT 0xc8
+0000            316   _CY             BIT 0xd7
+0000            317   _AC             BIT 0xd6
+0000            318   _F0             BIT 0xd5
+0000            319   _RS1            BIT 0xd4
+0000            320   _RS0            BIT 0xd3
+0000            321   _OV             BIT 0xd2
+0000            322   _F1             BIT 0xd1
+0000            323   _PARITY         BIT 0xd0
+0000            324   _CF             BIT 0xdf
+0000            325   _CR             BIT 0xde
+0000            326   _PCA0CN_5       BIT 0xde
+0000            327   _CCF4           BIT 0xdc
+0000            328   _CCF3           BIT 0xdb
+0000            329   _CCF2           BIT 0xda
+0000            330   _CCF1           BIT 0xd9
+0000            331   _CCF0           BIT 0xd8
+0000            332   _ACC_7          BIT 0xe7
+0000            333   _ACC_6          BIT 0xe6
+0000            334   _ACC_5          BIT 0xe5
+0000            335   _ACC_4          BIT 0xe4
+0000            336   _ACC_3          BIT 0xe3
+0000            337   _ACC_2          BIT 0xe2
+0000            338   _ACC_1          BIT 0xe1
+0000            339   _ACC_0          BIT 0xe0
+0000            340   _AD0EN          BIT 0xef
+0000            341   _AD0TM          BIT 0xee
+0000            342   _AD0INT         BIT 0xed
+0000            343   _AD0BUSY        BIT 0xec
+0000            344   _AD0WINT        BIT 0xeb
+0000            345   _AD0CM2         BIT 0xea
+0000            346   _AD0CM1         BIT 0xe9
+0000            347   _AD0CM0         BIT 0xe8
+0000            348   _B_7            BIT 0xf7
+0000            349   _B_6            BIT 0xf6
+0000            350   _B_5            BIT 0xf5
+0000            351   _B_4            BIT 0xf4
+0000            352   _B_3            BIT 0xf3
+0000            353   _B_2            BIT 0xf2
+0000            354   _B_1            BIT 0xf1
+0000            355   _B_0            BIT 0xf0
+0000            356   _SPIF           BIT 0xff
+0000            357   _WCOL           BIT 0xfe
+0000            358   _MODF           BIT 0xfd
+0000            359   _RXOVRN         BIT 0xfc
+0000            360   _NSSMD1         BIT 0xfb
+0000            361   _NSSMD0         BIT 0xfa
+0000            362   _TXBMT          BIT 0xf9
+0000            363   _SPIEN          BIT 0xf8
+0000            364   ;--------------------------------------------------------
+0000            365   ; overlayable register banks
+0000            366   ;--------------------------------------------------------
+0000            367            rbank0 segment data overlay
+0000            368   ;--------------------------------------------------------
+0000            369   ; internal ram data
+0000            370   ;--------------------------------------------------------
+0000            371            rseg R_DSEG
+0000            372   _overflow_count:
+0000            373            ds 1
+0001            374   _main_i_1_68:
+0001            375            ds 2
+0003            376   _main_j_1_68:
+0003            377            ds 2
+0005            378   _main_V_1_68:
+0005            379            ds 8
+000D            380   _main_period1_1_68:
+000D            381            ds 4
+0011            382   _main_period2_1_68:
+0011            383            ds 4
+0015            384   _main_vrmax_1_68:
+0015            385            ds 4
+0019            386   _main_vtmax_1_68:
+0019            387            ds 4
+001D            388   _main_omega_1_68:
+001D            389            ds 4
+0021            390   _main_timediff_1_68:
+0021            391            ds 4
+0025            392   _main_phase_1_68:
+0025            393            ds 4
+0029            394   _main_phases_1_68:
+0029            395            ds 20
+003D            396   _main_sloc0_1_0:
+003D            397            ds 4
+0041            398   _main_sloc1_1_0:
+0041            399            ds 4
+0045            400   _main_sloc2_1_0:
+0045            401            ds 4
+0049            402   ;--------------------------------------------------------
+0049            403   ; overlayable items in internal ram 
+0049            404   ;--------------------------------------------------------
+0000            405            rseg    R_OSEG
+0000            406            rseg    R_OSEG
+0000            407   _InitPinADC_PARM_2:
+0000            408            ds 1
+0001            409            rseg    R_OSEG
+0001            410   ;--------------------------------------------------------
+0001            411   ; indirectly addressable internal ram data
+0001            412   ;--------------------------------------------------------
+0000            413            rseg R_ISEG
+0000            414   ;--------------------------------------------------------
+0000            415   ; absolute internal ram data
+0000            416   ;--------------------------------------------------------
+0000            417            DSEG
+0000            418   ;--------------------------------------------------------
+0000            419   ; bit data
+0000            420   ;--------------------------------------------------------
+0000            421            rseg R_BSEG
+0000            422   ;--------------------------------------------------------
+0000            423   ; paged external ram data
+0000            424   ;--------------------------------------------------------
+0000            425            rseg R_PSEG
+0000            426   ;--------------------------------------------------------
+0000            427   ; external ram data
+0000            428   ;--------------------------------------------------------
+0000            429            rseg R_XSEG
+0000            430   ;--------------------------------------------------------
+0000            431   ; absolute external ram data
+0000            432   ;--------------------------------------------------------
+0000            433            XSEG
+0000            434   ;--------------------------------------------------------
+0000            435   ; external initialized ram data
+0000            436   ;--------------------------------------------------------
+0000            437            rseg R_IXSEG
+0000            438            rseg R_HOME
+0000            439            rseg R_GSINIT
+0000            440            rseg R_CSEG
+0000            441   ;--------------------------------------------------------
+0000            442   ; Reset entry point and interrupt vectors
+0000            443   ;--------------------------------------------------------
+0000            444            CSEG at 0x0000
+0000 020100     445            ljmp    _crt0
+0003            446   ;--------------------------------------------------------
+0003            447   ; global & static initialisations
+0003            448   ;--------------------------------------------------------
+0000            449            rseg R_HOME
+0000            450            rseg R_GSINIT
+0000            451            rseg R_GSINIT
+0000            452   ;--------------------------------------------------------
+0000            453   ; data variables initialization
+0000            454   ;--------------------------------------------------------
+0000            455            rseg R_DINIT
+0000            456            ; The linker places a 'ret' at the end of segment R_DINIT.
+0000            457   ;--------------------------------------------------------
+0000            458   ; code
+0000            459   ;--------------------------------------------------------
+0000            460            rseg R_CSEG
+0000            461   ;------------------------------------------------------------
+0000            462   ;Allocation info for local variables in function 'PORT_Init'
+0000            463   ;------------------------------------------------------------
+0000            464   ;------------------------------------------------------------
+0000            465   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:44: void PORT_Init (void)
+0000            466   ;        -----------------------------------------
+0000            467   ;         function PORT_Init
+0000            468   ;        -----------------------------------------
+0000            469   _PORT_Init:
+0000            470            using   0
+0000            471   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:46: P0MDOUT |= 0x10; // Enable UART TX as push-pull output
+0000 43A410     472            orl     _P0MDOUT,#0x10
+0003            473   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:47: XBR0=0b_0000_0001; // Enable UART on P0.4(TX) and P0.5(RX)                    
+0003 75E101     474            mov     _XBR0,#0x01
+0006            475   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:48: XBR1=0b_0101_0000; // Enable crossbar.  Enable T0 input.
+0006 75E250     476            mov     _XBR1,#0x50
+0009            477   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:49: XBR2=0b_0000_0000;
+0009 75E300     478            mov     _XBR2,#0x00
+000C 22         479            ret
+000D            480   ;------------------------------------------------------------
+000D            481   ;Allocation info for local variables in function 'SYSCLK_Init'
+000D            482   ;------------------------------------------------------------
+000D            483   ;------------------------------------------------------------
+000D            484   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:52: void SYSCLK_Init (void)
+000D            485   ;        -----------------------------------------
+000D            486   ;         function SYSCLK_Init
+000D            487   ;        -----------------------------------------
+000D            488   _SYSCLK_Init:
+000D            489   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:60: CLKSEL|=0b_0000_0011; // SYSCLK derived from the Internal High-Frequency Oscillator / 1.
+000D 43A903     490            orl     _CLKSEL,#0x03
+0010            491   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:64: OSCICN |= 0x03;   // Configure internal oscillator for its maximum frequency
+0010 43B203     492            orl     _OSCICN,#0x03
+0013            493   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:65: RSTSRC  = 0x04;   // Enable missing clock detector
+0013 75EF04     494            mov     _RSTSRC,#0x04
+0016 22         495            ret
+0017            496   ;------------------------------------------------------------
+0017            497   ;Allocation info for local variables in function 'UART0_Init'
+0017            498   ;------------------------------------------------------------
+0017            499   ;------------------------------------------------------------
+0017            500   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:68: void UART0_Init (void)
+0017            501   ;        -----------------------------------------
+0017            502   ;         function UART0_Init
+0017            503   ;        -----------------------------------------
+0017            504   _UART0_Init:
+0017            505   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:70: SCON0 = 0x10;
+0017 759810     506            mov     _SCON0,#0x10
+001A            507   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:73: TH1 = 0x10000-((SYSCLK/BAUDRATE)/2L);
+001A 758D30     508            mov     _TH1,#0x30
+001D            509   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:74: CKCON &= ~0x0B;                  // T1M = 1; SCA1:0 = xx
+001D 538EF4     510            anl     _CKCON,#0xF4
+0020            511   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:75: CKCON |=  0x08;
+0020 438E08     512            orl     _CKCON,#0x08
+0023            513   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:88: TL1 = TH1;      // Init Timer1
+0023 858D8B     514            mov     _TL1,_TH1
+0026            515   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:89: TMOD &= ~0xf0;  // TMOD: timer 1 in 8-bit autoreload
+0026 53890F     516            anl     _TMOD,#0x0F
+0029            517   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:90: TMOD |=  0x20;                       
+0029 438920     518            orl     _TMOD,#0x20
+002C            519   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:91: TR1 = 1; // START Timer1
+002C D28E       520            setb    _TR1
+002E            521   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:92: TI = 1;  // Indicate TX0 ready
+002E D299       522            setb    _TI
+0030 22         523            ret
+0031            524   ;------------------------------------------------------------
+0031            525   ;Allocation info for local variables in function 'TIMER0_Init'
+0031            526   ;------------------------------------------------------------
+0031            527   ;------------------------------------------------------------
+0031            528   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:95: void TIMER0_Init(void)
+0031            529   ;        -----------------------------------------
+0031            530   ;         function TIMER0_Init
+0031            531   ;        -----------------------------------------
+0031            532   _TIMER0_Init:
+0031            533   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:97: TMOD&=0b_1111_0000; // Set the bits of Timer/Counter 0 to zero
+0031 5389F0     534            anl     _TMOD,#0xF0
+0034            535   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:98: TMOD|=0b_0000_0001; // Timer/Counter 0 used as a 16-bit timer
+0034 438901     536            orl     _TMOD,#0x01
+0037            537   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:99: TR0=0; // Stop Timer/Counter 0
+0037 C28C       538            clr     _TR0
+0039 22         539            ret
+003A            540   ;------------------------------------------------------------
+003A            541   ;Allocation info for local variables in function '_c51_external_startup'
+003A            542   ;------------------------------------------------------------
+003A            543   ;------------------------------------------------------------
+003A            544   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:104: char _c51_external_startup (void)
+003A            545   ;        -----------------------------------------
+003A            546   ;         function _c51_external_startup
+003A            547   ;        -----------------------------------------
+003A            548   __c51_external_startup:
+003A            549   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:106: PCA0MD&=(~0x40) ;    // DISABLE WDT: clear Watchdog Enable bit
+003A 53D9BF     550            anl     _PCA0MD,#0xBF
+003D            551   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:107: VDM0CN=0x80; // enable VDD monitor
+003D 75FF80     552            mov     _VDM0CN,#0x80
+0040            553   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:108: RSTSRC=0x02|0x04; // Enable reset on missing clock detector and VDD
+0040 75EF06     554            mov     _RSTSRC,#0x06
+0043            555   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:116: CLKSEL|=0b_0000_0011; // SYSCLK derived from the Internal High-Frequency Oscillator / 1.
+0043 43A903     556            orl     _CLKSEL,#0x03
+0046            557   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:120: OSCICN |= 0x03; // Configure internal oscillator for its maximum frequency
+0046 43B203     558            orl     _OSCICN,#0x03
+0049            559   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:123: SCON0 = 0x10; 
+0049 759810     560            mov     _SCON0,#0x10
+004C            561   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:125: TH1 = 0x10000-((SYSCLK/BAUDRATE)/2L);
+004C 758D30     562            mov     _TH1,#0x30
+004F            563   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:126: CKCON &= ~0x0B;                  // T1M = 1; SCA1:0 = xx
+004F 538EF4     564            anl     _CKCON,#0xF4
+0052            565   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:127: CKCON |=  0x08;
+0052 438E08     566            orl     _CKCON,#0x08
+0055            567   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:140: TL1 = TH1;      // Init Timer1
+0055 858D8B     568            mov     _TL1,_TH1
+0058            569   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:141: TMOD &= ~0xf0;  // TMOD: timer 1 in 8-bit autoreload
+0058 53890F     570            anl     _TMOD,#0x0F
+005B            571   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:142: TMOD |=  0x20;                       
+005B 438920     572            orl     _TMOD,#0x20
+005E            573   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:143: TR1 = 1; // START Timer1
+005E D28E       574            setb    _TR1
+0060            575   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:144: TI = 1;  // Indicate TX0 ready
+0060 D299       576            setb    _TI
+0062            577   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:147: P0MDOUT |= 0x01;  // set P0.0 and P0.4 as push-pull outputs
+0062 43A401     578            orl     _P0MDOUT,#0x01
+0065            579   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:148: XBR0 = 0x01;      // Enable UART0 on P0.4(TX0) and P0.5(RX0)
+0065 75E101     580            mov     _XBR0,#0x01
+0068            581   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:149: XBR1 = 0x40;      // enable crossbar
+0068 75E240     582            mov     _XBR1,#0x40
+006B            583   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:151: return 0;
+006B 758200     584            mov     dpl,#0x00
+006E 22         585            ret
+006F            586   ;------------------------------------------------------------
+006F            587   ;Allocation info for local variables in function 'Timer3us'
+006F            588   ;------------------------------------------------------------
+006F            589   ;us                        Allocated to registers r2 
+006F            590   ;i                         Allocated to registers r3 
+006F            591   ;------------------------------------------------------------
+006F            592   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:155: void Timer3us(unsigned char us)
+006F            593   ;        -----------------------------------------
+006F            594   ;         function Timer3us
+006F            595   ;        -----------------------------------------
+006F            596   _Timer3us:
+006F AA82       597            mov     r2,dpl
+0071            598   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:160: CKCON|=0b_0100_0000;
+0071 438E40     599            orl     _CKCON,#0x40
+0074            600   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:162: TMR3RL = (-(SYSCLK)/1000000L); // Set Timer3 to overflow in 1us.
+0074 7592D0     601            mov     _TMR3RL,#0xD0
+0077 7593FF     602            mov     (_TMR3RL >> 8),#0xFF
+007A            603   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:163: TMR3 = TMR3RL;                 // Initialize Timer3 for first overflow
+007A 859294     604            mov     _TMR3,_TMR3RL
+007D 859395     605            mov     (_TMR3 >> 8),(_TMR3RL >> 8)
+0080            606   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:165: TMR3CN = 0x04;                 // Sart Timer3 and clear overflow flag
+0080 759104     607            mov     _TMR3CN,#0x04
+0083            608   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:166: for (i = 0; i < us; i++)       // Count <us> overflows
+0083 7B00       609            mov     r3,#0x00
+0085            610   L007004?:
+0085 C3         611            clr     c
+0086 EB         612            mov     a,r3
+0087 9A         613            subb    a,r2
+0088 5001       614            jnc     L007007?
+008A            615   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:168: while (!(TMR3CN & 0x80));  // Wait for overflow
+008A            616   L007001?:
+008A E591       617            mov     a,_TMR3CN
+008C 30E7A8     618            jnb     acc.7,L007001?
+008F            619   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:169: TMR3CN &= ~(0x80);         // Clear overflow indicator
+008F 53917F     620            anl     _TMR3CN,#0x7F
+0092            621   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:166: for (i = 0; i < us; i++)       // Count <us> overflows
+0092 0B         622            inc     r3
+0093 8001       623            sjmp    L007004?
+0095            624   L007007?:
+0095            625   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:171: TMR3CN = 0 ;                   // Stop Timer3 and clear overflow flag
+0095 759100     626            mov     _TMR3CN,#0x00
+0098 22         627            ret
+0099            628   ;------------------------------------------------------------
+0099            629   ;Allocation info for local variables in function 'waitms'
+0099            630   ;------------------------------------------------------------
+0099            631   ;ms                        Allocated to registers r2 r3 
+0099            632   ;j                         Allocated to registers r2 r3 
+0099            633   ;------------------------------------------------------------
+0099            634   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:174: void waitms (unsigned int ms)
+0099            635   ;        -----------------------------------------
+0099            636   ;         function waitms
+0099            637   ;        -----------------------------------------
+0099            638   _waitms:
+0099 AA82       639            mov     r2,dpl
+009B AB83       640            mov     r3,dph
+009D            641   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:177: for(j=ms; j!=0; j--)
+009D            642   L008001?:
+009D BA00A8     643            cjne    r2,#0x00,L008010?
+00A0 BB00A8     644            cjne    r3,#0x00,L008010?
+00A3 22         645            ret
+00A4            646   L008010?:
+00A4            647   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:179: Timer3us(249);
+00A4 7582F9     648            mov     dpl,#0xF9
+00A7 C002       649            push    ar2
+00A9 C003       650            push    ar3
+00AB 120100     651            lcall   _Timer3us
+00AE            652   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:180: Timer3us(249);
+00AE 7582F9     653            mov     dpl,#0xF9
+00B1 120100     654            lcall   _Timer3us
+00B4            655   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:181: Timer3us(249);
+00B4 7582F9     656            mov     dpl,#0xF9
+00B7 120100     657            lcall   _Timer3us
+00BA            658   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:182: Timer3us(250);
+00BA 7582FA     659            mov     dpl,#0xFA
+00BD 120100     660            lcall   _Timer3us
+00C0 D003       661            pop     ar3
+00C2 D002       662            pop     ar2
+00C4            663   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:177: for(j=ms; j!=0; j--)
+00C4 1A         664            dec     r2
+00C5 BAFFE8     665            cjne    r2,#0xff,L008011?
+00C8 1B         666            dec     r3
+00C9            667   L008011?:
+00C9 8001       668            sjmp    L008001?
+00CB            669   ;------------------------------------------------------------
+00CB            670   ;Allocation info for local variables in function 'InitADC'
+00CB            671   ;------------------------------------------------------------
+00CB            672   ;------------------------------------------------------------
+00CB            673   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:186: void InitADC (void)
+00CB            674   ;        -----------------------------------------
+00CB            675   ;         function InitADC
+00CB            676   ;        -----------------------------------------
+00CB            677   _InitADC:
+00CB            678   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:189: ADC0CF = 0xF8; // SAR clock = 31, Right-justified result
+00CB 75BCF8     679            mov     _ADC0CF,#0xF8
+00CE            680   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:190: ADC0CN = 0b_1000_0000; // AD0EN=1, AD0TM=0
+00CE 75E880     681            mov     _ADC0CN,#0x80
+00D1            682   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:191: REF0CN = 0b_0000_1000; //Select VDD as the voltage reference for the converter
+00D1 75D108     683            mov     _REF0CN,#0x08
+00D4 22         684            ret
+00D5            685   ;------------------------------------------------------------
+00D5            686   ;Allocation info for local variables in function 'InitPinADC'
+00D5            687   ;------------------------------------------------------------
+00D5            688   ;pinno                     Allocated with name '_InitPinADC_PARM_2'
+00D5            689   ;portno                    Allocated to registers r2 
+00D5            690   ;mask                      Allocated to registers r3 
+00D5            691   ;------------------------------------------------------------
+00D5            692   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:194: void InitPinADC (unsigned char portno, unsigned char pinno)
+00D5            693   ;        -----------------------------------------
+00D5            694   ;         function InitPinADC
+00D5            695   ;        -----------------------------------------
+00D5            696   _InitPinADC:
+00D5 AA82       697            mov     r2,dpl
+00D7            698   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:198: mask=1<<pinno;
+00D7 8570F0     699            mov     b,_InitPinADC_PARM_2
+00DA 05F0       700            inc     b
+00DC 7401       701            mov     a,#0x01
+00DE 8001       702            sjmp    L010012?
+00E0            703   L010010?:
+00E0 25E0       704            add     a,acc
+00E2            705   L010012?:
+00E2 D5F0A8     706            djnz    b,L010010?
+00E5 FB         707            mov     r3,a
+00E6            708   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:200: switch (portno)
+00E6 EA         709            mov     a,r2
+00E7 24FC       710            add     a,#0xff - 0x03
+00E9 4001       711            jc      L010007?
+00EB EA         712            mov     a,r2
+00EC 2A         713            add     a,r2
+00ED 2A         714            add     a,r2
+00EE 909928     715            mov     dptr,#L010014?
+00F1 73         716            jmp     @a+dptr
+00F2            717   L010014?:
+00F2 020100     718            ljmp    L010001?
+00F5 020100     719            ljmp    L010002?
+00F8 020100     720            ljmp    L010003?
+00FB 020100     721            ljmp    L010004?
+00FE            722   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:202: case 0:
+00FE            723   L010001?:
+00FE            724   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:203: P0MDIN &= (~mask); // Set pin as analog input
+00FE EB         725            mov     a,r3
+00FF F4         726            cpl     a
+0100 52F1       727            anl     _P0MDIN,a
+0102            728   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:204: P0SKIP |= mask; // Skip Crossbar decoding for this pin
+0102 EB         729            mov     a,r3
+0103 42D4       730            orl     _P0SKIP,a
+0105            731   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:205: break;
+0105            732   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:206: case 1:
+0105 22         733            ret
+0106            734   L010002?:
+0106            735   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:207: P1MDIN &= (~mask); // Set pin as analog input
+0106 EB         736            mov     a,r3
+0107 F4         737            cpl     a
+0108 52F2       738            anl     _P1MDIN,a
+010A            739   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:208: P1SKIP |= mask; // Skip Crossbar decoding for this pin
+010A EB         740            mov     a,r3
+010B 42D5       741            orl     _P1SKIP,a
+010D            742   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:209: break;
+010D            743   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:210: case 2:
+010D 22         744            ret
+010E            745   L010003?:
+010E            746   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:211: P2MDIN &= (~mask); // Set pin as analog input
+010E EB         747            mov     a,r3
+010F F4         748            cpl     a
+0110 52F3       749            anl     _P2MDIN,a
+0112            750   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:212: P2SKIP |= mask; // Skip Crossbar decoding for this pin
+0112 EB         751            mov     a,r3
+0113 42D6       752            orl     _P2SKIP,a
+0115            753   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:213: break;
+0115            754   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:214: case 3:
+0115 22         755            ret
+0116            756   L010004?:
+0116            757   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:215: P3MDIN &= (~mask); // Set pin as analog input
+0116 EB         758            mov     a,r3
+0117 F4         759            cpl     a
+0118 FA         760            mov     r2,a
+0119 52F4       761            anl     _P3MDIN,a
+011B            762   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:216: P3SKIP |= mask; // Skip Crossbar decoding for this pin
+011B EB         763            mov     a,r3
+011C 42DF       764            orl     _P3SKIP,a
+011E            765   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:220: }
+011E            766   L010007?:
+011E 22         767            ret
+011F            768   ;------------------------------------------------------------
+011F            769   ;Allocation info for local variables in function 'ADC_at_Pin'
+011F            770   ;------------------------------------------------------------
+011F            771   ;pin                       Allocated to registers 
+011F            772   ;------------------------------------------------------------
+011F            773   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:223: unsigned int ADC_at_Pin(unsigned char pin)
+011F            774   ;        -----------------------------------------
+011F            775   ;         function ADC_at_Pin
+011F            776   ;        -----------------------------------------
+011F            777   _ADC_at_Pin:
+011F 8582BB     778            mov     _AMX0P,dpl
+0122            779   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:226: AMX0N = LQFP32_MUX_GND;  // GND is negative input (Single-ended Mode)
+0122 75BA1F     780            mov     _AMX0N,#0x1F
+0125            781   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:228: AD0BUSY=1;
+0125 D2EC       782            setb    _AD0BUSY
+0127            783   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:229: while (AD0BUSY); // Wait for dummy conversion to finish
+0127            784   L011001?:
+0127 20EC68     785            jb      _AD0BUSY,L011001?
+012A            786   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:231: AD0BUSY = 1;
+012A D2EC       787            setb    _AD0BUSY
+012C            788   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:232: while (AD0BUSY); // Wait for conversion to complete
+012C            789   L011004?:
+012C 20ECA8     790            jb      _AD0BUSY,L011004?
+012F            791   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:233: return (ADC0L+(ADC0H*0x100));
+012F AABD       792            mov     r2,_ADC0L
+0131 7B00       793            mov     r3,#0x00
+0133 ADBE       794            mov     r5,_ADC0H
+0135 7C00       795            mov     r4,#0x00
+0137 EC         796            mov     a,r4
+0138 2A         797            add     a,r2
+0139 F582       798            mov     dpl,a
+013B ED         799            mov     a,r5
+013C 3B         800            addc    a,r3
+013D F583       801            mov     dph,a
+013F 22         802            ret
+0140            803   ;------------------------------------------------------------
+0140            804   ;Allocation info for local variables in function 'Volts_at_Pin'
+0140            805   ;------------------------------------------------------------
+0140            806   ;pin                       Allocated to registers r2 
+0140            807   ;------------------------------------------------------------
+0140            808   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:236: float Volts_at_Pin(unsigned char pin)
+0140            809   ;        -----------------------------------------
+0140            810   ;         function Volts_at_Pin
+0140            811   ;        -----------------------------------------
+0140            812   _Volts_at_Pin:
+0140            813   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:238: return ((ADC_at_Pin(pin)*3.30)/1024.0);
+0140 120100     814            lcall   _ADC_at_Pin
+0143 120100     815            lcall   ___uint2fs
+0146 AA82       816            mov     r2,dpl
+0148 AB83       817            mov     r3,dph
+014A ACF0       818            mov     r4,b
+014C FD         819            mov     r5,a
+014D C002       820            push    ar2
+014F C003       821            push    ar3
+0151 C004       822            push    ar4
+0153 C005       823            push    ar5
+0155 903333     824            mov     dptr,#0x3333
+0158 75F053     825            mov     b,#0x53
+015B 7440       826            mov     a,#0x40
+015D 120100     827            lcall   ___fsmul
+0160 AA82       828            mov     r2,dpl
+0162 AB83       829            mov     r3,dph
+0164 ACF0       830            mov     r4,b
+0166 FD         831            mov     r5,a
+0167 E581       832            mov     a,sp
+0169 24FC       833            add     a,#0xfc
+016B F581       834            mov     sp,a
+016D E4         835            clr     a
+016E C0E0       836            push    acc
+0170 C0E0       837            push    acc
+0172 7480       838            mov     a,#0x80
+0174 C0E0       839            push    acc
+0176 7444       840            mov     a,#0x44
+0178 C0E0       841            push    acc
+017A 8A82       842            mov     dpl,r2
+017C 8B83       843            mov     dph,r3
+017E 8CF0       844            mov     b,r4
+0180 ED         845            mov     a,r5
+0181 120100     846            lcall   ___fsdiv
+0184 AA82       847            mov     r2,dpl
+0186 AB83       848            mov     r3,dph
+0188 ACF0       849            mov     r4,b
+018A FD         850            mov     r5,a
+018B E581       851            mov     a,sp
+018D 24FC       852            add     a,#0xfc
+018F F581       853            mov     sp,a
+0191 8A82       854            mov     dpl,r2
+0193 8B83       855            mov     dph,r3
+0195 8CF0       856            mov     b,r4
+0197 ED         857            mov     a,r5
+0198 22         858            ret
+0199            859   ;------------------------------------------------------------
+0199            860   ;Allocation info for local variables in function 'main'
+0199            861   ;------------------------------------------------------------
+0199            862   ;i                         Allocated with name '_main_i_1_68'
+0199            863   ;j                         Allocated with name '_main_j_1_68'
+0199            864   ;k                         Allocated to registers r2 r3 
+0199            865   ;V                         Allocated with name '_main_V_1_68'
+0199            866   ;period1                   Allocated with name '_main_period1_1_68'
+0199            867   ;period2                   Allocated with name '_main_period2_1_68'
+0199            868   ;frequency                 Allocated to registers r2 r3 r4 r5 
+0199            869   ;vrmax                     Allocated with name '_main_vrmax_1_68'
+0199            870   ;vtmax                     Allocated with name '_main_vtmax_1_68'
+0199            871   ;vrrms                     Allocated with name '_main_sloc1_1_0'
+0199            872   ;vtrms                     Allocated with name '_main_sloc0_1_0'
+0199            873   ;omega                     Allocated with name '_main_omega_1_68'
+0199            874   ;timediff                  Allocated with name '_main_timediff_1_68'
+0199            875   ;phase                     Allocated with name '_main_phase_1_68'
+0199            876   ;phases                    Allocated with name '_main_phases_1_68'
+0199            877   ;sloc0                     Allocated with name '_main_sloc0_1_0'
+0199            878   ;sloc1                     Allocated with name '_main_sloc1_1_0'
+0199            879   ;sloc2                     Allocated with name '_main_sloc2_1_0'
+0199            880   ;------------------------------------------------------------
+0199            881   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:241: void main (void)
+0199            882   ;        -----------------------------------------
+0199            883   ;         function main
+0199            884   ;        -----------------------------------------
+0199            885   _main:
+0199            886   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:243: int i = 0;
+0199            887   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:244: int j = 0;
+0199            888   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:249: float period2 = 0;
+0199 E4         889            clr a
+019A F5A8       890            mov _main_i_1_68,a
+019C F5A9       891            mov (_main_i_1_68 + 1),a
+019E F5E8       892            mov _main_j_1_68,a
+01A0 F5E9       893            mov (_main_j_1_68 + 1),a
+01A2 F5C8       894            mov _main_period2_1_68,a
+01A4 F5C9       895            mov (_main_period2_1_68 + 1),a
+01A6 75CA00     896            mov     (_main_period2_1_68 + 2),#0x00
+01A9 75CB00     897            mov     (_main_period2_1_68 + 3),#0x00
+01AC            898   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:251: volatile float vrmax = 0;
+01AC 751800     899            mov     _main_vrmax_1_68,#0x00
+01AF 751900     900            mov     (_main_vrmax_1_68 + 1),#0x00
+01B2 751A00     901            mov     (_main_vrmax_1_68 + 2),#0x00
+01B5 751B00     902            mov     (_main_vrmax_1_68 + 3),#0x00
+01B8            903   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:252: volatile float vtmax = 0;
+01B8 756800     904            mov     _main_vtmax_1_68,#0x00
+01BB 756900     905            mov     (_main_vtmax_1_68 + 1),#0x00
+01BE 756A00     906            mov     (_main_vtmax_1_68 + 2),#0x00
+01C1 756B00     907            mov     (_main_vtmax_1_68 + 3),#0x00
+01C4            908   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:253: float vrrms = 0;
+01C4 752800     909            mov     _main_sloc1_1_0,#0x00
+01C7 752900     910            mov     (_main_sloc1_1_0 + 1),#0x00
+01CA 752A00     911            mov     (_main_sloc1_1_0 + 2),#0x00
+01CD 752B00     912            mov     (_main_sloc1_1_0 + 3),#0x00
+01D0            913   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:254: float vtrms = 0;
+01D0 75E800     914            mov     _main_sloc0_1_0,#0x00
+01D3 75E900     915            mov     (_main_sloc0_1_0 + 1),#0x00
+01D6 75EA00     916            mov     (_main_sloc0_1_0 + 2),#0x00
+01D9 75EB00     917            mov     (_main_sloc0_1_0 + 3),#0x00
+01DC            918   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:257: float phase = 0;
+01DC 755800     919            mov     _main_phase_1_68,#0x00
+01DF 755900     920            mov     (_main_phase_1_68 + 1),#0x00
+01E2 755A00     921            mov     (_main_phase_1_68 + 2),#0x00
+01E5 755B00     922            mov     (_main_phase_1_68 + 3),#0x00
+01E8            923   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:261: PCA0MD &= ~0x40; // WDTE = 0 (clear watchdog timer enable)
+01E8 53D9BF     924            anl     _PCA0MD,#0xBF
+01EB            925   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:262: PORT_Init();     // Initialize Port I/O
+01EB 120100     926            lcall   _PORT_Init
+01EE            927   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:263: SYSCLK_Init ();  // Initialize Oscillator
+01EE 120100     928            lcall   _SYSCLK_Init
+01F1            929   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:264: UART0_Init();    // Initialize UART0
+01F1 120100     930            lcall   _UART0_Init
+01F4            931   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:265: TIMER0_Init();
+01F4 120100     932            lcall   _TIMER0_Init
+01F7            933   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:267: printf("\x1b[2J"); // Clear screen using ANSI escape sequence.
+01F7 74E8       934            mov     a,#__str_0
+01F9 C0E0       935            push    acc
+01FB 749B       936            mov     a,#(__str_0 >> 8)
+01FD C0E0       937            push    acc
+01FF 7480       938            mov     a,#0x80
+0201 C0E0       939            push    acc
+0203 120100     940            lcall   _printf
+0206 1581       941            dec     sp
+0208 1581       942            dec     sp
+020A 1581       943            dec     sp
+020C            944   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:270: printf( CLEAR_SCREEN );
+020C 74E8       945            mov     a,#__str_0
+020E C0E0       946            push    acc
+0210 749B       947            mov     a,#(__str_0 >> 8)
+0212 C0E0       948            push    acc
+0214 7480       949            mov     a,#0x80
+0216 C0E0       950            push    acc
+0218 120100     951            lcall   _printf
+021B 1581       952            dec     sp
+021D 1581       953            dec     sp
+021F 1581       954            dec     sp
+0221            955   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:271: printf( FORE_BACK , COLOR_BLACK, COLOR_WHITE );
+0221 7407       956            mov     a,#0x07
+0223 C0E0       957            push    acc
+0225 E4         958            clr     a
+0226 C0E0       959            push    acc
+0228 E4         960            clr     a
+0229 C0E0       961            push    acc
+022B C0E0       962            push    acc
+022D 7468       963            mov     a,#__str_1
+022F C0E0       964            push    acc
+0231 749C       965            mov     a,#(__str_1 >> 8)
+0233 C0E0       966            push    acc
+0235 7480       967            mov     a,#0x80
+0237 C0E0       968            push    acc
+0239 120100     969            lcall   _printf
+023C E581       970            mov     a,sp
+023E 24F9       971            add     a,#0xf9
+0240 F581       972            mov     sp,a
+0242            973   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:272: printf( GOTO_YX , 1, 1);
+0242 7401       974            mov     a,#0x01
+0244 C0E0       975            push    acc
+0246 E4         976            clr     a
+0247 C0E0       977            push    acc
+0249 7401       978            mov     a,#0x01
+024B C0E0       979            push    acc
+024D E4         980            clr     a
+024E C0E0       981            push    acc
+0250 74A8       982            mov     a,#__str_2
+0252 C0E0       983            push    acc
+0254 749C       984            mov     a,#(__str_2 >> 8)
+0256 C0E0       985            push    acc
+0258 7480       986            mov     a,#0x80
+025A C0E0       987            push    acc
+025C 120100     988            lcall   _printf
+025F E581       989            mov     a,sp
+0261 24F9       990            add     a,#0xf9
+0263 F581       991            mov     sp,a
+0265            992   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:276: InitPinADC(2, 1); // Configure P2.1 as analog input
+0265 757001     993            mov     _InitPinADC_PARM_2,#0x01
+0268 758202     994            mov     dpl,#0x02
+026B 120100     995            lcall   _InitPinADC
+026E            996   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:277: InitPinADC(2, 2); // Configure P2.2 as analog input
+026E 757002     997            mov     _InitPinADC_PARM_2,#0x02
+0271 758202     998            mov     dpl,#0x02
+0274 120100     999            lcall   _InitPinADC
+0277           1000   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:280: InitADC();
+0277 120100    1001            lcall   _InitADC
+027A           1002   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:282: printf( "ษออออออออออออหออออออออออออป\n" );
+027A 74E8      1003            mov     a,#__str_3
+027C C0E0      1004            push    acc
+027E 749C      1005            mov     a,#(__str_3 >> 8)
+0280 C0E0      1006            push    acc
+0282 7480      1007            mov     a,#0x80
+0284 C0E0      1008            push    acc
+0286 120100    1009            lcall   _printf
+0289 1581      1010            dec     sp
+028B 1581      1011            dec     sp
+028D 1581      1012            dec     sp
+028F           1013   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:283: printf( "บ Vrms Ref   บ            บ\n" );
+028F 7428      1014            mov     a,#__str_4
+0291 C0E0      1015            push    acc
+0293 749D      1016            mov     a,#(__str_4 >> 8)
+0295 C0E0      1017            push    acc
+0297 7480      1018            mov     a,#0x80
+0299 C0E0      1019            push    acc
+029B 120100    1020            lcall   _printf
+029E 1581      1021            dec     sp
+02A0 1581      1022            dec     sp
+02A2 1581      1023            dec     sp
+02A4           1024   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:284: printf( "ฬออออออออออออฮออออออออออออน\n" );
+02A4 7468      1025            mov     a,#__str_5
+02A6 C0E0      1026            push    acc
+02A8 749D      1027            mov     a,#(__str_5 >> 8)
+02AA C0E0      1028            push    acc
+02AC 7480      1029            mov     a,#0x80
+02AE C0E0      1030            push    acc
+02B0 120100    1031            lcall   _printf
+02B3 1581      1032            dec     sp
+02B5 1581      1033            dec     sp
+02B7 1581      1034            dec     sp
+02B9           1035   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:285: printf( "บ Vrms Test  บ            บ\n" );
+02B9 74A8      1036            mov     a,#__str_6
+02BB C0E0      1037            push    acc
+02BD 749D      1038            mov     a,#(__str_6 >> 8)
+02BF C0E0      1039            push    acc
+02C1 7480      1040            mov     a,#0x80
+02C3 C0E0      1041            push    acc
+02C5 120100    1042            lcall   _printf
+02C8 1581      1043            dec     sp
+02CA 1581      1044            dec     sp
+02CC 1581      1045            dec     sp
+02CE           1046   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:286: printf( "ฬออออออออออออฮออออออออออออน\n" );
+02CE 7468      1047            mov     a,#__str_5
+02D0 C0E0      1048            push    acc
+02D2 749D      1049            mov     a,#(__str_5 >> 8)
+02D4 C0E0      1050            push    acc
+02D6 7480      1051            mov     a,#0x80
+02D8 C0E0      1052            push    acc
+02DA 120100    1053            lcall   _printf
+02DD 1581      1054            dec     sp
+02DF 1581      1055            dec     sp
+02E1 1581      1056            dec     sp
+02E3           1057   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:287: printf( "บ Phase      บ            บ\n" );
+02E3 74E8      1058            mov     a,#__str_7
+02E5 C0E0      1059            push    acc
+02E7 749D      1060            mov     a,#(__str_7 >> 8)
+02E9 C0E0      1061            push    acc
+02EB 7480      1062            mov     a,#0x80
+02ED C0E0      1063            push    acc
+02EF 120100    1064            lcall   _printf
+02F2 1581      1065            dec     sp
+02F4 1581      1066            dec     sp
+02F6 1581      1067            dec     sp
+02F8           1068   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:288: printf( "ฬออออออออออออฮออออออออออออน\n" );
+02F8 7468      1069            mov     a,#__str_5
+02FA C0E0      1070            push    acc
+02FC 749D      1071            mov     a,#(__str_5 >> 8)
+02FE C0E0      1072            push    acc
+0300 7480      1073            mov     a,#0x80
+0302 C0E0      1074            push    acc
+0304 120100    1075            lcall   _printf
+0307 1581      1076            dec     sp
+0309 1581      1077            dec     sp
+030B 1581      1078            dec     sp
+030D           1079   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:289: printf( "บ Frequency  บ            บ\n" );
+030D 7428      1080            mov     a,#__str_8
+030F C0E0      1081            push    acc
+0311 749E      1082            mov     a,#(__str_8 >> 8)
+0313 C0E0      1083            push    acc
+0315 7480      1084            mov     a,#0x80
+0317 C0E0      1085            push    acc
+0319 120100    1086            lcall   _printf
+031C 1581      1087            dec     sp
+031E 1581      1088            dec     sp
+0320 1581      1089            dec     sp
+0322           1090   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:290: printf( "ศออออออออออออสออออออออออออผ\n" );
+0322 7468      1091            mov     a,#__str_9
+0324 C0E0      1092            push    acc
+0326 749E      1093            mov     a,#(__str_9 >> 8)
+0328 C0E0      1094            push    acc
+032A 7480      1095            mov     a,#0x80
+032C C0E0      1096            push    acc
+032E 120100    1097            lcall   _printf
+0331 1581      1098            dec     sp
+0333 1581      1099            dec     sp
+0335 1581      1100            dec     sp
+0337           1101   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:292: while(1)
+0337           1102   L013049?:
+0337           1103   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:295: V[0]=Volts_at_Pin(LQFP32_MUX_P2_1);
+0337 758209    1104            mov     dpl,#0x09
+033A 120100    1105            lcall   _Volts_at_Pin
+033D AC82      1106            mov     r4,dpl
+033F AD83      1107            mov     r5,dph
+0341 AAF0      1108            mov     r2,b
+0343 FB        1109            mov     r3,a
+0344 8C28      1110            mov     _main_V_1_68,r4
+0346 8D29      1111            mov     (_main_V_1_68 + 1),r5
+0348 8A2A      1112            mov     (_main_V_1_68 + 2),r2
+034A 8B2B      1113            mov     (_main_V_1_68 + 3),r3
+034C           1114   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:296: V[1]=Volts_at_Pin(LQFP32_MUX_P2_2);
+034C 75820A    1115            mov     dpl,#0x0A
+034F 120100    1116            lcall   _Volts_at_Pin
+0352 AA82      1117            mov     r2,dpl
+0354 AB83      1118            mov     r3,dph
+0356 ACF0      1119            mov     r4,b
+0358 FD        1120            mov     r5,a
+0359 8A2C      1121            mov     (_main_V_1_68 + 0x0004),r2
+035B 8B2D      1122            mov     ((_main_V_1_68 + 0x0004) + 1),r3
+035D 8C2E      1123            mov     ((_main_V_1_68 + 0x0004) + 2),r4
+035F 8D2F      1124            mov     ((_main_V_1_68 + 0x0004) + 3),r5
+0361           1125   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:299: if(vrmax < V[1]) //reference Vpeak
+0361 C02C      1126            push    (_main_V_1_68 + 0x0004)
+0363 C02D      1127            push    ((_main_V_1_68 + 0x0004) + 1)
+0365 C02E      1128            push    ((_main_V_1_68 + 0x0004) + 2)
+0367 C02F      1129            push    ((_main_V_1_68 + 0x0004) + 3)
+0369 851882    1130            mov     dpl,_main_vrmax_1_68
+036C 851983    1131            mov     dph,(_main_vrmax_1_68 + 1)
+036F 851AF0    1132            mov     b,(_main_vrmax_1_68 + 2)
+0372 E51B      1133            mov     a,(_main_vrmax_1_68 + 3)
+0374 120100    1134            lcall   ___fslt
+0377 AA82      1135            mov     r2,dpl
+0379 E581      1136            mov     a,sp
+037B 24FC      1137            add     a,#0xfc
+037D F581      1138            mov     sp,a
+037F EA        1139            mov     a,r2
+0380 6001      1140            jz      L013004?
+0382           1141   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:301: vrmax=V[1];
+0382 852C18    1142            mov     _main_vrmax_1_68,(_main_V_1_68 + 0x0004)
+0385 852D19    1143            mov     (_main_vrmax_1_68 + 1),((_main_V_1_68 + 0x0004) + 1)
+0388 852E1A    1144            mov     (_main_vrmax_1_68 + 2),((_main_V_1_68 + 0x0004) + 2)
+038B 852F1B    1145            mov     (_main_vrmax_1_68 + 3),((_main_V_1_68 + 0x0004) + 3)
+038E           1146   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:302: if (vrmax == V[1])
+038E C02C      1147            push    (_main_V_1_68 + 0x0004)
+0390 C02D      1148            push    ((_main_V_1_68 + 0x0004) + 1)
+0392 C02E      1149            push    ((_main_V_1_68 + 0x0004) + 2)
+0394 C02F      1150            push    ((_main_V_1_68 + 0x0004) + 3)
+0396 851882    1151            mov     dpl,_main_vrmax_1_68
+0399 851983    1152            mov     dph,(_main_vrmax_1_68 + 1)
+039C 851AF0    1153            mov     b,(_main_vrmax_1_68 + 2)
+039F E51B      1154            mov     a,(_main_vrmax_1_68 + 3)
+03A1 120100    1155            lcall   ___fseq
+03A4 AA82      1156            mov     r2,dpl
+03A6 E581      1157            mov     a,sp
+03A8 24FC      1158            add     a,#0xfc
+03AA F581      1159            mov     sp,a
+03AC EA        1160            mov     a,r2
+03AD 6001      1161            jz      L013004?
+03AF           1162   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:305: vrrms=(vrmax*1.075)/1.41421;
+03AF C018      1163            push    _main_vrmax_1_68
+03B1 C019      1164            push    (_main_vrmax_1_68 + 1)
+03B3 C01A      1165            push    (_main_vrmax_1_68 + 2)
+03B5 C01B      1166            push    (_main_vrmax_1_68 + 3)
+03B7 90999A    1167            mov     dptr,#0x999A
+03BA 75F089    1168            mov     b,#0x89
+03BD 743F      1169            mov     a,#0x3F
+03BF 120100    1170            lcall   ___fsmul
+03C2 AA82      1171            mov     r2,dpl
+03C4 AB83      1172            mov     r3,dph
+03C6 ACF0      1173            mov     r4,b
+03C8 FD        1174            mov     r5,a
+03C9 E581      1175            mov     a,sp
+03CB 24FC      1176            add     a,#0xfc
+03CD F581      1177            mov     sp,a
+03CF 74D5      1178            mov     a,#0xD5
+03D1 C0E0      1179            push    acc
+03D3 7404      1180            mov     a,#0x04
+03D5 C0E0      1181            push    acc
+03D7 74B5      1182            mov     a,#0xB5
+03D9 C0E0      1183            push    acc
+03DB 743F      1184            mov     a,#0x3F
+03DD C0E0      1185            push    acc
+03DF 8A82      1186            mov     dpl,r2
+03E1 8B83      1187            mov     dph,r3
+03E3 8CF0      1188            mov     b,r4
+03E5 ED        1189            mov     a,r5
+03E6 120100    1190            lcall   ___fsdiv
+03E9 858228    1191            mov     _main_sloc1_1_0,dpl
+03EC 858329    1192            mov     (_main_sloc1_1_0 + 1),dph
+03EF 85F02A    1193            mov     (_main_sloc1_1_0 + 2),b
+03F2 F52B      1194            mov     (_main_sloc1_1_0 + 3),a
+03F4 E581      1195            mov     a,sp
+03F6 24FC      1196            add     a,#0xfc
+03F8 F581      1197            mov     sp,a
+03FA           1198   L013004?:
+03FA           1199   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:310: if(vtmax<V[0]) //test Vpeak
+03FA C028      1200            push    _main_V_1_68
+03FC C029      1201            push    (_main_V_1_68 + 1)
+03FE C02A      1202            push    (_main_V_1_68 + 2)
+0400 C02B      1203            push    (_main_V_1_68 + 3)
+0402 856882    1204            mov     dpl,_main_vtmax_1_68
+0405 856983    1205            mov     dph,(_main_vtmax_1_68 + 1)
+0408 856AF0    1206            mov     b,(_main_vtmax_1_68 + 2)
+040B E56B      1207            mov     a,(_main_vtmax_1_68 + 3)
+040D 120100    1208            lcall   ___fslt
+0410 AA82      1209            mov     r2,dpl
+0412 E581      1210            mov     a,sp
+0414 24FC      1211            add     a,#0xfc
+0416 F581      1212            mov     sp,a
+0418 EA        1213            mov     a,r2
+0419 6001      1214            jz      L013072?
+041B           1215   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:312: vtmax=V[0];
+041B 852868    1216            mov     _main_vtmax_1_68,_main_V_1_68
+041E 852969    1217            mov     (_main_vtmax_1_68 + 1),(_main_V_1_68 + 1)
+0421 852A6A    1218            mov     (_main_vtmax_1_68 + 2),(_main_V_1_68 + 2)
+0424 852B6B    1219            mov     (_main_vtmax_1_68 + 3),(_main_V_1_68 + 3)
+0427           1220   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:313: if (vtmax ==V[0])
+0427 C028      1221            push    _main_V_1_68
+0429 C029      1222            push    (_main_V_1_68 + 1)
+042B C02A      1223            push    (_main_V_1_68 + 2)
+042D C02B      1224            push    (_main_V_1_68 + 3)
+042F 856882    1225            mov     dpl,_main_vtmax_1_68
+0432 856983    1226            mov     dph,(_main_vtmax_1_68 + 1)
+0435 856AF0    1227            mov     b,(_main_vtmax_1_68 + 2)
+0438 E56B      1228            mov     a,(_main_vtmax_1_68 + 3)
+043A 120100    1229            lcall   ___fseq
+043D AA82      1230            mov     r2,dpl
+043F E581      1231            mov     a,sp
+0441 24FC      1232            add     a,#0xfc
+0443 F581      1233            mov     sp,a
+0445 EA        1234            mov     a,r2
+0446 6001      1235            jz      L013072?
+0448           1236   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:316: vtrms=(vtmax*1.133)/1.41421;
+0448 C068      1237            push    _main_vtmax_1_68
+044A C069      1238            push    (_main_vtmax_1_68 + 1)
+044C C06A      1239            push    (_main_vtmax_1_68 + 2)
+044E C06B      1240            push    (_main_vtmax_1_68 + 3)
+0450 900625    1241            mov     dptr,#0x0625
+0453 75F091    1242            mov     b,#0x91
+0456 743F      1243            mov     a,#0x3F
+0458 120100    1244            lcall   ___fsmul
+045B AA82      1245            mov     r2,dpl
+045D AB83      1246            mov     r3,dph
+045F ACF0      1247            mov     r4,b
+0461 FD        1248            mov     r5,a
+0462 E581      1249            mov     a,sp
+0464 24FC      1250            add     a,#0xfc
+0466 F581      1251            mov     sp,a
+0468 74D5      1252            mov     a,#0xD5
+046A C0E0      1253            push    acc
+046C 7404      1254            mov     a,#0x04
+046E C0E0      1255            push    acc
+0470 74B5      1256            mov     a,#0xB5
+0472 C0E0      1257            push    acc
+0474 743F      1258            mov     a,#0x3F
+0476 C0E0      1259            push    acc
+0478 8A82      1260            mov     dpl,r2
+047A 8B83      1261            mov     dph,r3
+047C 8CF0      1262            mov     b,r4
+047E ED        1263            mov     a,r5
+047F 120100    1264            lcall   ___fsdiv
+0482 8582E8    1265            mov     _main_sloc0_1_0,dpl
+0485 8583E9    1266            mov     (_main_sloc0_1_0 + 1),dph
+0488 85F0EA    1267            mov     (_main_sloc0_1_0 + 2),b
+048B F5EB      1268            mov     (_main_sloc0_1_0 + 3),a
+048D E581      1269            mov     a,sp
+048F 24FC      1270            add     a,#0xfc
+0491 F581      1271            mov     sp,a
+0493           1272   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:320: while(i<10)
+0493           1273   L013072?:
+0493 AAA8      1274            mov     r2,_main_i_1_68
+0495 ABA9      1275            mov     r3,(_main_i_1_68 + 1)
+0497           1276   L013027?:
+0497 C3        1277            clr     c
+0498 EA        1278            mov     a,r2
+0499 940A      1279            subb    a,#0x0A
+049B EB        1280            mov     a,r3
+049C 6480      1281            xrl     a,#0x80
+049E 9480      1282            subb    a,#0x80
+04A0 4001      1283            jc      L013092?
+04A2 020100    1284            ljmp    L013087?
+04A5           1285   L013092?:
+04A5           1286   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:322: TL0=0; 
+04A5 758A00    1287            mov     _TL0,#0x00
+04A8           1288   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:323: TH0=0;
+04A8 758C00    1289            mov     _TH0,#0x00
+04AB           1290   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:324: TF0=0;
+04AB C28D      1291            clr     _TF0
+04AD           1292   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:325: overflow_count=0;
+04AD 75E000    1293            mov     _overflow_count,#0x00
+04B0           1294   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:327: while(P2_3!=0); // Wait for the signal to be zero
+04B0           1295   L013009?:
+04B0 20A3A8    1296            jb      _P2_3,L013009?
+04B3           1297   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:328: while(P2_3!=1); // Wait for the signal to be one
+04B3           1298   L013012?:
+04B3 30A3E8    1299            jnb     _P2_3,L013012?
+04B6           1300   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:329: TR0=1; // Start the timer
+04B6 D28C      1301            setb    _TR0
+04B8           1302   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:330: while(P2_3!=0) // Wait for the signal to be zero
+04B8           1303   L013017?:
+04B8 30A368    1304            jnb     _P2_3,L013022?
+04BB           1305   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:332: if(TF0==1) // Did the 16-bit timer overflow?
+04BB           1306   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:334: TF0=0;
+04BB 108DA8    1307            jbc     _TF0,L013096?
+04BE 8001      1308            sjmp    L013017?
+04C0           1309   L013096?:
+04C0           1310   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:335: overflow_count++;
+04C0 05E0      1311            inc     _overflow_count
+04C2           1312   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:338: while(P2_3!=1) // Wait for the signal to be one
+04C2 8001      1313            sjmp    L013017?
+04C4           1314   L013022?:
+04C4 20A3E8    1315            jb      _P2_3,L013024?
+04C7           1316   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:340: if(TF0==1) // Did the 16-bit timer overflow?
+04C7           1317   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:342: TF0=0;
+04C7 108D28    1318            jbc     _TF0,L013098?
+04CA 8001      1319            sjmp    L013022?
+04CC           1320   L013098?:
+04CC           1321   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:343: overflow_count++;
+04CC 05E0      1322            inc     _overflow_count
+04CE 8001      1323            sjmp    L013022?
+04D0           1324   L013024?:
+04D0           1325   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:346: TR0=0; // Stop timer 0, the 24-bit number [overflow_count-TH0-TL0] has the period!
+04D0 C002      1326            push    ar2
+04D2 C003      1327            push    ar3
+04D4 C28C      1328            clr     _TR0
+04D6           1329   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:347: period1=(overflow_count*65536.0+TH0*256.0+TL0)*(12.0/SYSCLK);
+04D6 85E082    1330            mov     dpl,_overflow_count
+04D9 C002      1331            push    ar2
+04DB C003      1332            push    ar3
+04DD 120100    1333            lcall   ___uchar2fs
+04E0 AC82      1334            mov     r4,dpl
+04E2 AD83      1335            mov     r5,dph
+04E4 AEF0      1336            mov     r6,b
+04E6 FF        1337            mov     r7,a
+04E7 C004      1338            push    ar4
+04E9 C005      1339            push    ar5
+04EB C006      1340            push    ar6
+04ED C007      1341            push    ar7
+04EF 900000    1342            mov     dptr,#0x0000
+04F2 75F080    1343            mov     b,#0x80
+04F5 7447      1344            mov     a,#0x47
+04F7 120100    1345            lcall   ___fsmul
+04FA 858268    1346            mov     _main_sloc2_1_0,dpl
+04FD 858369    1347            mov     (_main_sloc2_1_0 + 1),dph
+0500 85F06A    1348            mov     (_main_sloc2_1_0 + 2),b
+0503 F56B      1349            mov     (_main_sloc2_1_0 + 3),a
+0505 E581      1350            mov     a,sp
+0507 24FC      1351            add     a,#0xfc
+0509 F581      1352            mov     sp,a
+050B D003      1353            pop     ar3
+050D D002      1354            pop     ar2
+050F 858C82    1355            mov     dpl,_TH0
+0512 120100    1356            lcall   ___uchar2fs
+0515 AA82      1357            mov     r2,dpl
+0517 AB83      1358            mov     r3,dph
+0519 ACF0      1359            mov     r4,b
+051B FD        1360            mov     r5,a
+051C C002      1361            push    ar2
+051E C003      1362            push    ar3
+0520 C004      1363            push    ar4
+0522 C005      1364            push    ar5
+0524 900000    1365            mov     dptr,#0x0000
+0527 75F080    1366            mov     b,#0x80
+052A 7443      1367            mov     a,#0x43
+052C 120100    1368            lcall   ___fsmul
+052F AA82      1369            mov     r2,dpl
+0531 AB83      1370            mov     r3,dph
+0533 ACF0      1371            mov     r4,b
+0535 FD        1372            mov     r5,a
+0536 E581      1373            mov     a,sp
+0538 24FC      1374            add     a,#0xfc
+053A F581      1375            mov     sp,a
+053C C002      1376            push    ar2
+053E C003      1377            push    ar3
+0540 C002      1378            push    ar2
+0542 C003      1379            push    ar3
+0544 C004      1380            push    ar4
+0546 C005      1381            push    ar5
+0548 856882    1382            mov     dpl,_main_sloc2_1_0
+054B 856983    1383            mov     dph,(_main_sloc2_1_0 + 1)
+054E 856AF0    1384            mov     b,(_main_sloc2_1_0 + 2)
+0551 E56B      1385            mov     a,(_main_sloc2_1_0 + 3)
+0553 120100    1386            lcall   ___fsadd
+0556 858268    1387            mov     _main_sloc2_1_0,dpl
+0559 858369    1388            mov     (_main_sloc2_1_0 + 1),dph
+055C 85F06A    1389            mov     (_main_sloc2_1_0 + 2),b
+055F F56B      1390            mov     (_main_sloc2_1_0 + 3),a
+0561 E581      1391            mov     a,sp
+0563 24FC      1392            add     a,#0xfc
+0565 F581      1393            mov     sp,a
+0567 D003      1394            pop     ar3
+0569 D002      1395            pop     ar2
+056B AE8A      1396            mov     r6,_TL0
+056D 7F00      1397            mov     r7,#0x00
+056F 8E82      1398            mov     dpl,r6
+0571 8F83      1399            mov     dph,r7
+0573 120100    1400            lcall   ___sint2fs
+0576 AE82      1401            mov     r6,dpl
+0578 AF83      1402            mov     r7,dph
+057A AAF0      1403            mov     r2,b
+057C FB        1404            mov     r3,a
+057D C006      1405            push    ar6
+057F C007      1406            push    ar7
+0581 C002      1407            push    ar2
+0583 C003      1408            push    ar3
+0585 856882    1409            mov     dpl,_main_sloc2_1_0
+0588 856983    1410            mov     dph,(_main_sloc2_1_0 + 1)
+058B 856AF0    1411            mov     b,(_main_sloc2_1_0 + 2)
+058E E56B      1412            mov     a,(_main_sloc2_1_0 + 3)
+0590 120100    1413            lcall   ___fsadd
+0593 AA82      1414            mov     r2,dpl
+0595 AB83      1415            mov     r3,dph
+0597 ACF0      1416            mov     r4,b
+0599 FD        1417            mov     r5,a
+059A E581      1418            mov     a,sp
+059C 24FC      1419            add     a,#0xfc
+059E F581      1420            mov     sp,a
+05A0 C002      1421            push    ar2
+05A2 C003      1422            push    ar3
+05A4 C002      1423            push    ar2
+05A6 C003      1424            push    ar3
+05A8 C004      1425            push    ar4
+05AA C005      1426            push    ar5
+05AC 9037BD    1427            mov     dptr,#0x37BD
+05AF 75F086    1428            mov     b,#0x86
+05B2 7434      1429            mov     a,#0x34
+05B4 120100    1430            lcall   ___fsmul
+05B7 858278    1431            mov     _main_period1_1_68,dpl
+05BA 858379    1432            mov     (_main_period1_1_68 + 1),dph
+05BD 85F07A    1433            mov     (_main_period1_1_68 + 2),b
+05C0 F57B      1434            mov     (_main_period1_1_68 + 3),a
+05C2 E581      1435            mov     a,sp
+05C4 24FC      1436            add     a,#0xfc
+05C6 F581      1437            mov     sp,a
+05C8 D003      1438            pop     ar3
+05CA D002      1439            pop     ar2
+05CC           1440   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:348: if(period1>period2)
+05CC C003      1441            push    ar3
+05CE C0C8      1442            push    _main_period2_1_68
+05D0 C0C9      1443            push    (_main_period2_1_68 + 1)
+05D2 C0CA      1444            push    (_main_period2_1_68 + 2)
+05D4 C0CB      1445            push    (_main_period2_1_68 + 3)
+05D6 857882    1446            mov     dpl,_main_period1_1_68
+05D9 857983    1447            mov     dph,(_main_period1_1_68 + 1)
+05DC 857AF0    1448            mov     b,(_main_period1_1_68 + 2)
+05DF E57B      1449            mov     a,(_main_period1_1_68 + 3)
+05E1 120100    1450            lcall   ___fsgt
+05E4 AA82      1451            mov     r2,dpl
+05E6 E581      1452            mov     a,sp
+05E8 24FC      1453            add     a,#0xfc
+05EA F581      1454            mov     sp,a
+05EC D003      1455            pop     ar3
+05EE EA        1456            mov     a,r2
+05EF D003      1457            pop     ar3
+05F1 D002      1458            pop     ar2
+05F3 6001      1459            jz      L013026?
+05F5           1460   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:350: period2 = period1;
+05F5 8578C8    1461            mov     _main_period2_1_68,_main_period1_1_68
+05F8 8579C9    1462            mov     (_main_period2_1_68 + 1),(_main_period1_1_68 + 1)
+05FB 857ACA    1463            mov     (_main_period2_1_68 + 2),(_main_period1_1_68 + 2)
+05FE 857BCB    1464            mov     (_main_period2_1_68 + 3),(_main_period1_1_68 + 3)
+0601           1465   L013026?:
+0601           1466   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:352: i++;
+0601 0A        1467            inc     r2
+0602 BA00A8    1468            cjne    r2,#0x00,L013100?
+0605 0B        1469            inc     r3
+0606           1470   L013100?:
+0606 8AA8      1471            mov     _main_i_1_68,r2
+0608 8BA9      1472            mov     (_main_i_1_68 + 1),r3
+060A 020100    1473            ljmp    L013027?
+060D           1474   L013087?:
+060D 8AA8      1475            mov     _main_i_1_68,r2
+060F 8BA9      1476            mov     (_main_i_1_68 + 1),r3
+0611           1477   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:354: omega=360/period2;
+0611 C0C8      1478            push    _main_period2_1_68
+0613 C0C9      1479            push    (_main_period2_1_68 + 1)
+0615 C0CA      1480            push    (_main_period2_1_68 + 2)
+0617 C0CB      1481            push    (_main_period2_1_68 + 3)
+0619 900000    1482            mov     dptr,#0x0000
+061C 75F0B4    1483            mov     b,#0xB4
+061F 7443      1484            mov     a,#0x43
+0621 120100    1485            lcall   ___fsdiv
+0624 8582B8    1486            mov     _main_omega_1_68,dpl
+0627 8583B9    1487            mov     (_main_omega_1_68 + 1),dph
+062A 85F0BA    1488            mov     (_main_omega_1_68 + 2),b
+062D F5BB      1489            mov     (_main_omega_1_68 + 3),a
+062F E581      1490            mov     a,sp
+0631 24FC      1491            add     a,#0xfc
+0633 F581      1492            mov     sp,a
+0635           1493   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:356: if (j < 5)
+0635 C3        1494            clr     c
+0636 E5E8      1495            mov     a,_main_j_1_68
+0638 9405      1496            subb    a,#0x05
+063A E5E9      1497            mov     a,(_main_j_1_68 + 1)
+063C 6480      1498            xrl     a,#0x80
+063E 9480      1499            subb    a,#0x80
+0640 4001      1500            jc      L013101?
+0642 020100    1501            ljmp    L013045?
+0645           1502   L013101?:
+0645           1503   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:358: TH0=0;
+0645 758C00    1504            mov     _TH0,#0x00
+0648           1505   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:359: TF0=0;
+0648 C28D      1506            clr     _TF0
+064A           1507   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:360: overflow_count=0;
+064A 75E000    1508            mov     _overflow_count,#0x00
+064D           1509   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:361: while(Volts_at_Pin(LQFP32_MUX_P2_2)!=vrmax); // Wait for the signal to be one
+064D           1510   L013030?:
+064D 75820A    1511            mov     dpl,#0x0A
+0650 120100    1512            lcall   _Volts_at_Pin
+0653 AE82      1513            mov     r6,dpl
+0655 AF83      1514            mov     r7,dph
+0657 AAF0      1515            mov     r2,b
+0659 FB        1516            mov     r3,a
+065A C018      1517            push    _main_vrmax_1_68
+065C C019      1518            push    (_main_vrmax_1_68 + 1)
+065E C01A      1519            push    (_main_vrmax_1_68 + 2)
+0660 C01B      1520            push    (_main_vrmax_1_68 + 3)
+0662 8E82      1521            mov     dpl,r6
+0664 8F83      1522            mov     dph,r7
+0666 8AF0      1523            mov     b,r2
+0668 EB        1524            mov     a,r3
+0669 120100    1525            lcall   ___fseq
+066C AA82      1526            mov     r2,dpl
+066E E581      1527            mov     a,sp
+0670 24FC      1528            add     a,#0xfc
+0672 F581      1529            mov     sp,a
+0674 EA        1530            mov     a,r2
+0675 6001      1531            jz      L013030?
+0677           1532   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:362: TR0=1; // Start the timer
+0677 D28C      1533            setb    _TR0
+0679           1534   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:363: while(Volts_at_Pin(LQFP32_MUX_P2_1)!=vtmax) // Wait for the signal to be zero
+0679           1535   L013035?:
+0679 758209    1536            mov     dpl,#0x09
+067C 120100    1537            lcall   _Volts_at_Pin
+067F AA82      1538            mov     r2,dpl
+0681 AB83      1539            mov     r3,dph
+0683 ACF0      1540            mov     r4,b
+0685 FD        1541            mov     r5,a
+0686 C068      1542            push    _main_vtmax_1_68
+0688 C069      1543            push    (_main_vtmax_1_68 + 1)
+068A C06A      1544            push    (_main_vtmax_1_68 + 2)
+068C C06B      1545            push    (_main_vtmax_1_68 + 3)
+068E 8A82      1546            mov     dpl,r2
+0690 8B83      1547            mov     dph,r3
+0692 8CF0      1548            mov     b,r4
+0694 ED        1549            mov     a,r5
+0695 120100    1550            lcall   ___fseq
+0698 AA82      1551            mov     r2,dpl
+069A E581      1552            mov     a,sp
+069C 24FC      1553            add     a,#0xfc
+069E F581      1554            mov     sp,a
+06A0 EA        1555            mov     a,r2
+06A1 7001      1556            jnz     L013037?
+06A3           1557   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:365: if(TF0==1) // Did the 16-bit timer overflow?
+06A3           1558   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:367: TF0=0;
+06A3 108D28    1559            jbc     _TF0,L013104?
+06A6 8001      1560            sjmp    L013035?
+06A8           1561   L013104?:
+06A8           1562   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:368: overflow_count++;
+06A8 05E0      1563            inc     _overflow_count
+06AA 8001      1564            sjmp    L013035?
+06AC           1565   L013037?:
+06AC           1566   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:371: TR0=0; // Stop timer 0, the 24-bit number [overflow_count-TH0-TL0] has the period!
+06AC C28C      1567            clr     _TR0
+06AE           1568   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:372: timediff=(overflow_count*65536.0+TH0*256.0+TL0)*(12.0/SYSCLK);
+06AE 85E082    1569            mov     dpl,_overflow_count
+06B1 120100    1570            lcall   ___uchar2fs
+06B4 AA82      1571            mov     r2,dpl
+06B6 AB83      1572            mov     r3,dph
+06B8 ACF0      1573            mov     r4,b
+06BA FD        1574            mov     r5,a
+06BB C002      1575            push    ar2
+06BD C003      1576            push    ar3
+06BF C004      1577            push    ar4
+06C1 C005      1578            push    ar5
+06C3 900000    1579            mov     dptr,#0x0000
+06C6 75F080    1580            mov     b,#0x80
+06C9 7447      1581            mov     a,#0x47
+06CB 120100    1582            lcall   ___fsmul
+06CE 858268    1583            mov     _main_sloc2_1_0,dpl
+06D1 858369    1584            mov     (_main_sloc2_1_0 + 1),dph
+06D4 85F06A    1585            mov     (_main_sloc2_1_0 + 2),b
+06D7 F56B      1586            mov     (_main_sloc2_1_0 + 3),a
+06D9 E581      1587            mov     a,sp
+06DB 24FC      1588            add     a,#0xfc
+06DD F581      1589            mov     sp,a
+06DF 858C82    1590            mov     dpl,_TH0
+06E2 120100    1591            lcall   ___uchar2fs
+06E5 AE82      1592            mov     r6,dpl
+06E7 AF83      1593            mov     r7,dph
+06E9 AAF0      1594            mov     r2,b
+06EB FB        1595            mov     r3,a
+06EC C006      1596            push    ar6
+06EE C007      1597            push    ar7
+06F0 C002      1598            push    ar2
+06F2 C003      1599            push    ar3
+06F4 900000    1600            mov     dptr,#0x0000
+06F7 75F080    1601            mov     b,#0x80
+06FA 7443      1602            mov     a,#0x43
+06FC 120100    1603            lcall   ___fsmul
+06FF AA82      1604            mov     r2,dpl
+0701 AB83      1605            mov     r3,dph
+0703 ACF0      1606            mov     r4,b
+0705 FD        1607            mov     r5,a
+0706 E581      1608            mov     a,sp
+0708 24FC      1609            add     a,#0xfc
+070A F581      1610            mov     sp,a
+070C C002      1611            push    ar2
+070E C003      1612            push    ar3
+0710 C004      1613            push    ar4
+0712 C005      1614            push    ar5
+0714 856882    1615            mov     dpl,_main_sloc2_1_0
+0717 856983    1616            mov     dph,(_main_sloc2_1_0 + 1)
+071A 856AF0    1617            mov     b,(_main_sloc2_1_0 + 2)
+071D E56B      1618            mov     a,(_main_sloc2_1_0 + 3)
+071F 120100    1619            lcall   ___fsadd
+0722 858268    1620            mov     _main_sloc2_1_0,dpl
+0725 858369    1621            mov     (_main_sloc2_1_0 + 1),dph
+0728 85F06A    1622            mov     (_main_sloc2_1_0 + 2),b
+072B F56B      1623            mov     (_main_sloc2_1_0 + 3),a
+072D E581      1624            mov     a,sp
+072F 24FC      1625            add     a,#0xfc
+0731 F581      1626            mov     sp,a
+0733 AE8A      1627            mov     r6,_TL0
+0735 7F00      1628            mov     r7,#0x00
+0737 8E82      1629            mov     dpl,r6
+0739 8F83      1630            mov     dph,r7
+073B 120100    1631            lcall   ___sint2fs
+073E AE82      1632            mov     r6,dpl
+0740 AF83      1633            mov     r7,dph
+0742 AAF0      1634            mov     r2,b
+0744 FB        1635            mov     r3,a
+0745 C006      1636            push    ar6
+0747 C007      1637            push    ar7
+0749 C002      1638            push    ar2
+074B C003      1639            push    ar3
+074D 856882    1640            mov     dpl,_main_sloc2_1_0
+0750 856983    1641            mov     dph,(_main_sloc2_1_0 + 1)
+0753 856AF0    1642            mov     b,(_main_sloc2_1_0 + 2)
+0756 E56B      1643            mov     a,(_main_sloc2_1_0 + 3)
+0758 120100    1644            lcall   ___fsadd
+075B AA82      1645            mov     r2,dpl
+075D AB83      1646            mov     r3,dph
+075F ACF0      1647            mov     r4,b
+0761 FD        1648            mov     r5,a
+0762 E581      1649            mov     a,sp
+0764 24FC      1650            add     a,#0xfc
+0766 F581      1651            mov     sp,a
+0768 C002      1652            push    ar2
+076A C003      1653            push    ar3
+076C C004      1654            push    ar4
+076E C005      1655            push    ar5
+0770 9037BD    1656            mov     dptr,#0x37BD
+0773 75F086    1657            mov     b,#0x86
+0776 7434      1658            mov     a,#0x34
+0778 120100    1659            lcall   ___fsmul
+077B 858208    1660            mov     _main_timediff_1_68,dpl
+077E 858309    1661            mov     (_main_timediff_1_68 + 1),dph
+0781 85F00A    1662            mov     (_main_timediff_1_68 + 2),b
+0784 F50B      1663            mov     (_main_timediff_1_68 + 3),a
+0786 E581      1664            mov     a,sp
+0788 24FC      1665            add     a,#0xfc
+078A F581      1666            mov     sp,a
+078C           1667   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:373: if(((omega*timediff)<100 && (omega*timediff)>30))
+078C C008      1668            push    _main_timediff_1_68
+078E C009      1669            push    (_main_timediff_1_68 + 1)
+0790 C00A      1670            push    (_main_timediff_1_68 + 2)
+0792 C00B      1671            push    (_main_timediff_1_68 + 3)
+0794 85B882    1672            mov     dpl,_main_omega_1_68
+0797 85B983    1673            mov     dph,(_main_omega_1_68 + 1)
+079A 85BAF0    1674            mov     b,(_main_omega_1_68 + 2)
+079D E5BB      1675            mov     a,(_main_omega_1_68 + 3)
+079F 120100    1676            lcall   ___fsmul
+07A2 AE82      1677            mov     r6,dpl
+07A4 AF83      1678            mov     r7,dph
+07A6 AAF0      1679            mov     r2,b
+07A8 FB        1680            mov     r3,a
+07A9 E581      1681            mov     a,sp
+07AB 24FC      1682            add     a,#0xfc
+07AD F581      1683            mov     sp,a
+07AF C002      1684            push    ar2
+07B1 C003      1685            push    ar3
+07B3 C006      1686            push    ar6
+07B5 C007      1687            push    ar7
+07B7 E4        1688            clr     a
+07B8 C0E0      1689            push    acc
+07BA C0E0      1690            push    acc
+07BC 74C8      1691            mov     a,#0xC8
+07BE C0E0      1692            push    acc
+07C0 7442      1693            mov     a,#0x42
+07C2 C0E0      1694            push    acc
+07C4 8E82      1695            mov     dpl,r6
+07C6 8F83      1696            mov     dph,r7
+07C8 8AF0      1697            mov     b,r2
+07CA EB        1698            mov     a,r3
+07CB 120100    1699            lcall   ___fslt
+07CE AC82      1700            mov     r4,dpl
+07D0 E581      1701            mov     a,sp
+07D2 24FC      1702            add     a,#0xfc
+07D4 F581      1703            mov     sp,a
+07D6 D007      1704            pop     ar7
+07D8 D006      1705            pop     ar6
+07DA D003      1706            pop     ar3
+07DC D002      1707            pop     ar2
+07DE EC        1708            mov     a,r4
+07DF 7001      1709            jnz     L013105?
+07E1 020100    1710            ljmp    L013045?
+07E4           1711   L013105?:
+07E4 C002      1712            push    ar2
+07E6 C003      1713            push    ar3
+07E8 C006      1714            push    ar6
+07EA C007      1715            push    ar7
+07EC E4        1716            clr     a
+07ED C0E0      1717            push    acc
+07EF C0E0      1718            push    acc
+07F1 74F0      1719            mov     a,#0xF0
+07F3 C0E0      1720            push    acc
+07F5 7441      1721            mov     a,#0x41
+07F7 C0E0      1722            push    acc
+07F9 8E82      1723            mov     dpl,r6
+07FB 8F83      1724            mov     dph,r7
+07FD 8AF0      1725            mov     b,r2
+07FF EB        1726            mov     a,r3
+0800 120100    1727            lcall   ___fsgt
+0803 AC82      1728            mov     r4,dpl
+0805 E581      1729            mov     a,sp
+0807 24FC      1730            add     a,#0xfc
+0809 F581      1731            mov     sp,a
+080B D007      1732            pop     ar7
+080D D006      1733            pop     ar6
+080F D003      1734            pop     ar3
+0811 D002      1735            pop     ar2
+0813 EC        1736            mov     a,r4
+0814 7001      1737            jnz     L013106?
+0816 020100    1738            ljmp    L013045?
+0819           1739   L013106?:
+0819           1740   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:375: if (timediff>(period2/2))
+0819 C006      1741            push    ar6
+081B C007      1742            push    ar7
+081D C002      1743            push    ar2
+081F C003      1744            push    ar3
+0821 C006      1745            push    ar6
+0823 C007      1746            push    ar7
+0825 E4        1747            clr     a
+0826 C0E0      1748            push    acc
+0828 C0E0      1749            push    acc
+082A C0E0      1750            push    acc
+082C 7440      1751            mov     a,#0x40
+082E C0E0      1752            push    acc
+0830 85C882    1753            mov     dpl,_main_period2_1_68
+0833 85C983    1754            mov     dph,(_main_period2_1_68 + 1)
+0836 85CAF0    1755            mov     b,(_main_period2_1_68 + 2)
+0839 E5CB      1756            mov     a,(_main_period2_1_68 + 3)
+083B 120100    1757            lcall   ___fsdiv
+083E AC82      1758            mov     r4,dpl
+0840 AD83      1759            mov     r5,dph
+0842 AAF0      1760            mov     r2,b
+0844 FB        1761            mov     r3,a
+0845 E581      1762            mov     a,sp
+0847 24FC      1763            add     a,#0xfc
+0849 F581      1764            mov     sp,a
+084B D007      1765            pop     ar7
+084D D006      1766            pop     ar6
+084F C003      1767            push    ar3
+0851 C006      1768            push    ar6
+0853 C007      1769            push    ar7
+0855 C004      1770            push    ar4
+0857 C005      1771            push    ar5
+0859 C002      1772            push    ar2
+085B C003      1773            push    ar3
+085D 850882    1774            mov     dpl,_main_timediff_1_68
+0860 850983    1775            mov     dph,(_main_timediff_1_68 + 1)
+0863 850AF0    1776            mov     b,(_main_timediff_1_68 + 2)
+0866 E50B      1777            mov     a,(_main_timediff_1_68 + 3)
+0868 120100    1778            lcall   ___fsgt
+086B AA82      1779            mov     r2,dpl
+086D E581      1780            mov     a,sp
+086F 24FC      1781            add     a,#0xfc
+0871 F581      1782            mov     sp,a
+0873 D007      1783            pop     ar7
+0875 D006      1784            pop     ar6
+0877 D003      1785            pop     ar3
+0879 EA        1786            mov     a,r2
+087A D003      1787            pop     ar3
+087C D002      1788            pop     ar2
+087E D007      1789            pop     ar7
+0880 D006      1790            pop     ar6
+0882 6001      1791            jz      L013039?
+0884           1792   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:377: phases[j]=(omega*timediff);
+0884 ACE8      1793            mov     r4,_main_j_1_68
+0886 E5E9      1794            mov     a,(_main_j_1_68 + 1)
+0888 CC        1795            xch     a,r4
+0889 25E0      1796            add     a,acc
+088B CC        1797            xch     a,r4
+088C 33        1798            rlc     a
+088D CC        1799            xch     a,r4
+088E 25E0      1800            add     a,acc
+0890 CC        1801            xch     a,r4
+0891 33        1802            rlc     a
+0892 FD        1803            mov     r5,a
+0893 EC        1804            mov     a,r4
+0894 24A8      1805            add     a,#_main_phases_1_68
+0896 F8        1806            mov     r0,a
+0897 A606      1807            mov     @r0,ar6
+0899 08        1808            inc     r0
+089A A607      1809            mov     @r0,ar7
+089C 08        1810            inc     r0
+089D A602      1811            mov     @r0,ar2
+089F 08        1812            inc     r0
+08A0 A603      1813            mov     @r0,ar3
+08A2 8001      1814            sjmp    L013040?
+08A4           1815   L013039?:
+08A4           1816   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:381: phases[j]=(-1)*(omega*timediff);
+08A4 ACE8      1817            mov     r4,_main_j_1_68
+08A6 E5E9      1818            mov     a,(_main_j_1_68 + 1)
+08A8 CC        1819            xch     a,r4
+08A9 25E0      1820            add     a,acc
+08AB CC        1821            xch     a,r4
+08AC 33        1822            rlc     a
+08AD CC        1823            xch     a,r4
+08AE 25E0      1824            add     a,acc
+08B0 CC        1825            xch     a,r4
+08B1 33        1826            rlc     a
+08B2 FD        1827            mov     r5,a
+08B3 EC        1828            mov     a,r4
+08B4 24A8      1829            add     a,#_main_phases_1_68
+08B6 F8        1830            mov     r0,a
+08B7 EB        1831            mov     a,r3
+08B8 B2E7      1832            cpl     acc.7
+08BA FB        1833            mov     r3,a
+08BB A606      1834            mov     @r0,ar6
+08BD 08        1835            inc     r0
+08BE A607      1836            mov     @r0,ar7
+08C0 08        1837            inc     r0
+08C1 A602      1838            mov     @r0,ar2
+08C3 08        1839            inc     r0
+08C4 A603      1840            mov     @r0,ar3
+08C6 18        1841            dec     r0
+08C7 18        1842            dec     r0
+08C8 18        1843            dec     r0
+08C9           1844   L013040?:
+08C9           1845   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:383: j++;
+08C9 05E8      1846            inc     _main_j_1_68
+08CB E4        1847            clr     a
+08CC B5E868    1848            cjne    a,_main_j_1_68,L013108?
+08CF 05E9      1849            inc     (_main_j_1_68 + 1)
+08D1           1850   L013108?:
+08D1           1851   L013045?:
+08D1           1852   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:386: if (j>=5)
+08D1 C3        1853            clr     c
+08D2 E5E8      1854            mov     a,_main_j_1_68
+08D4 9405      1855            subb    a,#0x05
+08D6 E5E9      1856            mov     a,(_main_j_1_68 + 1)
+08D8 6480      1857            xrl     a,#0x80
+08DA 9480      1858            subb    a,#0x80
+08DC 5001      1859            jnc     L013109?
+08DE 020100    1860            ljmp    L013047?
+08E1           1861   L013109?:
+08E1           1862   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:388: phase=0;
+08E1 755800    1863            mov     _main_phase_1_68,#0x00
+08E4 755900    1864            mov     (_main_phase_1_68 + 1),#0x00
+08E7 755A00    1865            mov     (_main_phase_1_68 + 2),#0x00
+08EA 755B00    1866            mov     (_main_phase_1_68 + 3),#0x00
+08ED           1867   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:389: for(k=0; k<5; k++)
+08ED 7A00      1868            mov     r2,#0x00
+08EF 7B00      1869            mov     r3,#0x00
+08F1           1870   L013051?:
+08F1 C3        1871            clr     c
+08F2 EA        1872            mov     a,r2
+08F3 9405      1873            subb    a,#0x05
+08F5 EB        1874            mov     a,r3
+08F6 6480      1875            xrl     a,#0x80
+08F8 9480      1876            subb    a,#0x80
+08FA 5001      1877            jnc     L013054?
+08FC           1878   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:391: phase+=phases[k];
+08FC 8A04      1879            mov     ar4,r2
+08FE EB        1880            mov     a,r3
+08FF CC        1881            xch     a,r4
+0900 25E0      1882            add     a,acc
+0902 CC        1883            xch     a,r4
+0903 33        1884            rlc     a
+0904 CC        1885            xch     a,r4
+0905 25E0      1886            add     a,acc
+0907 CC        1887            xch     a,r4
+0908 33        1888            rlc     a
+0909 EC        1889            mov     a,r4
+090A 24A8      1890            add     a,#_main_phases_1_68
+090C F8        1891            mov     r0,a
+090D 8604      1892            mov     ar4,@r0
+090F 08        1893            inc     r0
+0910 8605      1894            mov     ar5,@r0
+0912 08        1895            inc     r0
+0913 8606      1896            mov     ar6,@r0
+0915 08        1897            inc     r0
+0916 8607      1898            mov     ar7,@r0
+0918 18        1899            dec     r0
+0919 18        1900            dec     r0
+091A 18        1901            dec     r0
+091B C002      1902            push    ar2
+091D C003      1903            push    ar3
+091F C004      1904            push    ar4
+0921 C005      1905            push    ar5
+0923 C006      1906            push    ar6
+0925 C007      1907            push    ar7
+0927 855882    1908            mov     dpl,_main_phase_1_68
+092A 855983    1909            mov     dph,(_main_phase_1_68 + 1)
+092D 855AF0    1910            mov     b,(_main_phase_1_68 + 2)
+0930 E55B      1911            mov     a,(_main_phase_1_68 + 3)
+0932 120100    1912            lcall   ___fsadd
+0935 858258    1913            mov     _main_phase_1_68,dpl
+0938 858359    1914            mov     (_main_phase_1_68 + 1),dph
+093B 85F05A    1915            mov     (_main_phase_1_68 + 2),b
+093E F55B      1916            mov     (_main_phase_1_68 + 3),a
+0940 E581      1917            mov     a,sp
+0942 24FC      1918            add     a,#0xfc
+0944 F581      1919            mov     sp,a
+0946 D003      1920            pop     ar3
+0948 D002      1921            pop     ar2
+094A           1922   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:389: for(k=0; k<5; k++)
+094A 0A        1923            inc     r2
+094B BA0028    1924            cjne    r2,#0x00,L013051?
+094E 0B        1925            inc     r3
+094F 8001      1926            sjmp    L013051?
+0951           1927   L013054?:
+0951           1928   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:393: phase = phase/5;
+0951 E4        1929            clr     a
+0952 C0E0      1930            push    acc
+0954 C0E0      1931            push    acc
+0956 74A0      1932            mov     a,#0xA0
+0958 C0E0      1933            push    acc
+095A 7440      1934            mov     a,#0x40
+095C C0E0      1935            push    acc
+095E 855882    1936            mov     dpl,_main_phase_1_68
+0961 855983    1937            mov     dph,(_main_phase_1_68 + 1)
+0964 855AF0    1938            mov     b,(_main_phase_1_68 + 2)
+0967 E55B      1939            mov     a,(_main_phase_1_68 + 3)
+0969 120100    1940            lcall   ___fsdiv
+096C 858258    1941            mov     _main_phase_1_68,dpl
+096F 858359    1942            mov     (_main_phase_1_68 + 1),dph
+0972 85F05A    1943            mov     (_main_phase_1_68 + 2),b
+0975 F55B      1944            mov     (_main_phase_1_68 + 3),a
+0977 E581      1945            mov     a,sp
+0979 24FC      1946            add     a,#0xfc
+097B F581      1947            mov     sp,a
+097D           1948   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:394: j=0;
+097D E4        1949            clr     a
+097E F5E8      1950            mov     _main_j_1_68,a
+0980 F5E9      1951            mov     (_main_j_1_68 + 1),a
+0982           1952   L013047?:
+0982           1953   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:397: frequency = 1/period2;
+0982 C0C8      1954            push    _main_period2_1_68
+0984 C0C9      1955            push    (_main_period2_1_68 + 1)
+0986 C0CA      1956            push    (_main_period2_1_68 + 2)
+0988 C0CB      1957            push    (_main_period2_1_68 + 3)
+098A 900000    1958            mov     dptr,#0x0000
+098D 75F080    1959            mov     b,#0x80
+0990 743F      1960            mov     a,#0x3F
+0992 120100    1961            lcall   ___fsdiv
+0995 AA82      1962            mov     r2,dpl
+0997 AB83      1963            mov     r3,dph
+0999 ACF0      1964            mov     r4,b
+099B FD        1965            mov     r5,a
+099C E581      1966            mov     a,sp
+099E 24FC      1967            add     a,#0xfc
+09A0 F581      1968            mov     sp,a
+09A2           1969   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:399: printf( GOTO_YX , 2, 18);
+09A2 C002      1970            push    ar2
+09A4 C003      1971            push    ar3
+09A6 C004      1972            push    ar4
+09A8 C005      1973            push    ar5
+09AA 7412      1974            mov     a,#0x12
+09AC C0E0      1975            push    acc
+09AE E4        1976            clr     a
+09AF C0E0      1977            push    acc
+09B1 7402      1978            mov     a,#0x02
+09B3 C0E0      1979            push    acc
+09B5 E4        1980            clr     a
+09B6 C0E0      1981            push    acc
+09B8 74A8      1982            mov     a,#__str_2
+09BA C0E0      1983            push    acc
+09BC 749C      1984            mov     a,#(__str_2 >> 8)
+09BE C0E0      1985            push    acc
+09C0 7480      1986            mov     a,#0x80
+09C2 C0E0      1987            push    acc
+09C4 120100    1988            lcall   _printf
+09C7 E581      1989            mov     a,sp
+09C9 24F9      1990            add     a,#0xf9
+09CB F581      1991            mov     sp,a
+09CD           1992   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:400: printf( FORE_BACK , COLOR_RED, COLOR_WHITE );
+09CD 7407      1993            mov     a,#0x07
+09CF C0E0      1994            push    acc
+09D1 E4        1995            clr     a
+09D2 C0E0      1996            push    acc
+09D4 7401      1997            mov     a,#0x01
+09D6 C0E0      1998            push    acc
+09D8 E4        1999            clr     a
+09D9 C0E0      2000            push    acc
+09DB 7468      2001            mov     a,#__str_1
+09DD C0E0      2002            push    acc
+09DF 749C      2003            mov     a,#(__str_1 >> 8)
+09E1 C0E0      2004            push    acc
+09E3 7480      2005            mov     a,#0x80
+09E5 C0E0      2006            push    acc
+09E7 120100    2007            lcall   _printf
+09EA E581      2008            mov     a,sp
+09EC 24F9      2009            add     a,#0xf9
+09EE F581      2010            mov     sp,a
+09F0           2011   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:401: printf("%5.3f", vrrms);
+09F0 C028      2012            push    _main_sloc1_1_0
+09F2 C029      2013            push    (_main_sloc1_1_0 + 1)
+09F4 C02A      2014            push    (_main_sloc1_1_0 + 2)
+09F6 C02B      2015            push    (_main_sloc1_1_0 + 3)
+09F8 74A8      2016            mov     a,#__str_10
+09FA C0E0      2017            push    acc
+09FC 74A7      2018            mov     a,#(__str_10 >> 8)
+09FE C0E0      2019            push    acc
+0A00 7480      2020            mov     a,#0x80
+0A02 C0E0      2021            push    acc
+0A04 120100    2022            lcall   _printf
+0A07 E581      2023            mov     a,sp
+0A09 24F9      2024            add     a,#0xf9
+0A0B F581      2025            mov     sp,a
+0A0D           2026   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:402: printf( GOTO_YX , 4, 18);
+0A0D 7412      2027            mov     a,#0x12
+0A0F C0E0      2028            push    acc
+0A11 E4        2029            clr     a
+0A12 C0E0      2030            push    acc
+0A14 7404      2031            mov     a,#0x04
+0A16 C0E0      2032            push    acc
+0A18 E4        2033            clr     a
+0A19 C0E0      2034            push    acc
+0A1B 74A8      2035            mov     a,#__str_2
+0A1D C0E0      2036            push    acc
+0A1F 749C      2037            mov     a,#(__str_2 >> 8)
+0A21 C0E0      2038            push    acc
+0A23 7480      2039            mov     a,#0x80
+0A25 C0E0      2040            push    acc
+0A27 120100    2041            lcall   _printf
+0A2A E581      2042            mov     a,sp
+0A2C 24F9      2043            add     a,#0xf9
+0A2E F581      2044            mov     sp,a
+0A30           2045   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:403: printf( FORE_BACK , COLOR_GREEN, COLOR_WHITE );
+0A30 7407      2046            mov     a,#0x07
+0A32 C0E0      2047            push    acc
+0A34 E4        2048            clr     a
+0A35 C0E0      2049            push    acc
+0A37 7402      2050            mov     a,#0x02
+0A39 C0E0      2051            push    acc
+0A3B E4        2052            clr     a
+0A3C C0E0      2053            push    acc
+0A3E 7468      2054            mov     a,#__str_1
+0A40 C0E0      2055            push    acc
+0A42 749C      2056            mov     a,#(__str_1 >> 8)
+0A44 C0E0      2057            push    acc
+0A46 7480      2058            mov     a,#0x80
+0A48 C0E0      2059            push    acc
+0A4A 120100    2060            lcall   _printf
+0A4D E581      2061            mov     a,sp
+0A4F 24F9      2062            add     a,#0xf9
+0A51 F581      2063            mov     sp,a
+0A53           2064   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:404: printf("%5.3f", vtrms);
+0A53 C0E8      2065            push    _main_sloc0_1_0
+0A55 C0E9      2066            push    (_main_sloc0_1_0 + 1)
+0A57 C0EA      2067            push    (_main_sloc0_1_0 + 2)
+0A59 C0EB      2068            push    (_main_sloc0_1_0 + 3)
+0A5B 74A8      2069            mov     a,#__str_10
+0A5D C0E0      2070            push    acc
+0A5F 74A7      2071            mov     a,#(__str_10 >> 8)
+0A61 C0E0      2072            push    acc
+0A63 7480      2073            mov     a,#0x80
+0A65 C0E0      2074            push    acc
+0A67 120100    2075            lcall   _printf
+0A6A E581      2076            mov     a,sp
+0A6C 24F9      2077            add     a,#0xf9
+0A6E F581      2078            mov     sp,a
+0A70           2079   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:405: printf( GOTO_YX , 6, 18);
+0A70 7412      2080            mov     a,#0x12
+0A72 C0E0      2081            push    acc
+0A74 E4        2082            clr     a
+0A75 C0E0      2083            push    acc
+0A77 7406      2084            mov     a,#0x06
+0A79 C0E0      2085            push    acc
+0A7B E4        2086            clr     a
+0A7C C0E0      2087            push    acc
+0A7E 74A8      2088            mov     a,#__str_2
+0A80 C0E0      2089            push    acc
+0A82 749C      2090            mov     a,#(__str_2 >> 8)
+0A84 C0E0      2091            push    acc
+0A86 7480      2092            mov     a,#0x80
+0A88 C0E0      2093            push    acc
+0A8A 120100    2094            lcall   _printf
+0A8D E581      2095            mov     a,sp
+0A8F 24F9      2096            add     a,#0xf9
+0A91 F581      2097            mov     sp,a
+0A93           2098   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:406: printf( FORE_BACK , COLOR_BLUE, COLOR_WHITE );
+0A93 7407      2099            mov     a,#0x07
+0A95 C0E0      2100            push    acc
+0A97 E4        2101            clr     a
+0A98 C0E0      2102            push    acc
+0A9A 7404      2103            mov     a,#0x04
+0A9C C0E0      2104            push    acc
+0A9E E4        2105            clr     a
+0A9F C0E0      2106            push    acc
+0AA1 7468      2107            mov     a,#__str_1
+0AA3 C0E0      2108            push    acc
+0AA5 749C      2109            mov     a,#(__str_1 >> 8)
+0AA7 C0E0      2110            push    acc
+0AA9 7480      2111            mov     a,#0x80
+0AAB C0E0      2112            push    acc
+0AAD 120100    2113            lcall   _printf
+0AB0 E581      2114            mov     a,sp
+0AB2 24F9      2115            add     a,#0xf9
+0AB4 F581      2116            mov     sp,a
+0AB6           2117   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:407: printf("%5.3f", phase);
+0AB6 C058      2118            push    _main_phase_1_68
+0AB8 C059      2119            push    (_main_phase_1_68 + 1)
+0ABA C05A      2120            push    (_main_phase_1_68 + 2)
+0ABC C05B      2121            push    (_main_phase_1_68 + 3)
+0ABE 74A8      2122            mov     a,#__str_10
+0AC0 C0E0      2123            push    acc
+0AC2 74A7      2124            mov     a,#(__str_10 >> 8)
+0AC4 C0E0      2125            push    acc
+0AC6 7480      2126            mov     a,#0x80
+0AC8 C0E0      2127            push    acc
+0ACA 120100    2128            lcall   _printf
+0ACD E581      2129            mov     a,sp
+0ACF 24F9      2130            add     a,#0xf9
+0AD1 F581      2131            mov     sp,a
+0AD3           2132   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:408: printf( GOTO_YX , 8, 18);
+0AD3 7412      2133            mov     a,#0x12
+0AD5 C0E0      2134            push    acc
+0AD7 E4        2135            clr     a
+0AD8 C0E0      2136            push    acc
+0ADA 7408      2137            mov     a,#0x08
+0ADC C0E0      2138            push    acc
+0ADE E4        2139            clr     a
+0ADF C0E0      2140            push    acc
+0AE1 74A8      2141            mov     a,#__str_2
+0AE3 C0E0      2142            push    acc
+0AE5 749C      2143            mov     a,#(__str_2 >> 8)
+0AE7 C0E0      2144            push    acc
+0AE9 7480      2145            mov     a,#0x80
+0AEB C0E0      2146            push    acc
+0AED 120100    2147            lcall   _printf
+0AF0 E581      2148            mov     a,sp
+0AF2 24F9      2149            add     a,#0xf9
+0AF4 F581      2150            mov     sp,a
+0AF6           2151   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:409: printf( FORE_BACK , COLOR_MAGENTA, COLOR_WHITE );
+0AF6 7407      2152            mov     a,#0x07
+0AF8 C0E0      2153            push    acc
+0AFA E4        2154            clr     a
+0AFB C0E0      2155            push    acc
+0AFD 7405      2156            mov     a,#0x05
+0AFF C0E0      2157            push    acc
+0B01 E4        2158            clr     a
+0B02 C0E0      2159            push    acc
+0B04 7468      2160            mov     a,#__str_1
+0B06 C0E0      2161            push    acc
+0B08 749C      2162            mov     a,#(__str_1 >> 8)
+0B0A C0E0      2163            push    acc
+0B0C 7480      2164            mov     a,#0x80
+0B0E C0E0      2165            push    acc
+0B10 120100    2166            lcall   _printf
+0B13 E581      2167            mov     a,sp
+0B15 24F9      2168            add     a,#0xf9
+0B17 F581      2169            mov     sp,a
+0B19           2170   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:410: printf("%5.3f", frequency);         
+0B19 74A8      2171            mov     a,#__str_10
+0B1B C0E0      2172            push    acc
+0B1D 74A7      2173            mov     a,#(__str_10 >> 8)
+0B1F C0E0      2174            push    acc
+0B21 7480      2175            mov     a,#0x80
+0B23 C0E0      2176            push    acc
+0B25 120100    2177            lcall   _printf
+0B28 E581      2178            mov     a,sp
+0B2A 24F9      2179            add     a,#0xf9
+0B2C F581      2180            mov     sp,a
+0B2E           2181   ;        C:\Users\jeffreyliou\Desktop\elec291\lab5\any_pin with cp437.c:415: waitms(10);
+0B2E 90000A    2182            mov     dptr,#0x000A
+0B31 120100    2183            lcall   _waitms
+0B34 020100    2184            ljmp    L013049?
+0B37           2185            rseg R_CSEG
+0B37           2186   
+0000           2187            rseg R_XINIT
+0000           2188   
+0000           2189            rseg R_CONST
+0000           2190   __str_0:
+0000 1B        2191            db 0x1B
+0001 5B324A    2192            db '[2J'
+0004 00        2193            db 0x00
+0005           2194   __str_1:
+0005 1B        2195            db 0x1B
+0006 5B303B33  2196            db '[0;3%d;4%dm'
+     25643B34
+     25646D
+0011 00        2197            db 0x00
+0012           2198   __str_2:
+0012 1B        2199            db 0x1B
+0013 5B25643B  2200            db '[%d;%dH'
+     256448
+001A 00        2201            db 0x00
+001B           2202   __str_3:
+001B C9        2203            db 0xC9
+001C CD        2204            db 0xCD
+001D CD        2205            db 0xCD
+001E CD        2206            db 0xCD
+001F CD        2207            db 0xCD
+0020 CD        2208            db 0xCD
+0021 CD        2209            db 0xCD
+0022 CD        2210            db 0xCD
+0023 CD        2211            db 0xCD
+0024 CD        2212            db 0xCD
+0025 CD        2213            db 0xCD
+0026 CD        2214            db 0xCD
+0027 CD        2215            db 0xCD
+0028 CB        2216            db 0xCB
+0029 CD        2217            db 0xCD
+002A CD        2218            db 0xCD
+002B CD        2219            db 0xCD
+002C CD        2220            db 0xCD
+002D CD        2221            db 0xCD
+002E CD        2222            db 0xCD
+002F CD        2223            db 0xCD
+0030 CD        2224            db 0xCD
+0031 CD        2225            db 0xCD
+0032 CD        2226            db 0xCD
+0033 CD        2227            db 0xCD
+0034 CD        2228            db 0xCD
+0035 BB        2229            db 0xBB
+0036 0A        2230            db 0x0A
+0037 00        2231            db 0x00
+0038           2232   __str_4:
+0038 BA        2233            db 0xBA
+0039 2056726D  2234            db ' Vrms Ref   '
+     73205265
+     66202020
+0045 BA        2235            db 0xBA
+0046 20202020  2236            db '            '
+     20202020
+     20202020
+0052 BA        2237            db 0xBA
+0053 0A        2238            db 0x0A
+0054 00        2239            db 0x00
+0055           2240   __str_5:
+0055 CC        2241            db 0xCC
+0056 CD        2242            db 0xCD
+0057 CD        2243            db 0xCD
+0058 CD        2244            db 0xCD
+0059 CD        2245            db 0xCD
+005A CD        2246            db 0xCD
+005B CD        2247            db 0xCD
+005C CD        2248            db 0xCD
+005D CD        2249            db 0xCD
+005E CD        2250            db 0xCD
+005F CD        2251            db 0xCD
+0060 CD        2252            db 0xCD
+0061 CD        2253            db 0xCD
+0062 CE        2254            db 0xCE
+0063 CD        2255            db 0xCD
+0064 CD        2256            db 0xCD
+0065 CD        2257            db 0xCD
+0066 CD        2258            db 0xCD
+0067 CD        2259            db 0xCD
+0068 CD        2260            db 0xCD
+0069 CD        2261            db 0xCD
+006A CD        2262            db 0xCD
+006B CD        2263            db 0xCD
+006C CD        2264            db 0xCD
+006D CD        2265            db 0xCD
+006E CD        2266            db 0xCD
+006F B9        2267            db 0xB9
+0070 0A        2268            db 0x0A
+0071 00        2269            db 0x00
+0072           2270   __str_6:
+0072 BA        2271            db 0xBA
+0073 2056726D  2272            db ' Vrms Test  '
+     73205465
+     73742020
+007F BA        2273            db 0xBA
+0080 20202020  2274            db '            '
+     20202020
+     20202020
+008C BA        2275            db 0xBA
+008D 0A        2276            db 0x0A
+008E 00        2277            db 0x00
+008F           2278   __str_7:
+008F BA        2279            db 0xBA
+0090 20506861  2280            db ' Phase      '
+     73652020
+     20202020
+009C BA        2281            db 0xBA
+009D 20202020  2282            db '            '
+     20202020
+     20202020
+00A9 BA        2283            db 0xBA
+00AA 0A        2284            db 0x0A
+00AB 00        2285            db 0x00
+00AC           2286   __str_8:
+00AC BA        2287            db 0xBA
+00AD 20467265  2288            db ' Frequency  '
+     7175656E
+     63792020
+00B9 BA        2289            db 0xBA
+00BA 20202020  2290            db '            '
+     20202020
+     20202020
+00C6 BA        2291            db 0xBA
+00C7 0A        2292            db 0x0A
+00C8 00        2293            db 0x00
+00C9           2294   __str_9:
+00C9 C8        2295            db 0xC8
+00CA CD        2296            db 0xCD
+00CB CD        2297            db 0xCD
+00CC CD        2298            db 0xCD
+00CD CD        2299            db 0xCD
+00CE CD        2300            db 0xCD
+00CF CD        2301            db 0xCD
+00D0 CD        2302            db 0xCD
+00D1 CD        2303            db 0xCD
+00D2 CD        2304            db 0xCD
+00D3 CD        2305            db 0xCD
+00D4 CD        2306            db 0xCD
+00D5 CD        2307            db 0xCD
+00D6 CA        2308            db 0xCA
+00D7 CD        2309            db 0xCD
+00D8 CD        2310            db 0xCD
+00D9 CD        2311            db 0xCD
+00DA CD        2312            db 0xCD
+00DB CD        2313            db 0xCD
+00DC CD        2314            db 0xCD
+00DD CD        2315            db 0xCD
+00DE CD        2316            db 0xCD
+00DF CD        2317            db 0xCD
+00E0 CD        2318            db 0xCD
+00E1 CD        2319            db 0xCD
+00E2 CD        2320            db 0xCD
+00E3 BC        2321            db 0xBC
+00E4 0A        2322            db 0x0A
+00E5 00        2323            db 0x00
+00E6           2324   __str_10:
+00E6 25352E33  2325            db '%5.3f'
+     66
+00EB 00        2326            db 0x00
+00EC           2327   
+0003           2328            CSEG
+0003           2329   
+0003           2330   end

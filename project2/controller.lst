@@ -1,0 +1,1740 @@
+0000              1   ;--------------------------------------------------------
+0000              2   ; File Created by C51
+0000              3   ; Version 1.0.0 #1069 (Apr 23 2015) (MSVC)
+0000              4   ; This file was generated Mon Apr 04 23:26:56 2016
+0000              5   ;--------------------------------------------------------
+                  5   $name controller
+                  6   $optc51 --model-small
+0000              8            R_DSEG    segment data
+0000              9            R_CSEG    segment code
+0000             10            R_BSEG    segment bit
+0000             11            R_XSEG    segment xdata
+0000             12            R_PSEG    segment xdata
+0000             13            R_ISEG    segment idata
+0000             14            R_OSEG    segment data overlay
+0000             15            BIT_BANK  segment data overlay
+0000             16            R_HOME    segment code
+0000             17            R_GSINIT  segment code
+0000             18            R_IXSEG   segment xdata
+0000             19            R_CONST   segment code
+0000             20            R_XINIT   segment code
+0000             21            R_DINIT   segment code
+0000             22   
+0000             23   ;--------------------------------------------------------
+0000             24   ; Public variables in this module
+0000             25   ;--------------------------------------------------------
+0000             26            public _main
+0000             27            public _Timer2_ISR
+0000             28            public _putchar1
+0000             29            public _nunchuck_getdata
+0000             30            public _nunchuck_init
+0000             31            public _I2C_stop
+0000             32            public _I2C_start
+0000             33            public _I2C_read
+0000             34            public _I2C_write
+0000             35            public _Timer4ms
+0000             36            public __c51_external_startup
+0000             37            public _UART1_Init
+0000             38            public _nunchuck_init_PARM_1
+0000             39   ;--------------------------------------------------------
+0000             40   ; Special Function Registers
+0000             41   ;--------------------------------------------------------
+0000             42   _P0             DATA 0x80
+0000             43   _SP             DATA 0x81
+0000             44   _DPL            DATA 0x82
+0000             45   _DPH            DATA 0x83
+0000             46   _EMI0TC         DATA 0x84
+0000             47   _EMI0CF         DATA 0x85
+0000             48   _OSCLCN         DATA 0x86
+0000             49   _PCON           DATA 0x87
+0000             50   _TCON           DATA 0x88
+0000             51   _TMOD           DATA 0x89
+0000             52   _TL0            DATA 0x8a
+0000             53   _TL1            DATA 0x8b
+0000             54   _TH0            DATA 0x8c
+0000             55   _TH1            DATA 0x8d
+0000             56   _CKCON          DATA 0x8e
+0000             57   _PSCTL          DATA 0x8f
+0000             58   _P1             DATA 0x90
+0000             59   _TMR3CN         DATA 0x91
+0000             60   _TMR4CN         DATA 0x91
+0000             61   _TMR3RLL        DATA 0x92
+0000             62   _TMR4RLL        DATA 0x92
+0000             63   _TMR3RLH        DATA 0x93
+0000             64   _TMR4RLH        DATA 0x93
+0000             65   _TMR3L          DATA 0x94
+0000             66   _TMR4L          DATA 0x94
+0000             67   _TMR3H          DATA 0x95
+0000             68   _TMR4H          DATA 0x95
+0000             69   _USB0ADR        DATA 0x96
+0000             70   _USB0DAT        DATA 0x97
+0000             71   _SCON           DATA 0x98
+0000             72   _SCON0          DATA 0x98
+0000             73   _SBUF           DATA 0x99
+0000             74   _SBUF0          DATA 0x99
+0000             75   _CPT1CN         DATA 0x9a
+0000             76   _CPT0CN         DATA 0x9b
+0000             77   _CPT1MD         DATA 0x9c
+0000             78   _CPT0MD         DATA 0x9d
+0000             79   _CPT1MX         DATA 0x9e
+0000             80   _CPT0MX         DATA 0x9f
+0000             81   _P2             DATA 0xa0
+0000             82   _SPI0CFG        DATA 0xa1
+0000             83   _SPI0CKR        DATA 0xa2
+0000             84   _SPI0DAT        DATA 0xa3
+0000             85   _P0MDOUT        DATA 0xa4
+0000             86   _P1MDOUT        DATA 0xa5
+0000             87   _P2MDOUT        DATA 0xa6
+0000             88   _P3MDOUT        DATA 0xa7
+0000             89   _IE             DATA 0xa8
+0000             90   _CLKSEL         DATA 0xa9
+0000             91   _EMI0CN         DATA 0xaa
+0000             92   __XPAGE         DATA 0xaa
+0000             93   _SBCON1         DATA 0xac
+0000             94   _P4MDOUT        DATA 0xae
+0000             95   _PFE0CN         DATA 0xaf
+0000             96   _P3             DATA 0xb0
+0000             97   _OSCXCN         DATA 0xb1
+0000             98   _OSCICN         DATA 0xb2
+0000             99   _OSCICL         DATA 0xb3
+0000            100   _SBRLL1         DATA 0xb4
+0000            101   _SBRLH1         DATA 0xb5
+0000            102   _FLSCL          DATA 0xb6
+0000            103   _FLKEY          DATA 0xb7
+0000            104   _IP             DATA 0xb8
+0000            105   _CLKMUL         DATA 0xb9
+0000            106   _SMBTC          DATA 0xb9
+0000            107   _AMX0N          DATA 0xba
+0000            108   _AMX0P          DATA 0xbb
+0000            109   _ADC0CF         DATA 0xbc
+0000            110   _ADC0L          DATA 0xbd
+0000            111   _ADC0H          DATA 0xbe
+0000            112   _SFRPAGE        DATA 0xbf
+0000            113   _SMB0CN         DATA 0xc0
+0000            114   _SMB1CN         DATA 0xc0
+0000            115   _SMB0CF         DATA 0xc1
+0000            116   _SMB1CF         DATA 0xc1
+0000            117   _SMB0DAT        DATA 0xc2
+0000            118   _SMB1DAT        DATA 0xc2
+0000            119   _ADC0GTL        DATA 0xc3
+0000            120   _ADC0GTH        DATA 0xc4
+0000            121   _ADC0LTL        DATA 0xc5
+0000            122   _ADC0LTH        DATA 0xc6
+0000            123   _P4             DATA 0xc7
+0000            124   _TMR2CN         DATA 0xc8
+0000            125   _TMR5CN         DATA 0xc8
+0000            126   _REG01CN        DATA 0xc9
+0000            127   _TMR2RLL        DATA 0xca
+0000            128   _TMR5RLL        DATA 0xca
+0000            129   _TMR2RLH        DATA 0xcb
+0000            130   _TMR5RLH        DATA 0xcb
+0000            131   _TMR2L          DATA 0xcc
+0000            132   _TMR5L          DATA 0xcc
+0000            133   _TMR2H          DATA 0xcd
+0000            134   _TMR5H          DATA 0xcd
+0000            135   _SMB0ADM        DATA 0xce
+0000            136   _SMB1ADM        DATA 0xce
+0000            137   _SMB0ADR        DATA 0xcf
+0000            138   _SMB1ADR        DATA 0xcf
+0000            139   _PSW            DATA 0xd0
+0000            140   _REF0CN         DATA 0xd1
+0000            141   _SCON1          DATA 0xd2
+0000            142   _SBUF1          DATA 0xd3
+0000            143   _P0SKIP         DATA 0xd4
+0000            144   _P1SKIP         DATA 0xd5
+0000            145   _P2SKIP         DATA 0xd6
+0000            146   _USB0XCN        DATA 0xd7
+0000            147   _PCA0CN         DATA 0xd8
+0000            148   _PCA0MD         DATA 0xd9
+0000            149   _PCA0CPM0       DATA 0xda
+0000            150   _PCA0CPM1       DATA 0xdb
+0000            151   _PCA0CPM2       DATA 0xdc
+0000            152   _PCA0CPM3       DATA 0xdd
+0000            153   _PCA0CPM4       DATA 0xde
+0000            154   _P3SKIP         DATA 0xdf
+0000            155   _ACC            DATA 0xe0
+0000            156   _XBR0           DATA 0xe1
+0000            157   _XBR1           DATA 0xe2
+0000            158   _XBR2           DATA 0xe3
+0000            159   _IT01CF         DATA 0xe4
+0000            160   _CKCON1         DATA 0xe4
+0000            161   _SMOD1          DATA 0xe5
+0000            162   _EIE1           DATA 0xe6
+0000            163   _EIE2           DATA 0xe7
+0000            164   _ADC0CN         DATA 0xe8
+0000            165   _PCA0CPL1       DATA 0xe9
+0000            166   _PCA0CPH1       DATA 0xea
+0000            167   _PCA0CPL2       DATA 0xeb
+0000            168   _PCA0CPH2       DATA 0xec
+0000            169   _PCA0CPL3       DATA 0xed
+0000            170   _PCA0CPH3       DATA 0xee
+0000            171   _RSTSRC         DATA 0xef
+0000            172   _B              DATA 0xf0
+0000            173   _P0MDIN         DATA 0xf1
+0000            174   _P1MDIN         DATA 0xf2
+0000            175   _P2MDIN         DATA 0xf3
+0000            176   _P3MDIN         DATA 0xf4
+0000            177   _P4MDIN         DATA 0xf5
+0000            178   _EIP1           DATA 0xf6
+0000            179   _EIP2           DATA 0xf7
+0000            180   _SPI0CN         DATA 0xf8
+0000            181   _PCA0L          DATA 0xf9
+0000            182   _PCA0H          DATA 0xfa
+0000            183   _PCA0CPL0       DATA 0xfb
+0000            184   _PCA0CPH0       DATA 0xfc
+0000            185   _PCA0CPL4       DATA 0xfd
+0000            186   _PCA0CPH4       DATA 0xfe
+0000            187   _VDM0CN         DATA 0xff
+0000            188   _DPTR           DATA 0x8382
+0000            189   _TMR2RL         DATA 0xcbca
+0000            190   _TMR3RL         DATA 0x9392
+0000            191   _TMR4RL         DATA 0x9392
+0000            192   _TMR5RL         DATA 0xcbca
+0000            193   _TMR2           DATA 0xcdcc
+0000            194   _TMR3           DATA 0x9594
+0000            195   _TMR4           DATA 0x9594
+0000            196   _TMR5           DATA 0xcdcc
+0000            197   _SBRL1          DATA 0xb5b4
+0000            198   _ADC0           DATA 0xbebd
+0000            199   _ADC0GT         DATA 0xc4c3
+0000            200   _ADC0LT         DATA 0xc6c5
+0000            201   _PCA0           DATA 0xfaf9
+0000            202   _PCA0CP1        DATA 0xeae9
+0000            203   _PCA0CP2        DATA 0xeceb
+0000            204   _PCA0CP3        DATA 0xeeed
+0000            205   _PCA0CP0        DATA 0xfcfb
+0000            206   _PCA0CP4        DATA 0xfefd
+0000            207   ;--------------------------------------------------------
+0000            208   ; special function bits
+0000            209   ;--------------------------------------------------------
+0000            210   _P0_0           BIT 0x80
+0000            211   _P0_1           BIT 0x81
+0000            212   _P0_2           BIT 0x82
+0000            213   _P0_3           BIT 0x83
+0000            214   _P0_4           BIT 0x84
+0000            215   _P0_5           BIT 0x85
+0000            216   _P0_6           BIT 0x86
+0000            217   _P0_7           BIT 0x87
+0000            218   _TF1            BIT 0x8f
+0000            219   _TR1            BIT 0x8e
+0000            220   _TF0            BIT 0x8d
+0000            221   _TR0            BIT 0x8c
+0000            222   _IE1            BIT 0x8b
+0000            223   _IT1            BIT 0x8a
+0000            224   _IE0            BIT 0x89
+0000            225   _IT0            BIT 0x88
+0000            226   _P1_0           BIT 0x90
+0000            227   _P1_1           BIT 0x91
+0000            228   _P1_2           BIT 0x92
+0000            229   _P1_3           BIT 0x93
+0000            230   _P1_4           BIT 0x94
+0000            231   _P1_5           BIT 0x95
+0000            232   _P1_6           BIT 0x96
+0000            233   _P1_7           BIT 0x97
+0000            234   _S0MODE         BIT 0x9f
+0000            235   _SCON0_6        BIT 0x9e
+0000            236   _MCE0           BIT 0x9d
+0000            237   _REN0           BIT 0x9c
+0000            238   _TB80           BIT 0x9b
+0000            239   _RB80           BIT 0x9a
+0000            240   _TI0            BIT 0x99
+0000            241   _RI0            BIT 0x98
+0000            242   _SCON_6         BIT 0x9e
+0000            243   _MCE            BIT 0x9d
+0000            244   _REN            BIT 0x9c
+0000            245   _TB8            BIT 0x9b
+0000            246   _RB8            BIT 0x9a
+0000            247   _TI             BIT 0x99
+0000            248   _RI             BIT 0x98
+0000            249   _P2_0           BIT 0xa0
+0000            250   _P2_1           BIT 0xa1
+0000            251   _P2_2           BIT 0xa2
+0000            252   _P2_3           BIT 0xa3
+0000            253   _P2_4           BIT 0xa4
+0000            254   _P2_5           BIT 0xa5
+0000            255   _P2_6           BIT 0xa6
+0000            256   _P2_7           BIT 0xa7
+0000            257   _EA             BIT 0xaf
+0000            258   _ESPI0          BIT 0xae
+0000            259   _ET2            BIT 0xad
+0000            260   _ES0            BIT 0xac
+0000            261   _ET1            BIT 0xab
+0000            262   _EX1            BIT 0xaa
+0000            263   _ET0            BIT 0xa9
+0000            264   _EX0            BIT 0xa8
+0000            265   _P3_0           BIT 0xb0
+0000            266   _P3_1           BIT 0xb1
+0000            267   _P3_2           BIT 0xb2
+0000            268   _P3_3           BIT 0xb3
+0000            269   _P3_4           BIT 0xb4
+0000            270   _P3_5           BIT 0xb5
+0000            271   _P3_6           BIT 0xb6
+0000            272   _P3_7           BIT 0xb7
+0000            273   _IP_7           BIT 0xbf
+0000            274   _PSPI0          BIT 0xbe
+0000            275   _PT2            BIT 0xbd
+0000            276   _PS0            BIT 0xbc
+0000            277   _PT1            BIT 0xbb
+0000            278   _PX1            BIT 0xba
+0000            279   _PT0            BIT 0xb9
+0000            280   _PX0            BIT 0xb8
+0000            281   _MASTER0        BIT 0xc7
+0000            282   _TXMODE0        BIT 0xc6
+0000            283   _STA0           BIT 0xc5
+0000            284   _STO0           BIT 0xc4
+0000            285   _ACKRQ0         BIT 0xc3
+0000            286   _ARBLOST0       BIT 0xc2
+0000            287   _ACK0           BIT 0xc1
+0000            288   _SI0            BIT 0xc0
+0000            289   _MASTER1        BIT 0xc7
+0000            290   _TXMODE1        BIT 0xc6
+0000            291   _STA1           BIT 0xc5
+0000            292   _STO1           BIT 0xc4
+0000            293   _ACKRQ1         BIT 0xc3
+0000            294   _ARBLOST1       BIT 0xc2
+0000            295   _ACK1           BIT 0xc1
+0000            296   _SI1            BIT 0xc0
+0000            297   _TF2            BIT 0xcf
+0000            298   _TF2H           BIT 0xcf
+0000            299   _TF2L           BIT 0xce
+0000            300   _TF2LEN         BIT 0xcd
+0000            301   _TF2CEN         BIT 0xcc
+0000            302   _T2SPLIT        BIT 0xcb
+0000            303   _TR2            BIT 0xca
+0000            304   _T2CSS          BIT 0xc9
+0000            305   _T2XCLK         BIT 0xc8
+0000            306   _TF5H           BIT 0xcf
+0000            307   _TF5L           BIT 0xce
+0000            308   _TF5LEN         BIT 0xcd
+0000            309   _TMR5CN_4       BIT 0xcc
+0000            310   _T5SPLIT        BIT 0xcb
+0000            311   _TR5            BIT 0xca
+0000            312   _TMR5CN_1       BIT 0xc9
+0000            313   _T5XCLK         BIT 0xc8
+0000            314   _CY             BIT 0xd7
+0000            315   _AC             BIT 0xd6
+0000            316   _F0             BIT 0xd5
+0000            317   _RS1            BIT 0xd4
+0000            318   _RS0            BIT 0xd3
+0000            319   _OV             BIT 0xd2
+0000            320   _F1             BIT 0xd1
+0000            321   _PARITY         BIT 0xd0
+0000            322   _CF             BIT 0xdf
+0000            323   _CR             BIT 0xde
+0000            324   _PCA0CN_5       BIT 0xde
+0000            325   _CCF4           BIT 0xdc
+0000            326   _CCF3           BIT 0xdb
+0000            327   _CCF2           BIT 0xda
+0000            328   _CCF1           BIT 0xd9
+0000            329   _CCF0           BIT 0xd8
+0000            330   _ACC_7          BIT 0xe7
+0000            331   _ACC_6          BIT 0xe6
+0000            332   _ACC_5          BIT 0xe5
+0000            333   _ACC_4          BIT 0xe4
+0000            334   _ACC_3          BIT 0xe3
+0000            335   _ACC_2          BIT 0xe2
+0000            336   _ACC_1          BIT 0xe1
+0000            337   _ACC_0          BIT 0xe0
+0000            338   _AD0EN          BIT 0xef
+0000            339   _AD0TM          BIT 0xee
+0000            340   _AD0INT         BIT 0xed
+0000            341   _AD0BUSY        BIT 0xec
+0000            342   _AD0WINT        BIT 0xeb
+0000            343   _AD0CM2         BIT 0xea
+0000            344   _AD0CM1         BIT 0xe9
+0000            345   _AD0CM0         BIT 0xe8
+0000            346   _B_7            BIT 0xf7
+0000            347   _B_6            BIT 0xf6
+0000            348   _B_5            BIT 0xf5
+0000            349   _B_4            BIT 0xf4
+0000            350   _B_3            BIT 0xf3
+0000            351   _B_2            BIT 0xf2
+0000            352   _B_1            BIT 0xf1
+0000            353   _B_0            BIT 0xf0
+0000            354   _SPIF           BIT 0xff
+0000            355   _WCOL           BIT 0xfe
+0000            356   _MODF           BIT 0xfd
+0000            357   _RXOVRN         BIT 0xfc
+0000            358   _NSSMD1         BIT 0xfb
+0000            359   _NSSMD0         BIT 0xfa
+0000            360   _TXBMT          BIT 0xf9
+0000            361   _SPIEN          BIT 0xf8
+0000            362   ;--------------------------------------------------------
+0000            363   ; overlayable register banks
+0000            364   ;--------------------------------------------------------
+0000            365            rbank0 segment data overlay
+0000            366   ;--------------------------------------------------------
+0000            367   ; internal ram data
+0000            368   ;--------------------------------------------------------
+0000            369            rseg R_DSEG
+0000            370   _UART1_Init_sloc0_1_0:
+0000            371            ds 4
+0004            372   _nunchuck_init_buf_1_62:
+0004            373            ds 6
+000A            374   _nunchuck_init_sloc0_1_0:
+000A            375            ds 2
+000C            376   _nunchuck_init_sloc1_1_0:
+000C            377            ds 2
+000E            378   _nunchuck_init_sloc2_1_0:
+000E            379            ds 2
+0010            380   _main_Mode_Flag_1_76:
+0010            381            ds 2
+0012            382   _main_rbuf_1_76:
+0012            383            ds 6
+0018            384   _main_joy_y_1_76:
+0018            385            ds 2
+001A            386   _main_off_x_1_76:
+001A            387            ds 2
+001C            388   _main_off_y_1_76:
+001C            389            ds 2
+001E            390   _main_acc_x_1_76:
+001E            391            ds 2
+0020            392   _main_acc_y_1_76:
+0020            393            ds 2
+0022            394   _main_acc_z_1_76:
+0022            395            ds 2
+0024            396   _main_sloc0_1_0:
+0024            397            ds 1
+0025            398   ;--------------------------------------------------------
+0025            399   ; overlayable items in internal ram 
+0025            400   ;--------------------------------------------------------
+0000            401            rseg    R_OSEG
+0000            402            rseg    R_OSEG
+0000            403            rseg    R_OSEG
+0000            404            rseg    R_OSEG
+0000            405   ;--------------------------------------------------------
+0000            406   ; indirectly addressable internal ram data
+0000            407   ;--------------------------------------------------------
+0000            408            rseg R_ISEG
+0000            409   ;--------------------------------------------------------
+0000            410   ; absolute internal ram data
+0000            411   ;--------------------------------------------------------
+0000            412            DSEG
+0000            413   ;--------------------------------------------------------
+0000            414   ; bit data
+0000            415   ;--------------------------------------------------------
+0000            416            rseg R_BSEG
+0000            417   _nunchuck_init_PARM_1:
+0000            418            DBIT    1
+0001            419   _main_but1_1_76:
+0001            420            DBIT    1
+0002            421   _main_but2_1_76:
+0002            422            DBIT    1
+0003            423   ;--------------------------------------------------------
+0003            424   ; paged external ram data
+0003            425   ;--------------------------------------------------------
+0000            426            rseg R_PSEG
+0000            427   ;--------------------------------------------------------
+0000            428   ; external ram data
+0000            429   ;--------------------------------------------------------
+0000            430            rseg R_XSEG
+0000            431   ;--------------------------------------------------------
+0000            432   ; absolute external ram data
+0000            433   ;--------------------------------------------------------
+0000            434            XSEG
+0000            435   ;--------------------------------------------------------
+0000            436   ; external initialized ram data
+0000            437   ;--------------------------------------------------------
+0000            438            rseg R_IXSEG
+0000            439            rseg R_HOME
+0000            440            rseg R_GSINIT
+0000            441            rseg R_CSEG
+0000            442   ;--------------------------------------------------------
+0000            443   ; Reset entry point and interrupt vectors
+0000            444   ;--------------------------------------------------------
+0000            445            CSEG at 0x0000
+0000 020100     446            ljmp    _crt0
+002B            447            CSEG at 0x002b
+002B 020100     448            ljmp    _Timer2_ISR
+002E            449   ;--------------------------------------------------------
+002E            450   ; global & static initialisations
+002E            451   ;--------------------------------------------------------
+0000            452            rseg R_HOME
+0000            453            rseg R_GSINIT
+0000            454            rseg R_GSINIT
+0000            455   ;--------------------------------------------------------
+0000            456   ; data variables initialization
+0000            457   ;--------------------------------------------------------
+0000            458            rseg R_DINIT
+0000            459            ; The linker places a 'ret' at the end of segment R_DINIT.
+0000            460   ;--------------------------------------------------------
+0000            461   ; code
+0000            462   ;--------------------------------------------------------
+0000            463            rseg R_CSEG
+0000            464   ;------------------------------------------------------------
+0000            465   ;Allocation info for local variables in function 'UART1_Init'
+0000            466   ;------------------------------------------------------------
+0000            467   ;baudrate                  Allocated to registers r2 r3 r4 r5 
+0000            468   ;sloc0                     Allocated with name '_UART1_Init_sloc0_1_0'
+0000            469   ;------------------------------------------------------------
+0000            470   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:34: void UART1_Init (unsigned long baudrate) { 
+0000            471   ;        -----------------------------------------
+0000            472   ;         function UART1_Init
+0000            473   ;        -----------------------------------------
+0000            474   _UART1_Init:
+0000            475            using   0
+0000 AA82       476            mov     r2,dpl
+0002 AB83       477            mov     r3,dph
+0004 ACF0       478            mov     r4,b
+0006 FD         479            mov     r5,a
+0007            480   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:35: SMOD1 = 0x0C; // no parity, 8 data bits, 1 stop bit 
+0007 75E50C     481            mov     _SMOD1,#0x0C
+000A            482   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:36: SCON1 = 0x10;
+000A 75D210     483            mov     _SCON1,#0x10
+000D            484   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:37: if (((SYSCLK/baudrate)/2L)/0xFFFFL < 1){ 
+000D 8A00       485            mov     __divulong_PARM_2,r2
+000F 8B01       486            mov     (__divulong_PARM_2 + 1),r3
+0011 8C02       487            mov     (__divulong_PARM_2 + 2),r4
+0013 8D03       488            mov     (__divulong_PARM_2 + 3),r5
+0015 906C00     489            mov     dptr,#0x6C00
+0018 75F0DC     490            mov     b,#0xDC
+001B 7402       491            mov     a,#0x02
+001D 120100     492            lcall   __divulong
+0020 AA82       493            mov     r2,dpl
+0022 AB83       494            mov     r3,dph
+0024 ACF0       495            mov     r4,b
+0026 C3         496            clr     c
+0027 13         497            rrc     a
+0028 F5FB       498            mov     (_UART1_Init_sloc0_1_0 + 3),a
+002A EC         499            mov     a,r4
+002B 13         500            rrc     a
+002C F5FA       501            mov     (_UART1_Init_sloc0_1_0 + 2),a
+002E EB         502            mov     a,r3
+002F 13         503            rrc     a
+0030 F5F9       504            mov     (_UART1_Init_sloc0_1_0 + 1),a
+0032 EA         505            mov     a,r2
+0033 13         506            rrc     a
+0034 F5F8       507            mov     _UART1_Init_sloc0_1_0,a
+0036 7500FF     508            mov     __divulong_PARM_2,#0xFF
+0039 7501FF     509            mov     (__divulong_PARM_2 + 1),#0xFF
+003C 750200     510            mov     (__divulong_PARM_2 + 2),#0x00
+003F 750300     511            mov     (__divulong_PARM_2 + 3),#0x00
+0042 85F882     512            mov     dpl,_UART1_Init_sloc0_1_0
+0045 85F983     513            mov     dph,(_UART1_Init_sloc0_1_0 + 1)
+0048 85FAF0     514            mov     b,(_UART1_Init_sloc0_1_0 + 2)
+004B E5FB       515            mov     a,(_UART1_Init_sloc0_1_0 + 3)
+004D 120100     516            lcall   __divulong
+0050 AE82       517            mov     r6,dpl
+0052 AF83       518            mov     r7,dph
+0054 A8F0       519            mov     r0,b
+0056 F9         520            mov     r1,a
+0057 C3         521            clr     c
+0058 EE         522            mov     a,r6
+0059 9401       523            subb    a,#0x01
+005B EF         524            mov     a,r7
+005C 9400       525            subb    a,#0x00
+005E E8         526            mov     a,r0
+005F 9400       527            subb    a,#0x00
+0061 E9         528            mov     a,r1
+0062 9400       529            subb    a,#0x00
+0064 5001       530            jnc     L002008?
+0066            531   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:38: SBRL1 = 0x10000L-((SYSCLK/baudrate)/2L); 
+0066 E4         532            clr     a
+0067 C3         533            clr     c
+0068 95F8       534            subb    a,_UART1_Init_sloc0_1_0
+006A FA         535            mov     r2,a
+006B E4         536            clr     a
+006C 95F9       537            subb    a,(_UART1_Init_sloc0_1_0 + 1)
+006E FB         538            mov     r3,a
+006F 7401       539            mov     a,#0x01
+0071 95FA       540            subb    a,(_UART1_Init_sloc0_1_0 + 2)
+0073 FC         541            mov     r4,a
+0074 E4         542            clr     a
+0075 95FB       543            subb    a,(_UART1_Init_sloc0_1_0 + 3)
+0077 FD         544            mov     r5,a
+0078 8AB4       545            mov     _SBRL1,r2
+007A 8BB5       546            mov     (_SBRL1 >> 8),r3
+007C            547   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:39: SBCON1 |= 0x03; // set prescaler to 1 
+007C 43AC03     548            orl     _SBCON1,#0x03
+007F 020100     549            ljmp    L002009?
+0082            550   L002008?:
+0082            551   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:41: else if (((SYSCLK/baudrate)/2L)/0xFFFFL < 4){ 
+0082 C3         552            clr     c
+0083 EE         553            mov     a,r6
+0084 9404       554            subb    a,#0x04
+0086 EF         555            mov     a,r7
+0087 9400       556            subb    a,#0x00
+0089 E8         557            mov     a,r0
+008A 9400       558            subb    a,#0x00
+008C E9         559            mov     a,r1
+008D 9400       560            subb    a,#0x00
+008F 5001       561            jnc     L002005?
+0091            562   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:42: SBRL1 = 0x10000L-(((SYSCLK/baudrate)/2L)/4L); 
+0091 E5FB       563            mov     a,(_UART1_Init_sloc0_1_0 + 3)
+0093 C3         564            clr     c
+0094 13         565            rrc     a
+0095 FD         566            mov     r5,a
+0096 E5FA       567            mov     a,(_UART1_Init_sloc0_1_0 + 2)
+0098 13         568            rrc     a
+0099 FC         569            mov     r4,a
+009A E5F9       570            mov     a,(_UART1_Init_sloc0_1_0 + 1)
+009C 13         571            rrc     a
+009D FB         572            mov     r3,a
+009E E5F8       573            mov     a,_UART1_Init_sloc0_1_0
+00A0 13         574            rrc     a
+00A1 FA         575            mov     r2,a
+00A2 ED         576            mov     a,r5
+00A3 C3         577            clr     c
+00A4 13         578            rrc     a
+00A5 FD         579            mov     r5,a
+00A6 EC         580            mov     a,r4
+00A7 13         581            rrc     a
+00A8 FC         582            mov     r4,a
+00A9 EB         583            mov     a,r3
+00AA 13         584            rrc     a
+00AB FB         585            mov     r3,a
+00AC EA         586            mov     a,r2
+00AD 13         587            rrc     a
+00AE FA         588            mov     r2,a
+00AF E4         589            clr     a
+00B0 C3         590            clr     c
+00B1 9A         591            subb    a,r2
+00B2 FA         592            mov     r2,a
+00B3 E4         593            clr     a
+00B4 9B         594            subb    a,r3
+00B5 FB         595            mov     r3,a
+00B6 7401       596            mov     a,#0x01
+00B8 9C         597            subb    a,r4
+00B9 FC         598            mov     r4,a
+00BA E4         599            clr     a
+00BB 9D         600            subb    a,r5
+00BC FD         601            mov     r5,a
+00BD 8AB4       602            mov     _SBRL1,r2
+00BF 8BB5       603            mov     (_SBRL1 >> 8),r3
+00C1            604   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:43: SBCON1 &= ~0x03; 
+00C1 53ACFC     605            anl     _SBCON1,#0xFC
+00C4            606   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:44: SBCON1 |= 0x01; // set prescaler to 4 
+00C4 43AC01     607            orl     _SBCON1,#0x01
+00C7 020100     608            ljmp    L002009?
+00CA            609   L002005?:
+00CA            610   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:46: else if (((SYSCLK/baudrate)/2L)/0xFFFFL < 12){ 
+00CA C3         611            clr     c
+00CB EE         612            mov     a,r6
+00CC 940C       613            subb    a,#0x0C
+00CE EF         614            mov     a,r7
+00CF 9400       615            subb    a,#0x00
+00D1 E8         616            mov     a,r0
+00D2 9400       617            subb    a,#0x00
+00D4 E9         618            mov     a,r1
+00D5 9400       619            subb    a,#0x00
+00D7 5001       620            jnc     L002002?
+00D9            621   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:47: SBRL1 = 0x10000L-(((SYSCLK/baudrate)/2L)/12L); 
+00D9 75000C     622            mov     __divulong_PARM_2,#0x0C
+00DC E4         623            clr     a
+00DD F501       624            mov     (__divulong_PARM_2 + 1),a
+00DF F502       625            mov     (__divulong_PARM_2 + 2),a
+00E1 F503       626            mov     (__divulong_PARM_2 + 3),a
+00E3 85F882     627            mov     dpl,_UART1_Init_sloc0_1_0
+00E6 85F983     628            mov     dph,(_UART1_Init_sloc0_1_0 + 1)
+00E9 85FAF0     629            mov     b,(_UART1_Init_sloc0_1_0 + 2)
+00EC E5FB       630            mov     a,(_UART1_Init_sloc0_1_0 + 3)
+00EE 120100     631            lcall   __divulong
+00F1 AA82       632            mov     r2,dpl
+00F3 AB83       633            mov     r3,dph
+00F5 ACF0       634            mov     r4,b
+00F7 FD         635            mov     r5,a
+00F8 E4         636            clr     a
+00F9 C3         637            clr     c
+00FA 9A         638            subb    a,r2
+00FB FA         639            mov     r2,a
+00FC E4         640            clr     a
+00FD 9B         641            subb    a,r3
+00FE FB         642            mov     r3,a
+00FF 7401       643            mov     a,#0x01
+0101 9C         644            subb    a,r4
+0102 FC         645            mov     r4,a
+0103 E4         646            clr     a
+0104 9D         647            subb    a,r5
+0105 FD         648            mov     r5,a
+0106 8AB4       649            mov     _SBRL1,r2
+0108 8BB5       650            mov     (_SBRL1 >> 8),r3
+010A            651   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:48: SBCON1 &= ~0x03; // set prescaler to 12 
+010A 53ACFC     652            anl     _SBCON1,#0xFC
+010D 8001       653            sjmp    L002009?
+010F            654   L002002?:
+010F            655   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:51: SBRL1 = 0x10000L-(((SYSCLK/baudrate)/2L)/48L); 
+010F 750030     656            mov     __divulong_PARM_2,#0x30
+0112 E4         657            clr     a
+0113 F501       658            mov     (__divulong_PARM_2 + 1),a
+0115 F502       659            mov     (__divulong_PARM_2 + 2),a
+0117 F503       660            mov     (__divulong_PARM_2 + 3),a
+0119 85F882     661            mov     dpl,_UART1_Init_sloc0_1_0
+011C 85F983     662            mov     dph,(_UART1_Init_sloc0_1_0 + 1)
+011F 85FAF0     663            mov     b,(_UART1_Init_sloc0_1_0 + 2)
+0122 E5FB       664            mov     a,(_UART1_Init_sloc0_1_0 + 3)
+0124 120100     665            lcall   __divulong
+0127 AA82       666            mov     r2,dpl
+0129 AB83       667            mov     r3,dph
+012B ACF0       668            mov     r4,b
+012D FD         669            mov     r5,a
+012E E4         670            clr     a
+012F C3         671            clr     c
+0130 9A         672            subb    a,r2
+0131 FA         673            mov     r2,a
+0132 E4         674            clr     a
+0133 9B         675            subb    a,r3
+0134 FB         676            mov     r3,a
+0135 7401       677            mov     a,#0x01
+0137 9C         678            subb    a,r4
+0138 FC         679            mov     r4,a
+0139 E4         680            clr     a
+013A 9D         681            subb    a,r5
+013B FD         682            mov     r5,a
+013C 8AB4       683            mov     _SBRL1,r2
+013E 8BB5       684            mov     (_SBRL1 >> 8),r3
+0140            685   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:52: SBCON1 &= ~0x03; 
+0140 53ACFC     686            anl     _SBCON1,#0xFC
+0143            687   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:53: SBCON1 |= 0x02; // set prescaler to ? 
+0143 43AC02     688            orl     _SBCON1,#0x02
+0146            689   L002009?:
+0146            690   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:55: SCON1 |= 0x02;    // indicate ready for TX 
+0146 43D202     691            orl     _SCON1,#0x02
+0149            692   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:56: SBCON1 |= 0x40;   // enable baud rate generator
+0149 43AC40     693            orl     _SBCON1,#0x40
+014C 22         694            ret
+014D            695   ;------------------------------------------------------------
+014D            696   ;Allocation info for local variables in function '_c51_external_startup'
+014D            697   ;------------------------------------------------------------
+014D            698   ;------------------------------------------------------------
+014D            699   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:59: char _c51_external_startup (void)
+014D            700   ;        -----------------------------------------
+014D            701   ;         function _c51_external_startup
+014D            702   ;        -----------------------------------------
+014D            703   __c51_external_startup:
+014D            704   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:61: PCA0MD&=(~0x40) ;  // DISABLE WDT: clear Watchdog Enable bit
+014D 53D9BF     705            anl     _PCA0MD,#0xBF
+0150            706   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:62: VDM0CN=0x80;       // Enable VDD monitor
+0150 75FF80     707            mov     _VDM0CN,#0x80
+0153            708   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:63: RSTSRC=0x02|0x04;  // Enable reset on missing clock detector and VDD
+0153 75EF06     709            mov     _RSTSRC,#0x06
+0156            710   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:71: CLKSEL|=0b_0000_0011; // SYSCLK derived from the Internal High-Frequency Oscillator / 1.
+0156 43A903     711            orl     _CLKSEL,#0x03
+0159            712   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:75: OSCICN |= 0x03; // Configure internal oscillator for its maximum frequency
+0159 43B203     713            orl     _OSCICN,#0x03
+015C            714   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:77: SCON0 = 0x52; 
+015C 759852     715            mov     _SCON0,#0x52
+015F            716   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:79: UART1_Init (110);
+015F 90006E     717            mov     dptr,#(0x6E&0x00ff)
+0162 E4         718            clr     a
+0163 F5F0       719            mov     b,a
+0165 120100     720            lcall   _UART1_Init
+0168            721   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:81: TH1 = 0x10000-((SYSCLK/BAUDRATE)/2L);
+0168 758D30     722            mov     _TH1,#0x30
+016B            723   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:82: CKCON &= ~0x0B;                  // T1M = 1; SCA1:0 = xx
+016B 538EF4     724            anl     _CKCON,#0xF4
+016E            725   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:83: CKCON |=  0x08;
+016E 438E08     726            orl     _CKCON,#0x08
+0171            727   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:97: TL1 = TH1;     // Init timer 1
+0171 858D8B     728            mov     _TL1,_TH1
+0174            729   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:98: TMOD &= 0x0f;  // Mask out timer 1 bits
+0174 53890F     730            anl     _TMOD,#0x0F
+0177            731   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:99: TMOD |= 0x20;  // TMOD: timer 1 in 8-bit autoreload                     
+0177 438920     732            orl     _TMOD,#0x20
+017A            733   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:100: TR1 = 1;       // Start timer1
+017A D28E       734            setb    _TR1
+017C            735   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:101: TI = 1;  // Indicate TX0 ready
+017C D299       736            setb    _TI
+017E            737   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:104: P0MDOUT = 0x10;           // Enable Uart TX as push-pull output
+017E 75A410     738            mov     _P0MDOUT,#0x10
+0181            739   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:105: P2MDOUT |= 0b0000_0011;   // Make the LED (P2.2) a push-pull output.  P2.1 used for debuging.
+0181 43A603     740            orl     _P2MDOUT,#0x03
+0184            741   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:106: XBR0 = 0b0000_0101;       // Enable SMBus pins and UART pins P0.4(TX) and P0.5(RX)
+0184 75E105     742            mov     _XBR0,#0x05
+0187            743   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:107: XBR1 = 0x40;              // Enable crossbar and weak pull-ups
+0187 75E240     744            mov     _XBR1,#0x40
+018A            745   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:108: XBR2 = 0x01;                      // Enable UART TX1, and RX1 routed to Port Pins
+018A 75E301     746            mov     _XBR2,#0x01
+018D            747   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:109: P2MDOUT         |=0b_0001_0011;
+018D 43A613     748            orl     _P2MDOUT,#0x13
+0190            749   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:111: CKCON |= 0x04; // Timer0 clock source = SYSCLK
+0190 438E04     750            orl     _CKCON,#0x04
+0193            751   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:112: TMOD &= 0xf0;  // Mask out timer 1 bits
+0193 5389F0     752            anl     _TMOD,#0xF0
+0196            753   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:113: TMOD |= 0x02;  // Timer0 in 8-bit auto-reload mode
+0196 438902     754            orl     _TMOD,#0x02
+0199            755   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:115: TL0 = TH0 = 256-(SYSCLK/SMB_FREQUENCY/3);
+0199 758C60     756            mov     _TH0,#0x60
+019C 758A60     757            mov     _TL0,#0x60
+019F            758   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:116: TR0 = 1; // Enable timer 0
+019F D28C       759            setb    _TR0
+01A1            760   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:119: SMB0CF = INH | EXTHOLD | SMBTOE | SMBFTE ;
+01A1 75C15C     761            mov     _SMB0CF,#0x5C
+01A4            762   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:120: SMB0CF |= ENSMB;  // Enable SMBus
+01A4 43C180     763            orl     _SMB0CF,#0x80
+01A7            764   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:123: TMR2CN=0x00;   // Stop Timer2; Clear TF2;
+01A7 75C800     765            mov     _TMR2CN,#0x00
+01AA            766   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:124: CKCON|=0b_0001_0000;
+01AA 438E10     767            orl     _CKCON,#0x10
+01AD            768   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:125: TMR2RL=(-(SYSCLK/(2*DEFAULT_F))); // Initialize reload value
+01AD 75CAA0     769            mov     _TMR2RL,#0xA0
+01B0 75CBF6     770            mov     (_TMR2RL >> 8),#0xF6
+01B3            771   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:126: TMR2=0xffff;   // Set to reload immediately
+01B3 75CCFF     772            mov     _TMR2,#0xFF
+01B6 75CDFF     773            mov     (_TMR2 >> 8),#0xFF
+01B9            774   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:127: ET2=1;         // Enable Timer2 interrupts
+01B9 D2AD       775            setb    _ET2
+01BB            776   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:128: TR2=1;         // Start Timer2
+01BB D2CA       777            setb    _TR2
+01BD            778   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:129: EA=1; // Enable interrupts
+01BD D2AF       779            setb    _EA
+01BF            780   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:133: return 0;
+01BF 758200     781            mov     dpl,#0x00
+01C2 22         782            ret
+01C3            783   ;------------------------------------------------------------
+01C3            784   ;Allocation info for local variables in function 'Timer4ms'
+01C3            785   ;------------------------------------------------------------
+01C3            786   ;ms                        Allocated to registers r2 
+01C3            787   ;i                         Allocated to registers r4 
+01C3            788   ;k                         Allocated to registers r3 
+01C3            789   ;------------------------------------------------------------
+01C3            790   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:137: void Timer4ms(unsigned char ms)
+01C3            791   ;        -----------------------------------------
+01C3            792   ;         function Timer4ms
+01C3            793   ;        -----------------------------------------
+01C3            794   _Timer4ms:
+01C3 AA82       795            mov     r2,dpl
+01C5            796   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:142: k=SFRPAGE;
+01C5 ABBF       797            mov     r3,_SFRPAGE
+01C7            798   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:143: SFRPAGE=0xf;
+01C7 75BF0F     799            mov     _SFRPAGE,#0x0F
+01CA            800   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:145: CKCON1|=0b_0000_0001;
+01CA 43E401     801            orl     _CKCON1,#0x01
+01CD            802   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:147: TMR4RL = 65536-(SYSCLK/1000L); // Set Timer4 to overflow in 1 ms.
+01CD 759280     803            mov     _TMR4RL,#0x80
+01D0 759344     804            mov     (_TMR4RL >> 8),#0x44
+01D3            805   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:148: TMR4 = TMR4RL;                 // Initialize Timer4 for first overflow
+01D3 859294     806            mov     _TMR4,_TMR4RL
+01D6 859395     807            mov     (_TMR4 >> 8),(_TMR4RL >> 8)
+01D9            808   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:150: TMR4CN = 0x04;                 // Start Timer4 and clear overflow flag
+01D9 759104     809            mov     _TMR4CN,#0x04
+01DC            810   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:151: for (i = 0; i < ms; i++)       // Count <ms> overflows
+01DC 7C00       811            mov     r4,#0x00
+01DE            812   L004004?:
+01DE C3         813            clr     c
+01DF EC         814            mov     a,r4
+01E0 9A         815            subb    a,r2
+01E1 5001       816            jnc     L004007?
+01E3            817   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:153: while (!(TMR4CN & 0x80));  // Wait for overflow
+01E3            818   L004001?:
+01E3 E591       819            mov     a,_TMR4CN
+01E5 30E7B8     820            jnb     acc.7,L004001?
+01E8            821   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:154: TMR4CN &= ~(0x80);         // Clear overflow indicator
+01E8 53917F     822            anl     _TMR4CN,#0x7F
+01EB            823   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:151: for (i = 0; i < ms; i++)       // Count <ms> overflows
+01EB 0C         824            inc     r4
+01EC 8001       825            sjmp    L004004?
+01EE            826   L004007?:
+01EE            827   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:156: TMR4CN = 0 ;                   // Stop Timer4 and clear overflow flag
+01EE 759100     828            mov     _TMR4CN,#0x00
+01F1            829   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:157: SFRPAGE=k;      
+01F1 8BBF       830            mov     _SFRPAGE,r3
+01F3 22         831            ret
+01F4            832   ;------------------------------------------------------------
+01F4            833   ;Allocation info for local variables in function 'I2C_write'
+01F4            834   ;------------------------------------------------------------
+01F4            835   ;output_data               Allocated to registers 
+01F4            836   ;------------------------------------------------------------
+01F4            837   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:160: void I2C_write (unsigned char output_data)
+01F4            838   ;        -----------------------------------------
+01F4            839   ;         function I2C_write
+01F4            840   ;        -----------------------------------------
+01F4            841   _I2C_write:
+01F4 8582C2     842            mov     _SMB0DAT,dpl
+01F7            843   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:163: SI0 = 0;
+01F7 C2C0       844            clr     _SI0
+01F9            845   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:164: while (!SI0); // Wait until done with send
+01F9            846   L005001?:
+01F9 30C038     847            jnb     _SI0,L005001?
+01FC 22         848            ret
+01FD            849   ;------------------------------------------------------------
+01FD            850   ;Allocation info for local variables in function 'I2C_read'
+01FD            851   ;------------------------------------------------------------
+01FD            852   ;input_data                Allocated to registers 
+01FD            853   ;------------------------------------------------------------
+01FD            854   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:167: unsigned char I2C_read (void)
+01FD            855   ;        -----------------------------------------
+01FD            856   ;         function I2C_read
+01FD            857   ;        -----------------------------------------
+01FD            858   _I2C_read:
+01FD            859   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:171: SI0 = 0;
+01FD C2C0       860            clr     _SI0
+01FF            861   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:172: while (!SI0); // Wait until we have data to read
+01FF            862   L006001?:
+01FF 30C078     863            jnb     _SI0,L006001?
+0202            864   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:173: input_data = SMB0DAT; // Read the data
+0202 85C282     865            mov     dpl,_SMB0DAT
+0205            866   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:175: return input_data;
+0205 22         867            ret
+0206            868   ;------------------------------------------------------------
+0206            869   ;Allocation info for local variables in function 'I2C_start'
+0206            870   ;------------------------------------------------------------
+0206            871   ;------------------------------------------------------------
+0206            872   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:178: void I2C_start (void)
+0206            873   ;        -----------------------------------------
+0206            874   ;         function I2C_start
+0206            875   ;        -----------------------------------------
+0206            876   _I2C_start:
+0206            877   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:180: ACK0 = 1;
+0206 D2C1       878            setb    _ACK0
+0208            879   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:181: STA0 = 1;     // Send I2C start
+0208 D2C5       880            setb    _STA0
+020A            881   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:182: STO0 = 0;
+020A C2C4       882            clr     _STO0
+020C            883   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:183: SI0 = 0;
+020C C2C0       884            clr     _SI0
+020E            885   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:184: while (!SI0); // Wait until start sent
+020E            886   L007001?:
+020E 30C0B8     887            jnb     _SI0,L007001?
+0211            888   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:185: STA0 = 0;     // Reset I2C start
+0211 C2C5       889            clr     _STA0
+0213 22         890            ret
+0214            891   ;------------------------------------------------------------
+0214            892   ;Allocation info for local variables in function 'I2C_stop'
+0214            893   ;------------------------------------------------------------
+0214            894   ;------------------------------------------------------------
+0214            895   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:188: void I2C_stop(void)
+0214            896   ;        -----------------------------------------
+0214            897   ;         function I2C_stop
+0214            898   ;        -----------------------------------------
+0214            899   _I2C_stop:
+0214            900   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:190: STO0 = 1;       // Perform I2C stop
+0214 D2C4       901            setb    _STO0
+0216            902   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:191: SI0 = 0;        // Clear SI
+0216 C2C0       903            clr     _SI0
+0218 22         904            ret
+0219            905   ;------------------------------------------------------------
+0219            906   ;Allocation info for local variables in function 'nunchuck_init'
+0219            907   ;------------------------------------------------------------
+0219            908   ;i                         Allocated to registers r2 
+0219            909   ;buf                       Allocated with name '_nunchuck_init_buf_1_62'
+0219            910   ;sloc0                     Allocated with name '_nunchuck_init_sloc0_1_0'
+0219            911   ;sloc1                     Allocated with name '_nunchuck_init_sloc1_1_0'
+0219            912   ;sloc2                     Allocated with name '_nunchuck_init_sloc2_1_0'
+0219            913   ;------------------------------------------------------------
+0219            914   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:195: void nunchuck_init(bit print_extension_type)
+0219            915   ;        -----------------------------------------
+0219            916   ;         function nunchuck_init
+0219            917   ;        -----------------------------------------
+0219            918   _nunchuck_init:
+0219            919   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:207: I2C_start();
+0219 120100     920            lcall   _I2C_start
+021C            921   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:208: I2C_write(0xA4);
+021C 7582A4     922            mov     dpl,#0xA4
+021F 120100     923            lcall   _I2C_write
+0222            924   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:209: I2C_write(0xF0);
+0222 7582F0     925            mov     dpl,#0xF0
+0225 120100     926            lcall   _I2C_write
+0228            927   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:210: I2C_write(0x55);
+0228 758255     928            mov     dpl,#0x55
+022B 120100     929            lcall   _I2C_write
+022E            930   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:211: I2C_stop();
+022E 120100     931            lcall   _I2C_stop
+0231            932   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:212: Timer4ms(1);
+0231 758201     933            mov     dpl,#0x01
+0234 120100     934            lcall   _Timer4ms
+0237            935   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:214: I2C_start();
+0237 120100     936            lcall   _I2C_start
+023A            937   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:215: I2C_write(0xA4);
+023A 7582A4     938            mov     dpl,#0xA4
+023D 120100     939            lcall   _I2C_write
+0240            940   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:216: I2C_write(0xFB);
+0240 7582FB     941            mov     dpl,#0xFB
+0243 120100     942            lcall   _I2C_write
+0246            943   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:217: I2C_write(0x00);
+0246 758200     944            mov     dpl,#0x00
+0249 120100     945            lcall   _I2C_write
+024C            946   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:218: I2C_stop();
+024C 120100     947            lcall   _I2C_stop
+024F            948   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:219: Timer4ms(1);
+024F 758201     949            mov     dpl,#0x01
+0252 120100     950            lcall   _Timer4ms
+0255            951   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:223: I2C_start();
+0255 120100     952            lcall   _I2C_start
+0258            953   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:224: I2C_write(0xA4);
+0258 7582A4     954            mov     dpl,#0xA4
+025B 120100     955            lcall   _I2C_write
+025E            956   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:225: I2C_write(0xFA); // extension type register
+025E 7582FA     957            mov     dpl,#0xFA
+0261 120100     958            lcall   _I2C_write
+0264            959   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:226: I2C_stop();
+0264 120100     960            lcall   _I2C_stop
+0267            961   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:227: Timer4ms(3); // 3 ms required to complete acquisition
+0267 758203     962            mov     dpl,#0x03
+026A 120100     963            lcall   _Timer4ms
+026D            964   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:229: I2C_start();
+026D 120100     965            lcall   _I2C_start
+0270            966   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:230: I2C_write(0xA5);
+0270 7582A5     967            mov     dpl,#0xA5
+0273 120100     968            lcall   _I2C_write
+0276            969   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:233: for(i=0; i<6; i++)
+0276 7A00       970            mov     r2,#0x00
+0278            971   L009003?:
+0278 BA0638     972            cjne    r2,#0x06,L009013?
+027B            973   L009013?:
+027B 5001       974            jnc     L009006?
+027D            975   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:235: buf[i]=I2C_read();
+027D EA         976            mov     a,r2
+027E 2448       977            add     a,#_nunchuck_init_buf_1_62
+0280 F8         978            mov     r0,a
+0281 C002       979            push    ar2
+0283 C000       980            push    ar0
+0285 120100     981            lcall   _I2C_read
+0288 E582       982            mov     a,dpl
+028A D000       983            pop     ar0
+028C D002       984            pop     ar2
+028E F6         985            mov     @r0,a
+028F            986   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:233: for(i=0; i<6; i++)
+028F 0A         987            inc     r2
+0290 8001       988            sjmp    L009003?
+0292            989   L009006?:
+0292            990   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:237: ACK0=0;
+0292 C2C1       991            clr     _ACK0
+0294            992   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:238: I2C_stop();
+0294 120100     993            lcall   _I2C_stop
+0297            994   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:239: Timer4ms(3);
+0297 758203     995            mov     dpl,#0x03
+029A 120100     996            lcall   _Timer4ms
+029D            997   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:241: if(print_extension_type)
+029D 3020B8     998            jnb     _nunchuck_init_PARM_1,L009002?
+02A0            999   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:244: buf[0],  buf[1], buf[2], buf[3], buf[4], buf[5]);
+02A0 AA4D      1000            mov     r2,(_nunchuck_init_buf_1_62 + 0x0005)
+02A2 7B00      1001            mov     r3,#0x00
+02A4 AC4C      1002            mov     r4,(_nunchuck_init_buf_1_62 + 0x0004)
+02A6 7D00      1003            mov     r5,#0x00
+02A8 854B98    1004            mov     _nunchuck_init_sloc0_1_0,(_nunchuck_init_buf_1_62 + 0x0003)
+02AB 759900    1005            mov     (_nunchuck_init_sloc0_1_0 + 1),#0x00
+02AE 854AE8    1006            mov     _nunchuck_init_sloc1_1_0,(_nunchuck_init_buf_1_62 + 0x0002)
+02B1 75E900    1007            mov     (_nunchuck_init_sloc1_1_0 + 1),#0x00
+02B4 854938    1008            mov     _nunchuck_init_sloc2_1_0,(_nunchuck_init_buf_1_62 + 0x0001)
+02B7 753900    1009            mov     (_nunchuck_init_sloc2_1_0 + 1),#0x00
+02BA AE48      1010            mov     r6,_nunchuck_init_buf_1_62
+02BC 7F00      1011            mov     r7,#0x00
+02BE           1012   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:243: printf("Extension type: %02x  %02x  %02x  %02x  %02x  %02x\n", 
+02BE C002      1013            push    ar2
+02C0 C003      1014            push    ar3
+02C2 C004      1015            push    ar4
+02C4 C005      1016            push    ar5
+02C6 C098      1017            push    _nunchuck_init_sloc0_1_0
+02C8 C099      1018            push    (_nunchuck_init_sloc0_1_0 + 1)
+02CA C0E8      1019            push    _nunchuck_init_sloc1_1_0
+02CC C0E9      1020            push    (_nunchuck_init_sloc1_1_0 + 1)
+02CE C038      1021            push    _nunchuck_init_sloc2_1_0
+02D0 C039      1022            push    (_nunchuck_init_sloc2_1_0 + 1)
+02D2 C006      1023            push    ar6
+02D4 C007      1024            push    ar7
+02D6 74F8      1025            mov     a,#__str_0
+02D8 C0E0      1026            push    acc
+02DA 7499      1027            mov     a,#(__str_0 >> 8)
+02DC C0E0      1028            push    acc
+02DE 7480      1029            mov     a,#0x80
+02E0 C0E0      1030            push    acc
+02E2 120100    1031            lcall   _printf
+02E5 E581      1032            mov     a,sp
+02E7 24F1      1033            add     a,#0xf1
+02E9 F581      1034            mov     sp,a
+02EB           1035   L009002?:
+02EB           1036   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:249: I2C_start();
+02EB 120100    1037            lcall   _I2C_start
+02EE           1038   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:250: I2C_write(0xA4);
+02EE 7582A4    1039            mov     dpl,#0xA4
+02F1 120100    1040            lcall   _I2C_write
+02F4           1041   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:251: I2C_write(0xF0);
+02F4 7582F0    1042            mov     dpl,#0xF0
+02F7 120100    1043            lcall   _I2C_write
+02FA           1044   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:252: I2C_write(0xAA);
+02FA 7582AA    1045            mov     dpl,#0xAA
+02FD 120100    1046            lcall   _I2C_write
+0300           1047   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:253: I2C_stop();
+0300 120100    1048            lcall   _I2C_stop
+0303           1049   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:254: Timer4ms(1);
+0303 758201    1050            mov     dpl,#0x01
+0306 120100    1051            lcall   _Timer4ms
+0309           1052   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:256: I2C_start();
+0309 120100    1053            lcall   _I2C_start
+030C           1054   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:257: I2C_write(0xA4);
+030C 7582A4    1055            mov     dpl,#0xA4
+030F 120100    1056            lcall   _I2C_write
+0312           1057   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:258: I2C_write(0x40);
+0312 758240    1058            mov     dpl,#0x40
+0315 120100    1059            lcall   _I2C_write
+0318           1060   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:259: I2C_write(0x00);
+0318 758200    1061            mov     dpl,#0x00
+031B 120100    1062            lcall   _I2C_write
+031E           1063   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:260: I2C_write(0x00);
+031E 758200    1064            mov     dpl,#0x00
+0321 120100    1065            lcall   _I2C_write
+0324           1066   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:261: I2C_write(0x00);
+0324 758200    1067            mov     dpl,#0x00
+0327 120100    1068            lcall   _I2C_write
+032A           1069   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:262: I2C_write(0x00);
+032A 758200    1070            mov     dpl,#0x00
+032D 120100    1071            lcall   _I2C_write
+0330           1072   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:263: I2C_write(0x00);
+0330 758200    1073            mov     dpl,#0x00
+0333 120100    1074            lcall   _I2C_write
+0336           1075   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:264: I2C_write(0x00);
+0336 758200    1076            mov     dpl,#0x00
+0339 120100    1077            lcall   _I2C_write
+033C           1078   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:265: I2C_stop();
+033C 120100    1079            lcall   _I2C_stop
+033F           1080   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:266: Timer4ms(1);
+033F 758201    1081            mov     dpl,#0x01
+0342 120100    1082            lcall   _Timer4ms
+0345           1083   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:268: I2C_start();
+0345 120100    1084            lcall   _I2C_start
+0348           1085   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:269: I2C_write(0xA4);
+0348 7582A4    1086            mov     dpl,#0xA4
+034B 120100    1087            lcall   _I2C_write
+034E           1088   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:270: I2C_write(0x40);
+034E 758240    1089            mov     dpl,#0x40
+0351 120100    1090            lcall   _I2C_write
+0354           1091   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:271: I2C_write(0x00);
+0354 758200    1092            mov     dpl,#0x00
+0357 120100    1093            lcall   _I2C_write
+035A           1094   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:272: I2C_write(0x00);
+035A 758200    1095            mov     dpl,#0x00
+035D 120100    1096            lcall   _I2C_write
+0360           1097   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:273: I2C_write(0x00);
+0360 758200    1098            mov     dpl,#0x00
+0363 120100    1099            lcall   _I2C_write
+0366           1100   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:274: I2C_write(0x00);
+0366 758200    1101            mov     dpl,#0x00
+0369 120100    1102            lcall   _I2C_write
+036C           1103   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:275: I2C_write(0x00);
+036C 758200    1104            mov     dpl,#0x00
+036F 120100    1105            lcall   _I2C_write
+0372           1106   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:276: I2C_write(0x00);
+0372 758200    1107            mov     dpl,#0x00
+0375 120100    1108            lcall   _I2C_write
+0378           1109   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:277: I2C_stop();
+0378 120100    1110            lcall   _I2C_stop
+037B           1111   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:278: Timer4ms(1);
+037B 758201    1112            mov     dpl,#0x01
+037E 120100    1113            lcall   _Timer4ms
+0381           1114   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:280: I2C_start();
+0381 120100    1115            lcall   _I2C_start
+0384           1116   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:281: I2C_write(0xA4);
+0384 7582A4    1117            mov     dpl,#0xA4
+0387 120100    1118            lcall   _I2C_write
+038A           1119   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:282: I2C_write(0x40);
+038A 758240    1120            mov     dpl,#0x40
+038D 120100    1121            lcall   _I2C_write
+0390           1122   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:283: I2C_write(0x00);
+0390 758200    1123            mov     dpl,#0x00
+0393 120100    1124            lcall   _I2C_write
+0396           1125   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:284: I2C_write(0x00);
+0396 758200    1126            mov     dpl,#0x00
+0399 120100    1127            lcall   _I2C_write
+039C           1128   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:285: I2C_write(0x00);
+039C 758200    1129            mov     dpl,#0x00
+039F 120100    1130            lcall   _I2C_write
+03A2           1131   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:286: I2C_write(0x00);
+03A2 758200    1132            mov     dpl,#0x00
+03A5 120100    1133            lcall   _I2C_write
+03A8           1134   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:287: I2C_stop();
+03A8 120100    1135            lcall   _I2C_stop
+03AB           1136   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:288: Timer4ms(1);
+03AB 758201    1137            mov     dpl,#0x01
+03AE 020100    1138            ljmp    _Timer4ms
+03B1           1139   ;------------------------------------------------------------
+03B1           1140   ;Allocation info for local variables in function 'nunchuck_getdata'
+03B1           1141   ;------------------------------------------------------------
+03B1           1142   ;s                         Allocated to registers r2 r3 r4 
+03B1           1143   ;i                         Allocated to registers r5 
+03B1           1144   ;------------------------------------------------------------
+03B1           1145   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:292: void nunchuck_getdata(unsigned char * s)
+03B1           1146   ;        -----------------------------------------
+03B1           1147   ;         function nunchuck_getdata
+03B1           1148   ;        -----------------------------------------
+03B1           1149   _nunchuck_getdata:
+03B1 AA82      1150            mov     r2,dpl
+03B3 AB83      1151            mov     r3,dph
+03B5 ACF0      1152            mov     r4,b
+03B7           1153   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:297: I2C_start();
+03B7 C002      1154            push    ar2
+03B9 C003      1155            push    ar3
+03BB C004      1156            push    ar4
+03BD 120100    1157            lcall   _I2C_start
+03C0           1158   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:298: I2C_write(0xA4);
+03C0 7582A4    1159            mov     dpl,#0xA4
+03C3 120100    1160            lcall   _I2C_write
+03C6           1161   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:299: I2C_write(0x00);
+03C6 758200    1162            mov     dpl,#0x00
+03C9 120100    1163            lcall   _I2C_write
+03CC           1164   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:300: I2C_stop();
+03CC 120100    1165            lcall   _I2C_stop
+03CF           1166   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:301: Timer4ms(3);    // 3 ms required to complete acquisition
+03CF 758203    1167            mov     dpl,#0x03
+03D2 120100    1168            lcall   _Timer4ms
+03D5           1169   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:304: I2C_start();
+03D5 120100    1170            lcall   _I2C_start
+03D8           1171   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:305: I2C_write(0xA5);
+03D8 7582A5    1172            mov     dpl,#0xA5
+03DB 120100    1173            lcall   _I2C_write
+03DE D004      1174            pop     ar4
+03E0 D003      1175            pop     ar3
+03E2 D002      1176            pop     ar2
+03E4           1177   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:308: for(i=0; i<6; i++)
+03E4 7D00      1178            mov     r5,#0x00
+03E6           1179   L010001?:
+03E6 BD06F8    1180            cjne    r5,#0x06,L010010?
+03E9           1181   L010010?:
+03E9 5001      1182            jnc     L010004?
+03EB           1183   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:310: s[i]=(I2C_read()^0x17)+0x17; // Read and decrypt
+03EB ED        1184            mov     a,r5
+03EC 2A        1185            add     a,r2
+03ED FE        1186            mov     r6,a
+03EE E4        1187            clr     a
+03EF 3B        1188            addc    a,r3
+03F0 FF        1189            mov     r7,a
+03F1 8C00      1190            mov     ar0,r4
+03F3 C002      1191            push    ar2
+03F5 C003      1192            push    ar3
+03F7 C004      1193            push    ar4
+03F9 C005      1194            push    ar5
+03FB C006      1195            push    ar6
+03FD C007      1196            push    ar7
+03FF C000      1197            push    ar0
+0401 120100    1198            lcall   _I2C_read
+0404 E582      1199            mov     a,dpl
+0406 D000      1200            pop     ar0
+0408 D007      1201            pop     ar7
+040A D006      1202            pop     ar6
+040C D005      1203            pop     ar5
+040E D004      1204            pop     ar4
+0410 D003      1205            pop     ar3
+0412 D002      1206            pop     ar2
+0414 6417      1207            xrl     a,#0x17
+0416 2417      1208            add     a,#0x17
+0418 F9        1209            mov     r1,a
+0419 8E82      1210            mov     dpl,r6
+041B 8F83      1211            mov     dph,r7
+041D 88F0      1212            mov     b,r0
+041F 120100    1213            lcall   __gptrput
+0422           1214   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:308: for(i=0; i<6; i++)
+0422 0D        1215            inc     r5
+0423 8001      1216            sjmp    L010001?
+0425           1217   L010004?:
+0425           1218   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:312: ACK0=0;
+0425 C2C1      1219            clr     _ACK0
+0427           1220   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:313: I2C_stop();
+0427 020100    1221            ljmp    _I2C_stop
+042A           1222   ;------------------------------------------------------------
+042A           1223   ;Allocation info for local variables in function 'putchar1'
+042A           1224   ;------------------------------------------------------------
+042A           1225   ;c                         Allocated to registers r2 
+042A           1226   ;------------------------------------------------------------
+042A           1227   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:316: void putchar1 (char c) { 
+042A           1228   ;        -----------------------------------------
+042A           1229   ;         function putchar1
+042A           1230   ;        -----------------------------------------
+042A           1231   _putchar1:
+042A AA82      1232            mov     r2,dpl
+042C           1233   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:317: if (c == '\n' ) { 
+042C BA0AB8    1234            cjne    r2,#0x0A,L011006?
+042F           1235   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:318: while (!(SCON1 & 0x02)); 
+042F           1236   L011001?:
+042F E5D2      1237            mov     a,_SCON1
+0431 30E1F8    1238            jnb     acc.1,L011001?
+0434           1239   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:319: SCON1 &= ~0x02; 
+0434 53D2FD    1240            anl     _SCON1,#0xFD
+0437           1241   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:320: SBUF1 = '\r' ; 
+0437 75D30D    1242            mov     _SBUF1,#0x0D
+043A           1243   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:322: while (!(SCON1 & 0x02)); 
+043A           1244   L011006?:
+043A E5D2      1245            mov     a,_SCON1
+043C 30E1B8    1246            jnb     acc.1,L011006?
+043F           1247   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:323: SCON1 &= ~0x02; 
+043F 53D2FD    1248            anl     _SCON1,#0xFD
+0442           1249   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:324: SBUF1 = c; 
+0442 8AD3      1250            mov     _SBUF1,r2
+0444 22        1251            ret
+0445           1252   ;------------------------------------------------------------
+0445           1253   ;Allocation info for local variables in function 'Timer2_ISR'
+0445           1254   ;------------------------------------------------------------
+0445           1255   ;SFRPAGE_save              Allocated to registers r2 
+0445           1256   ;------------------------------------------------------------
+0445           1257   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:328: void Timer2_ISR (void) interrupt 5
+0445           1258   ;        -----------------------------------------
+0445           1259   ;         function Timer2_ISR
+0445           1260   ;        -----------------------------------------
+0445           1261   _Timer2_ISR:
+0445 C002      1262            push    ar2
+0447 C0D0      1263            push    psw
+0449 75D000    1264            mov     psw,#0x00
+044C           1265   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:331: SFRPAGE_save=SFRPAGE;
+044C AABF      1266            mov     r2,_SFRPAGE
+044E           1267   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:332: SFRPAGE=0;
+044E 75BF00    1268            mov     _SFRPAGE,#0x00
+0451           1269   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:333: TF2H = 0; // Clear Timer2 interrupt flag
+0451 C2CF      1270            clr     _TF2H
+0453           1271   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:334: if(CHAR_OUT){
+0453 308278    1272            jnb     _P0_2,L012002?
+0456           1273   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:335: OUT0=!OUT0;
+0456 B2A0      1274            cpl     _P2_0
+0458           1275   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:336: OUT1=!OUT0;
+0458 A2A0      1276            mov     c,_P2_0
+045A B3        1277            cpl     c
+045B 92A1      1278            mov     _P2_1,c
+045D 8001      1279            sjmp    L012003?
+045F           1280   L012002?:
+045F           1281   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:339: OUT0 = 0;
+045F C2A0      1282            clr     _P2_0
+0461           1283   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:340: OUT1 = 0;
+0461 C2A1      1284            clr     _P2_1
+0463           1285   L012003?:
+0463           1286   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:343: SFRPAGE = SFRPAGE_save;
+0463 8ABF      1287            mov     _SFRPAGE,r2
+0465 D0D0      1288            pop     psw
+0467 D002      1289            pop     ar2
+0469 32        1290            reti
+046A           1291   ;        eliminated unneeded push/pop dpl
+046A           1292   ;        eliminated unneeded push/pop dph
+046A           1293   ;        eliminated unneeded push/pop b
+046A           1294   ;        eliminated unneeded push/pop acc
+046A           1295   ;------------------------------------------------------------
+046A           1296   ;Allocation info for local variables in function 'main'
+046A           1297   ;------------------------------------------------------------
+046A           1298   ;Mode_Flag                 Allocated with name '_main_Mode_Flag_1_76'
+046A           1299   ;LEFT                      Allocated to registers 
+046A           1300   ;RIGHT                     Allocated to registers 
+046A           1301   ;FORWARD                   Allocated to registers 
+046A           1302   ;BACKWARD                  Allocated to registers 
+046A           1303   ;DONT_MOVE                 Allocated to registers 
+046A           1304   ;BEEP                      Allocated to registers 
+046A           1305   ;rbuf                      Allocated with name '_main_rbuf_1_76'
+046A           1306   ;joy_x                     Allocated to registers r6 r7 
+046A           1307   ;joy_y                     Allocated with name '_main_joy_y_1_76'
+046A           1308   ;off_x                     Allocated with name '_main_off_x_1_76'
+046A           1309   ;off_y                     Allocated with name '_main_off_y_1_76'
+046A           1310   ;acc_x                     Allocated with name '_main_acc_x_1_76'
+046A           1311   ;acc_y                     Allocated with name '_main_acc_y_1_76'
+046A           1312   ;acc_z                     Allocated with name '_main_acc_z_1_76'
+046A           1313   ;sloc0                     Allocated with name '_main_sloc0_1_0'
+046A           1314   ;------------------------------------------------------------
+046A           1315   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:346: void main (void)
+046A           1316   ;        -----------------------------------------
+046A           1317   ;         function main
+046A           1318   ;        -----------------------------------------
+046A           1319   _main:
+046A           1320   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:348: int      Mode_Flag = 0;
+046A E4        1321            clr     a
+046B F588      1322            mov     _main_Mode_Flag_1_76,a
+046D F589      1323            mov     (_main_Mode_Flag_1_76 + 1),a
+046F           1324   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:361: printf("\x1b[2J\x1b[1;1H"); // Clear screen using ANSI escape sequence.
+046F 74F8      1325            mov     a,#__str_1
+0471 C0E0      1326            push    acc
+0473 749C      1327            mov     a,#(__str_1 >> 8)
+0475 C0E0      1328            push    acc
+0477 7480      1329            mov     a,#0x80
+0479 C0E0      1330            push    acc
+047B 120100    1331            lcall   _printf
+047E 1581      1332            dec     sp
+0480 1581      1333            dec     sp
+0482 1581      1334            dec     sp
+0484           1335   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:362: printf("\n\nWII Nunchuck I2C Reader\n");
+0484 7438      1336            mov     a,#__str_2
+0486 C0E0      1337            push    acc
+0488 749D      1338            mov     a,#(__str_2 >> 8)
+048A C0E0      1339            push    acc
+048C 7480      1340            mov     a,#0x80
+048E C0E0      1341            push    acc
+0490 120100    1342            lcall   _printf
+0493 1581      1343            dec     sp
+0495 1581      1344            dec     sp
+0497 1581      1345            dec     sp
+0499           1346   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:364: Timer4ms(200);
+0499 7582C8    1347            mov     dpl,#0xC8
+049C 120100    1348            lcall   _Timer4ms
+049F           1349   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:365: nunchuck_init(1);
+049F D220      1350            setb    _nunchuck_init_PARM_1
+04A1 120100    1351            lcall   _nunchuck_init
+04A4           1352   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:366: Timer4ms(100);
+04A4 758264    1353            mov     dpl,#0x64
+04A7 120100    1354            lcall   _Timer4ms
+04AA           1355   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:368: nunchuck_getdata(rbuf);
+04AA 9091C8    1356            mov     dptr,#_main_rbuf_1_76
+04AD 75F040    1357            mov     b,#0x40
+04B0 120100    1358            lcall   _nunchuck_getdata
+04B3           1359   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:370: off_x=(int)rbuf[0]-128;
+04B3 ACC8      1360            mov     r4,_main_rbuf_1_76
+04B5 7D00      1361            mov     r5,#0x00
+04B7 EC        1362            mov     a,r4
+04B8 2480      1363            add     a,#0x80
+04BA F568      1364            mov     _main_off_x_1_76,a
+04BC ED        1365            mov     a,r5
+04BD 34FF      1366            addc    a,#0xff
+04BF F569      1367            mov     (_main_off_x_1_76 + 1),a
+04C1           1368   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:371: off_y=(int)rbuf[1]-128;
+04C1 AEC9      1369            mov     r6,(_main_rbuf_1_76 + 0x0001)
+04C3 7F00      1370            mov     r7,#0x00
+04C5 EE        1371            mov     a,r6
+04C6 2480      1372            add     a,#0x80
+04C8 F5B8      1373            mov     _main_off_y_1_76,a
+04CA EF        1374            mov     a,r7
+04CB 34FF      1375            addc    a,#0xff
+04CD F5B9      1376            mov     (_main_off_y_1_76 + 1),a
+04CF           1377   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:372: printf("Offset_X:%4d Offset_Y:%4d\n\n", off_x, off_y);
+04CF C0B8      1378            push    _main_off_y_1_76
+04D1 C0B9      1379            push    (_main_off_y_1_76 + 1)
+04D3 C068      1380            push    _main_off_x_1_76
+04D5 C069      1381            push    (_main_off_x_1_76 + 1)
+04D7 7478      1382            mov     a,#__str_3
+04D9 C0E0      1383            push    acc
+04DB 749D      1384            mov     a,#(__str_3 >> 8)
+04DD C0E0      1385            push    acc
+04DF 7480      1386            mov     a,#0x80
+04E1 C0E0      1387            push    acc
+04E3 120100    1388            lcall   _printf
+04E6 E581      1389            mov     a,sp
+04E8 24F9      1390            add     a,#0xf9
+04EA F581      1391            mov     sp,a
+04EC           1392   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:374: while(1)
+04EC           1393   L013038?:
+04EC           1394   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:376: nunchuck_getdata(rbuf);
+04EC 9091C8    1395            mov     dptr,#_main_rbuf_1_76
+04EF 75F040    1396            mov     b,#0x40
+04F2 120100    1397            lcall   _nunchuck_getdata
+04F5           1398   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:378: joy_x=(int)rbuf[0]-128-off_x;
+04F5 AEC8      1399            mov     r6,_main_rbuf_1_76
+04F7 7F00      1400            mov     r7,#0x00
+04F9 EE        1401            mov     a,r6
+04FA 2480      1402            add     a,#0x80
+04FC FE        1403            mov     r6,a
+04FD EF        1404            mov     a,r7
+04FE 34FF      1405            addc    a,#0xff
+0500 FF        1406            mov     r7,a
+0501 EE        1407            mov     a,r6
+0502 C3        1408            clr     c
+0503 9568      1409            subb    a,_main_off_x_1_76
+0505 FE        1410            mov     r6,a
+0506 EF        1411            mov     a,r7
+0507 9569      1412            subb    a,(_main_off_x_1_76 + 1)
+0509 FF        1413            mov     r7,a
+050A           1414   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:379: joy_y=(int)rbuf[1]-128-off_y;
+050A ACC9      1415            mov     r4,(_main_rbuf_1_76 + 0x0001)
+050C 7D00      1416            mov     r5,#0x00
+050E EC        1417            mov     a,r4
+050F 2480      1418            add     a,#0x80
+0511 FC        1419            mov     r4,a
+0512 ED        1420            mov     a,r5
+0513 34FF      1421            addc    a,#0xff
+0515 FD        1422            mov     r5,a
+0516 EC        1423            mov     a,r4
+0517 C3        1424            clr     c
+0518 95B8      1425            subb    a,_main_off_y_1_76
+051A F518      1426            mov     _main_joy_y_1_76,a
+051C ED        1427            mov     a,r5
+051D 95B9      1428            subb    a,(_main_off_y_1_76 + 1)
+051F F519      1429            mov     (_main_joy_y_1_76 + 1),a
+0521           1430   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:380: acc_x=rbuf[2]*4; 
+0521 E5CA      1431            mov     a,(_main_rbuf_1_76 + 0x0002)
+0523 75F004    1432            mov     b,#0x04
+0526 A4        1433            mul     ab
+0527 F508      1434            mov     _main_acc_x_1_76,a
+0529 85F009    1435            mov     (_main_acc_x_1_76 + 1),b
+052C           1436   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:381: acc_y=rbuf[3]*4;
+052C E5CB      1437            mov     a,(_main_rbuf_1_76 + 0x0003)
+052E 75F004    1438            mov     b,#0x04
+0531 A4        1439            mul     ab
+0532 F558      1440            mov     _main_acc_y_1_76,a
+0534 85F059    1441            mov     (_main_acc_y_1_76 + 1),b
+0537           1442   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:382: acc_z=rbuf[4]*4;
+0537 E5CC      1443            mov     a,(_main_rbuf_1_76 + 0x0004)
+0539 75F004    1444            mov     b,#0x04
+053C A4        1445            mul     ab
+053D F5A8      1446            mov     _main_acc_z_1_76,a
+053F 85F0A9    1447            mov     (_main_acc_z_1_76 + 1),b
+0542           1448   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:384: but1=(rbuf[5] & 0x01)?1:0;
+0542 E5CD      1449            mov     a,(_main_rbuf_1_76 + 0x0005)
+0544 13        1450            rrc     a
+0545 9228      1451            mov     _main_but1_1_76,c
+0547           1452   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:385: but2=(rbuf[5] & 0x02)?1:0;
+0547 E5CD      1453            mov     a,(_main_rbuf_1_76 + 0x0005)
+0549 A2E1      1454            mov     c,acc.1
+054B 9268      1455            mov     _main_but2_1_76,c
+054D           1456   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:386: if (rbuf[5] & 0x04) acc_x+=2;
+054D E5CD      1457            mov     a,(_main_rbuf_1_76 + 0x0005)
+054F 30E2F8    1458            jnb     acc.2,L013002?
+0552 7402      1459            mov     a,#0x02
+0554 2508      1460            add     a,_main_acc_x_1_76
+0556 F508      1461            mov     _main_acc_x_1_76,a
+0558 E4        1462            clr     a
+0559 3509      1463            addc    a,(_main_acc_x_1_76 + 1)
+055B F509      1464            mov     (_main_acc_x_1_76 + 1),a
+055D           1465   L013002?:
+055D           1466   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:387: if (rbuf[5] & 0x08) acc_x+=1;
+055D E5CD      1467            mov     a,(_main_rbuf_1_76 + 0x0005)
+055F 30E338    1468            jnb     acc.3,L013004?
+0562 0508      1469            inc     _main_acc_x_1_76
+0564 E4        1470            clr     a
+0565 B50878    1471            cjne    a,_main_acc_x_1_76,L013065?
+0568 0509      1472            inc     (_main_acc_x_1_76 + 1)
+056A           1473   L013065?:
+056A           1474   L013004?:
+056A           1475   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:388: if (rbuf[5] & 0x10) acc_y+=2;
+056A E5CD      1476            mov     a,(_main_rbuf_1_76 + 0x0005)
+056C 30E4B8    1477            jnb     acc.4,L013006?
+056F 7402      1478            mov     a,#0x02
+0571 2558      1479            add     a,_main_acc_y_1_76
+0573 F558      1480            mov     _main_acc_y_1_76,a
+0575 E4        1481            clr     a
+0576 3559      1482            addc    a,(_main_acc_y_1_76 + 1)
+0578 F559      1483            mov     (_main_acc_y_1_76 + 1),a
+057A           1484   L013006?:
+057A           1485   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:389: if (rbuf[5] & 0x20) acc_y+=1;
+057A E5CD      1486            mov     a,(_main_rbuf_1_76 + 0x0005)
+057C 30E5F8    1487            jnb     acc.5,L013008?
+057F 0558      1488            inc     _main_acc_y_1_76
+0581 E4        1489            clr     a
+0582 B55838    1490            cjne    a,_main_acc_y_1_76,L013068?
+0585 0559      1491            inc     (_main_acc_y_1_76 + 1)
+0587           1492   L013068?:
+0587           1493   L013008?:
+0587           1494   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:390: if (rbuf[5] & 0x40) acc_z+=2;
+0587 E5CD      1495            mov     a,(_main_rbuf_1_76 + 0x0005)
+0589 30E678    1496            jnb     acc.6,L013010?
+058C 7402      1497            mov     a,#0x02
+058E 25A8      1498            add     a,_main_acc_z_1_76
+0590 F5A8      1499            mov     _main_acc_z_1_76,a
+0592 E4        1500            clr     a
+0593 35A9      1501            addc    a,(_main_acc_z_1_76 + 1)
+0595 F5A9      1502            mov     (_main_acc_z_1_76 + 1),a
+0597           1503   L013010?:
+0597           1504   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:391: if (rbuf[5] & 0x80) acc_z+=1;
+0597 E5CD      1505            mov     a,(_main_rbuf_1_76 + 0x0005)
+0599 30E7B8    1506            jnb     acc.7,L013012?
+059C 05A8      1507            inc     _main_acc_z_1_76
+059E E4        1508            clr     a
+059F B5A800    1509            cjne    a,_main_acc_z_1_76,L013071?
+05A2 05A9      1510            inc     (_main_acc_z_1_76 + 1)
+05A4           1511   L013071?:
+05A4           1512   L013012?:
+05A4           1513   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:394: but1?'1':'0', but2?'1':'0', joy_x, joy_y, acc_x, acc_y, acc_z);
+05A4 306840    1514            jnb     _main_but2_1_76,L013042?
+05A7 7A31      1515            mov     r2,#0x31
+05A9 8001      1516            sjmp    L013043?
+05AB           1517   L013042?:
+05AB 7A30      1518            mov     r2,#0x30
+05AD           1519   L013043?:
+05AD EA        1520            mov     a,r2
+05AE 33        1521            rlc     a
+05AF 95E0      1522            subb    a,acc
+05B1 FB        1523            mov     r3,a
+05B2 3028C0    1524            jnb     _main_but1_1_76,L013044?
+05B5 75E831    1525            mov     _main_sloc0_1_0,#0x31
+05B8 8001      1526            sjmp    L013045?
+05BA           1527   L013044?:
+05BA 75E830    1528            mov     _main_sloc0_1_0,#0x30
+05BD           1529   L013045?:
+05BD E5E8      1530            mov     a,_main_sloc0_1_0
+05BF FC        1531            mov     r4,a
+05C0 33        1532            rlc     a
+05C1 95E0      1533            subb    a,acc
+05C3 FD        1534            mov     r5,a
+05C4           1535   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:393: printf("Buttons(Z:%c, C:%c) Joystick(%4d, %4d) Accelerometer(%3d, %3d, %3d)\x1b[0J\r",
+05C4 C006      1536            push    ar6
+05C6 C007      1537            push    ar7
+05C8 C0A8      1538            push    _main_acc_z_1_76
+05CA C0A9      1539            push    (_main_acc_z_1_76 + 1)
+05CC C058      1540            push    _main_acc_y_1_76
+05CE C059      1541            push    (_main_acc_y_1_76 + 1)
+05D0 C008      1542            push    _main_acc_x_1_76
+05D2 C009      1543            push    (_main_acc_x_1_76 + 1)
+05D4 C018      1544            push    _main_joy_y_1_76
+05D6 C019      1545            push    (_main_joy_y_1_76 + 1)
+05D8 C006      1546            push    ar6
+05DA C007      1547            push    ar7
+05DC C002      1548            push    ar2
+05DE C003      1549            push    ar3
+05E0 C004      1550            push    ar4
+05E2 C005      1551            push    ar5
+05E4 7440      1552            mov     a,#__str_4
+05E6 C0E0      1553            push    acc
+05E8 74A1      1554            mov     a,#(__str_4 >> 8)
+05EA C0E0      1555            push    acc
+05EC 7480      1556            mov     a,#0x80
+05EE C0E0      1557            push    acc
+05F0 120100    1558            lcall   _printf
+05F3 E581      1559            mov     a,sp
+05F5 24EF      1560            add     a,#0xef
+05F7 F581      1561            mov     sp,a
+05F9           1562   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:396: Timer4ms(100);
+05F9 758264    1563            mov     dpl,#0x64
+05FC 120100    1564            lcall   _Timer4ms
+05FF D007      1565            pop     ar7
+0601 D006      1566            pop     ar6
+0603           1567   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:398: if(but2 == 0) {
+0603 206880    1568            jb      _main_but2_1_76,L013035?
+0606           1569   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:400: if(Mode_Flag == 0) {
+0606 E588      1570            mov     a,_main_Mode_Flag_1_76
+0608 4589      1571            orl     a,(_main_Mode_Flag_1_76 + 1)
+060A 7001      1572            jnz     L013014?
+060C           1573   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:401: Mode_Flag = 1;
+060C 758801    1574            mov     _main_Mode_Flag_1_76,#0x01
+060F E4        1575            clr     a
+0610 F589      1576            mov     (_main_Mode_Flag_1_76 + 1),a
+0612 020100    1577            ljmp    L013038?
+0615           1578   L013014?:
+0615           1579   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:404: Mode_Flag = 0;
+0615 E4        1580            clr     a
+0616 F588      1581            mov     _main_Mode_Flag_1_76,a
+0618 F589      1582            mov     (_main_Mode_Flag_1_76 + 1),a
+061A 020100    1583            ljmp    L013038?
+061D           1584   L013035?:
+061D           1585   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:407: else if(Mode_Flag == 1) {
+061D 7401      1586            mov     a,#0x01
+061F B58800    1587            cjne    a,_main_Mode_Flag_1_76,L013076?
+0622 E4        1588            clr     a
+0623 B58900    1589            cjne    a,(_main_Mode_Flag_1_76 + 1),L013076?
+0626 8001      1590            sjmp    L013077?
+0628           1591   L013076?:
+0628 8001      1592            sjmp    L013032?
+062A           1593   L013077?:
+062A           1594   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:408: CHAR_OUT = 1;
+062A D282      1595            setb    _P0_2
+062C 020100    1596            ljmp    L013038?
+062F           1597   L013032?:
+062F           1598   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:412: if(joy_x < -75) {
+062F C3        1599            clr     c
+0630 EE        1600            mov     a,r6
+0631 94B5      1601            subb    a,#0xB5
+0633 EF        1602            mov     a,r7
+0634 6480      1603            xrl     a,#0x80
+0636 947F      1604            subb    a,#0x7f
+0638 5001      1605            jnc     L013029?
+063A           1606   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:413: putchar1(LEFT);
+063A 75826C    1607            mov     dpl,#0x6C
+063D 120100    1608            lcall   _putchar1
+0640 020100    1609            ljmp    L013038?
+0643           1610   L013029?:
+0643           1611   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:415: else if(joy_x > 75) {
+0643 C3        1612            clr     c
+0644 744B      1613            mov     a,#0x4B
+0646 9E        1614            subb    a,r6
+0647 E4        1615            clr     a
+0648 6480      1616            xrl     a,#0x80
+064A 8FF0      1617            mov     b,r7
+064C 63F080    1618            xrl     b,#0x80
+064F 95F0      1619            subb    a,b
+0651 5001      1620            jnc     L013026?
+0653           1621   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:416: putchar1(RIGHT);
+0653 758272    1622            mov     dpl,#0x72
+0656 120100    1623            lcall   _putchar1
+0659 020100    1624            ljmp    L013038?
+065C           1625   L013026?:
+065C           1626   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:418: else if(joy_y > 75) {
+065C C3        1627            clr     c
+065D 744B      1628            mov     a,#0x4B
+065F 9518      1629            subb    a,_main_joy_y_1_76
+0661 E4        1630            clr     a
+0662 6480      1631            xrl     a,#0x80
+0664 8519F0    1632            mov     b,(_main_joy_y_1_76 + 1)
+0667 63F080    1633            xrl     b,#0x80
+066A 95F0      1634            subb    a,b
+066C 5001      1635            jnc     L013023?
+066E           1636   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:419: putchar1(FORWARD);
+066E 758266    1637            mov     dpl,#0x66
+0671 120100    1638            lcall   _putchar1
+0674 020100    1639            ljmp    L013038?
+0677           1640   L013023?:
+0677           1641   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:421: else if(joy_y < -75) {
+0677 C3        1642            clr     c
+0678 E518      1643            mov     a,_main_joy_y_1_76
+067A 94B5      1644            subb    a,#0xB5
+067C E519      1645            mov     a,(_main_joy_y_1_76 + 1)
+067E 6480      1646            xrl     a,#0x80
+0680 947F      1647            subb    a,#0x7f
+0682 5001      1648            jnc     L013020?
+0684           1649   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:422: putchar1(BACKWARD);
+0684 758262    1650            mov     dpl,#0x62
+0687 120100    1651            lcall   _putchar1
+068A 020100    1652            ljmp    L013038?
+068D           1653   L013020?:
+068D           1654   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:424: else if(but1 == 0) {
+068D 2028C0    1655            jb      _main_but1_1_76,L013017?
+0690           1656   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:425: putchar1(BEEP);
+0690 758268    1657            mov     dpl,#0x68
+0693 120100    1658            lcall   _putchar1
+0696 020100    1659            ljmp    L013038?
+0699           1660   L013017?:
+0699           1661   ;        C:\Users\jeffreyliou\Desktop\elec291\project2\controller.c:428: putchar1(DONT_MOVE);
+0699 758264    1662            mov     dpl,#0x64
+069C 120100    1663            lcall   _putchar1
+069F 020100    1664            ljmp    L013038?
+06A2           1665            rseg R_CSEG
+06A2           1666   
+0000           1667            rseg R_XINIT
+0000           1668   
+0000           1669            rseg R_CONST
+0000           1670   __str_0:
+0000 45787465  1671            db 'Extension type: %02x  %02x  %02x  %02x  %02x  %02x'
+     6E73696F
+     6E207479
+     70653A20
+     25303278
+     20202530
+     32782020
+     25303278
+     20202530
+     32782020
+     25303278
+     20202530
+     3278
+0032 0A        1672            db 0x0A
+0033 00        1673            db 0x00
+0034           1674   __str_1:
+0034 1B        1675            db 0x1B
+0035 5B324A    1676            db '[2J'
+0038 1B        1677            db 0x1B
+0039 5B313B31  1678            db '[1;1H'
+     48
+003E 00        1679            db 0x00
+003F           1680   __str_2:
+003F 0A        1681            db 0x0A
+0040 0A        1682            db 0x0A
+0041 57494920  1683            db 'WII Nunchuck I2C Reader'
+     4E756E63
+     6875636B
+     20493243
+     20526561
+     646572
+0058 0A        1684            db 0x0A
+0059 00        1685            db 0x00
+005A           1686   __str_3:
+005A 4F666673  1687            db 'Offset_X:%4d Offset_Y:%4d'
+     65745F58
+     3A253464
+     204F6666
+     7365745F
+     593A2534
+     64
+0073 0A        1688            db 0x0A
+0074 0A        1689            db 0x0A
+0075 00        1690            db 0x00
+0076           1691   __str_4:
+0076 42757474  1692            db 'Buttons(Z:%c, C:%c) Joystick(%4d, %4d) Accelerometer(%3d, %3'
+     6F6E7328
+     5A3A2563
+     2C20433A
+     25632920
+     4A6F7973
+     7469636B
+     28253464
+     2C202534
+     64292041
+     6363656C
+     65726F6D
+     65746572
+     28253364
+     2C202533
+00B2 642C2025  1693            db 'd, %3d)'
+     336429
+00B9 1B        1694            db 0x1B
+00BA 5B304A    1695            db '[0J'
+00BD 0D        1696            db 0x0D
+00BE 00        1697            db 0x00
+00BF           1698   
+002E           1699            CSEG
+002E           1700   
+002E           1701   end
